@@ -24,7 +24,7 @@ best_optimal = function(best, check){
 #' @return
 #' @export
 
-ahg_estimate = function(Q, Y = NULL, V = NULL, TW = NULL, allowance = .05, quiet = FALSE, GA = T){
+ahg_estimate = function(Q, Y = NULL, V = NULL, TW = NULL, allowance = .05, quiet = FALSE, GA = FALSE){
   
   ahg_y  = if(!is.null(Y)){ compute_ahg(Q,Y, "Y") }
   ahg_tw = if(!is.null(TW)){ compute_ahg(Q,TW, "TW") }
@@ -56,9 +56,11 @@ ahg_estimate = function(Q, Y = NULL, V = NULL, TW = NULL, allowance = .05, quiet
     message(paste("OLS", ifelse(ols_viable, "meets", "does not meet"), "continuity ... ",
                   ifelse(ols_viable, emo::ji("+1"), emo::ji("-1")), "\n"))
 
+    
+    best = unique(best)
     cond = best_optimal(best, ifelse(best[1] == "nls", nls_viable, ols_viable))
     
-    if(!cond){ 
+    if(!any(cond)){ 
       message("Launching Evolutionary Algorithm... allownace (", allowance,") ", emo::ji("biceps"))
       if(GA){
         r = calc_ga_2(Q, Y, V, TW, allowance, r)

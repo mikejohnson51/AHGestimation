@@ -42,8 +42,8 @@ mismash = function(v, params, V, TW, Y, Q, r, allowance){
     
     ttt = c(Vtmp, Ttmp, Ytmp)
     
-    g$c1[i] = prod(ttt[c(1,3,5)])
-    g$c2[i] = sum(ttt[c(2,4,6)])
+    g$c1[i] = round(prod(ttt[c(1,3,5)]), 3)
+    g$c2[i] = round(sum(ttt[c(2,4,6)]), 3)
     
     g$viable[i] = sum(
       between(g$c1[i], 1-allowance, 1+allowance),
