@@ -29,27 +29,35 @@ compute_ahg = function(Q,P, type = NA){
   
   s = model %>% summary()
   coef2 = s$coefficients[1,1]
-  exp2 = s$coefficients[2,1]
+  exp2  = s$coefficients[2,1]
   
-  OLS = coef * df$Q ^ exp
+  OLS = coef  * df$Q ^ exp
   NLS = coef2 * df$Q ^ exp2
   
   res  = list()
   
   res[[type]] = data.frame(
+    type = type,
     exp = exp,
     coef = coef,
-    nrmse = hydroGOF::nrmse(OLS, df$P, norm = "maxmin"),
+    nrmse = hydroGOF::rmse(OLS, df$P) / mean(df$P),
     pb = hydroGOF::pbias(OLS, df$P),
+    mean_ape = mean(abs((df$P - OLS) / df$P)),
+    min_ape = min(abs((df$P - OLS) / df$P)),
+    max_ape = max(abs((df$P - OLS) / df$P)),
     method = "ols",
     row.names = NULL,
     stringsAsFactors = FALSE) %>% 
   rbind(
     data.frame(
+    type = type,
     exp  = exp2,
     coef = coef2,
-    nrmse  = hydroGOF::nrmse(NLS, df$P, norm = "maxmin"),
+    nrmse  = hydroGOF::rmse(NLS, df$P) / mean(df$P),
     pb = hydroGOF::pbias(NLS, df$P),
+    mean_ape = mean(abs((df$P - NLS) / df$P)),
+    min_ape = min(abs((df$P - NLS) / df$P)),
+    max_ape = max(abs((df$P - NLS) / df$P)),
     method = "nls",
     row.names = NULL,
     stringsAsFactors = FALSE))

@@ -21,10 +21,13 @@ best_optimal = function(best, check){
 #' @param allowance streamflow timeseries
 #' @param quiet streamflow timeseries
 #' @param GA use GA or NSGA2?
+#' @importFrom dplyr between
 #' @return
 #' @export
 
-ahg_estimate = function(Q, Y = NULL, V = NULL, TW = NULL, allowance = .05, quiet = FALSE, GA = FALSE){
+ahg_estimate = function(Q, Y = NULL, V = NULL, TW = NULL, 
+                        allowance = .05, quiet = FALSE, forceGA= FALSE,
+                        nwis = NULL, location = NULL){
   
   ahg_y  = if(!is.null(Y)){ compute_ahg(Q,Y, "Y") }
   ahg_tw = if(!is.null(TW)){ compute_ahg(Q,TW, "TW") }
@@ -59,28 +62,57 @@ ahg_estimate = function(Q, Y = NULL, V = NULL, TW = NULL, allowance = .05, quiet
     
     best = unique(best)
     cond = best_optimal(best, ifelse(best[1] == "nls", nls_viable, ols_viable))
-    
-    if(!any(cond)){ 
-      message("Launching Evolutionary Algorithm... allownace (", allowance,") ", emo::ji("biceps"))
-      if(GA){
-        r = calc_ga_2(Q, Y, V, TW, allowance, r)
-      } else {
-        r = calc_ga(Q, Y, V, TW, allowance, r)
-      }
+  
+    if(any(!cond) | forceGA){ 
+      message("Launching Evolutionary Algorithm... allowance (", allowance,") ", emo::ji("biceps"))
       
-      m = mismash(v = c("ols", "nls", "GA"), params= length(r),V, TW, Y, Q, r, allowance )
+      r = calc_ga(Q, Y, V, TW, allowance, r)
+      m = mismash(v = c("ols", "nls", "GA"),V, TW, Y, Q, r, allowance)
+      
     } else{
-      m = mismash(v = c("ols", "nls"), params = length(r),V, TW, Y, Q, r, allowance)
+      
+      m = mismash(v = c("ols", "nls"), V, TW, Y, Q, r, allowance)
     }
     
-    }else if(length(r) == 2){
-      m = mismash(v = c("ols", "nls"), params = length(r),V, TW, Y, Q,r, allowance)
+    } else if(length(r) == 2){
+      m = mismash(v = c("ols", "nls"), V, TW, Y, Q,r, allowance)
     } else {
       m = NULL
     }
   
+  r = dplyr::bind_rows(r) %>% 
+    arrange(nrmse)
+
+  if(!is.null(nwis)) {
+    r$comid = dataRetrieval::findNLDI(nwis = nwis)$comid
+  } 
+  
+  if(!is.null(location)) {
+    r$comid = dataRetrieval::findNLDI(location = location)$comid
+  } 
+  
     
-    return(c(r, m)) 
+  if(!is.null(m)){
+    tmp = filter(r, type == "Y")
+    m$summary$c =  tmp$coef[match(m$summary$Y, tmp$method)]
+    m$summary$f =  tmp$exp[match(m$summary$Y, tmp$method)]
+  
+    tmp = filter(r, type == "TW")
+    m$summary$a =  tmp$coef[match(m$summary$TW, tmp$method)]
+    m$summary$b =  tmp$exp[match(m$summary$TW, tmp$method)]
+    
+    tmp = filter(r, type == "V")
+    m$summary$k =  tmp$coef[match(m$summary$V, tmp$method)]
+    m$summary$m =  tmp$exp[match(m$summary$V, tmp$method)]
+    m$summary$comid = r$comid[1]
+    m$summary$r = m$summary$f / m$summary$b
+  }
+      
+  out = list(summary = r, output = m$summary)
+  out = Filter(Negate(is.null), out)
+  if(length(out) == 1){ out = out[[1]]}
+  
+  return(out) 
 
 }
 
