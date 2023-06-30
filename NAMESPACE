@@ -3,6 +3,7 @@
 export(best_optimal)
 export(calc_ga)
 export(compute_fhg)
+export(cross_section)
 export(fhg_estimate)
 export(mismash)
 importFrom(GA,ga)

@@ -1,6 +1,6 @@
 #' @title Approximate channel shape
 #' @description Get a list of points from x axis of a cross section and max depth and produce depth values for those points based on channel shape
-#' @param r The corresponding dingman's r coeficent 
+#' @param r The corresponding Dingman's r coeficent 
 #' @param TW width of the channel at bankfull 
 #' @param Ymax maximum depth of the channel at bankfull 
 #' @return depth values every 1m along the cross section   
