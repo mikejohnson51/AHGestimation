@@ -1,14 +1,28 @@
-Package: AHGestimation
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
+Package: FHGestimation
+Title: Compute Feature-based Hydrualic Geometries
+Version: 0.0.1
 Authors@R: 
-    person(given = "First",
-           family = "Last",
-           role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+    c(person(given = "Mike", 
+             family = "Johnson", 
+             role = c("aut", "cre"), 
+             email = "mikecp11@gmail.com", 
+             comment = c(ORCID = "0000-0002-5288-8350")),
+      person(given = "NSF",  role = "fnd"))
+Description: Compute FHG fits from river measurements.
+Imports:
+  dplyr,
+  dataRetrieval,
+  emo,
+  mco,
+  GA,
+  hydroGOF,
+  stats
+Remotes:
+  hadley/emo
 License: CC0
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.1.1
+RoxygenNote: 7.2.3
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3

@@ -12,21 +12,23 @@ knitr::opts_chunk$set(
   out.width = "100%"
 )
 
-library(AHGestimation)
+devtools::load_all('.')
 library(dplyr)
 library(ggplot2)
 library(patchwork)
 ```
 
-# AHGestimation
+# FHGestimation
 
 Using pre-processed observation data from the USGS, we can evaluate learn some things about estimating power law fits from noisy data. 
 
 ```{r}
-length(usgs_obs)
+library(FHGestimation)
+load("extra/usgs_obs_hydraulics.rda")
+
 ```
 
-Taking a random station we subset data occurring after 2010-01-01 and that falls within the 2 year reoccurance interval (defined via NWM v20 reanalysis product).
+Taking a random station we subset data occurring after 2010-01-01 and that falls within the 2 year reoccurance interval (defined via NWM v21 reanalysis product).
 
 ```{r}
 index = 5
@@ -38,7 +40,8 @@ tmp = usgs_obs[[index]] %>%
     filter(V > 0) %>%
     filter(TW > 0) %>%
     filter(Q > 0) %>%
-    filter(is.finite(Ymean)) %>% dplyr::select(date,Q, TW, V, Y = Ymean)
+    filter(is.finite(Ymean)) %>% 
+  select(date,Q, TW, V, Y = Ymean)
 
 dim(tmp)
 
@@ -66,37 +69,65 @@ g1 + g2 + g3
 
 ## Single Relationship fits
 
-Here we use the ahg estimate package to fit the Q-Y relationship using OLS and NLS models:
+Here we use the `FHGestimation` package to fit the Q-Y relationship using OLS and NLS models:
 
 ```{r}
-ahg_estimate(Q = tmp$Q, Y = tmp$Y, allowance = .05)
+fhg_estimate(Q = tmp$Q, Y = tmp$Y, allowance = .05)
 ```
 
-Overall we see that the the NLS model provides a better fit (albeit small) when measured both by nRMSE and pBais.
-
+Overall the the NLS model provides a better fit (albeit small) when measured both by nRMSE and pBais.
 
 ## Full Hydraulic fits
 
-When we have data regarding all three hydraulic states (V,TW,Y) we can ensure that the solutions found are physically valid (meets the continuity constraint Q = Y*V*TW).
+When we have data regarding all three hydraulic states (V,TW,Y) we can ensure that the solutions found are physically valid (meets the continuity constraint Q = Y x V x TW).
 
-In this mode the OLS and NLS models are fit, and if continuity is not met, then a Evolutionary approach is implemented. Doing so produces 3 unique fits for 3 variables (27 total combinations). These are crossed to identify the best performing relationships that meet continuity at a prescribed allowance:
+In this mode the OLS and NLS models are fit, and if continuity is not met, then a Evolutionary approach is implemented. Doing so produces three unique fits for three variables (27 total combinations). These are crossed to identify the best performing relationships that meet continuity at a prescribed allowance:
 
 ```{r}
-ahg_estimate(Q = tmp$Q, V = tmp$V, TW = tmp$TW, Y = tmp$Y, allowance = .05)
+(x = fhg_estimate(Q = tmp$Q, 
+             V = tmp$V, 
+             TW = tmp$TW, 
+             Y = tmp$Y, 
+             allowance = .05)$output)
 ```
+
+
 
 In the above example we see that NLS was able to provide better fits the OLS but neither  NLS or OLS was able to provide physically valid solutions (c1, c2, viable). While the GA approach was able to provide a physically valid solution, its error was almost 10% higher then the OLS/NLS methods.
 
-However a combined approach of a NLS, OLS, and GA fit was able to provide a physically valid result with only .9% more error the seen in the best performing NLS method.
+However a combined approach of a NLS, OLS, and GA fit was able to provide a physically valid result with only 0.9% more error the seen in the best performing NLS method.
 
-## Take home points of this paper:
+```{r, echo = F}
+
+g1 = ggplot(data = tmp ) + 
+  geom_point(aes(x = Q, y = Y)) + 
+  geom_line(aes(x = Q, y = x$c[1] * Q ^ (x$f[1])), col = "red") +
+  theme_light()  + 
+  labs(title = 'Q-Y Relationship')
+
+g2 = ggplot(data = tmp ) + 
+  geom_point(aes(x = Q, y = TW)) + 
+  geom_line(aes(x = Q, y = x$a[1] * Q ^ (x$b[1])), col = "blue") +
+  theme_light() + 
+  labs(title = 'Q-TW Relationship')
+
+g3 = ggplot(data = tmp ) + 
+  geom_point(aes(x = Q, y = V)) + 
+  geom_line(aes(x = Q, y = x$k[1] * Q ^ (x$m[1])), col = "darkgreen") +
+  theme_light()  + 
+  labs(title = 'Q-V Relationship')
+
+g1 + g2 + g3
+```
+
+## Take home points of this work:
 
 > NLS is better then OLS for predicting single relationships in almost every case and should become the defacto approach.
 
 > When fitting an entire system, OLS and NLS often provide results that are not physically valid.
 
-> GA approaches can always find a physically valid solution but often introduce disproportionate error. 
+> EA approaches can always find a physically valid solution but often introduce disproportionate error. 
 
-> Instead, using a mishmash of NLS, OLS, and GA fits (in cases of non-valid solutions), can find solutions with minimal error AND physical validity. We argue  this approach  is the proper way to fit AHG relationships.
+> Instead, using a mishmash of NLS, OLS, and GA fits (in cases of non-valid solutions), can find solutions with minimal error AND physical validity. We argue  this approach  is the proper way to fit FHG relationships.
 
-> This process in formalized in the AHGestimation R packages.
+> This process in formalized in the FHGestimation R packages.

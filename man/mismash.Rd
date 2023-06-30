@@ -4,20 +4,22 @@
 \alias{mismash}
 \title{Compute all combos!}
 \usage{
-mismash(v, params, V, TW, Y, Q, r, allowancce)
+mismash(v, V, TW, Y, Q, r, allowance)
 }
 \arguments{
-\item{v}{}
+\item{v}{values}
 
-\item{params}{}
+\item{V}{Velocity time series}
 
-\item{V}{}
+\item{TW}{Top width time series}
 
-\item{TW}{}
+\item{Y}{Depth time series}
 
-\item{Y}{}
+\item{Q}{Discharge time series}
 
-\item{Q}{}
+\item{r}{rrr TODO}
+
+\item{allowance}{Allowable deviation from continuity}
 }
 \value{
 list

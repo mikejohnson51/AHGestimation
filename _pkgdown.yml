@@ -1,0 +1,12 @@
+url: ~
+template:
+  bootstrap: 5
+  bootswatch: litera
+authors:
+   NSF: 
+     html: "<img src='man/figures/nsf-logo.png' height='36' alt='NSF'/>"
+     href: "https://www.nsf.gov"
+   footer:
+    roles: [cre]
+   citation:
+    roles: [cre]

@@ -1,95 +1,137 @@
 #' @title Compute all combos!
-#' @param v 
-#' @param params 
-#' @param V 
-#' @param TW 
-#' @param Y 
-#' @param Q 
-#' @param r
-#' @param allowance
+#' @param v values
+#' @param V Velocity time series
+#' @param TW Top width time series
+#' @param Y Depth time series
+#' @param Q Discharge time series
+#' @param r rrr TODO
+#' @param allowance Allowable deviation from continuity
 #' @return list
 #' @export
 
 mismash = function(v, V, TW, Y, Q, r, allowance){
   
-  fit =  function(x,V, TW, Y, Q) {
-    ## order: k,m,a,b,c,f
-    v = (x[1]*Q^x[2]) %>% hydroGOF::rmse(V) /mean(V)
-    t = (x[3]*Q^x[4]) %>% hydroGOF::rmse(TW) /mean(TW)
-    d = (x[5]*Q^x[6]) %>% hydroGOF::rmse(Y)/mean(Y)
+  fit =  function(g, ind, V, TW, Y, Q) {
 
-    return(c(v,t,d))
+    x = g[ind,]
+    
+    if(!is.null(V)){
+    g$V_error[ind] = tryCatch({
+      (x$V_coef*Q^x$V_exp) %>% rmse(V) /mean(V)},
+      error = function(e){
+        NA
+      })
+    }
+      
+    if(!is.null(TW)){
+    g$TW_error[ind] = tryCatch({
+      (x$TW_coef*Q^x$TW_exp) %>% rmse(TW) /mean(TW)},
+      error = function(e){
+        NA
+      })
+    }
+    
+    if(!is.null(Y)){
+    g$Y_error[ind] = tryCatch({
+      (x$Y_coef*Q^x$Y_exp) %>% rmse(Y) /mean(T)},
+      error = function(e){
+        NA
+      })
+    }
+
+    g
   }
-
 
   l = list()
   
-  for(i in 1:length(v)){
+  num = sum(!is.null(V), !is.null(TW), !is.null(Y))
+  
+  names = c("V", "TW", "Y")[c(!is.null(V), !is.null(TW), !is.null(Y))]
+  
+  
+  for(i in 1:num){
     l[[i]] = v
   }
   
   g = expand.grid(l, stringsAsFactors = F) %>% 
-    mutate(c1 = NA, c2 = NA, viable = NA,
-           Y_error = NA, TW_error = NA, V_error = NA, tot_error = NA)
+    setNames(paste0(names, "_method")) %>% 
+    mutate(c1 = NA, c2 = NA, viable = NA, tot_error = NA) 
+  
+  g = bind_cols(g, 
+                setNames(data.frame(matrix(NA, ncol = 3*num, nrow =nrow(g))), c(paste0(names, "_error"), 
+                                                                                paste0(names, "_coef"), 
+                                                                                paste0(names, "_exp"))))
+
+  
+  
+  types = c("TW", "Y", "V")
+  
+  for(t in 1:3){
+    x = g[[paste0(types[t], "_method")]]
+    
+    ind = match(x, r[[types[t]]]$method)
+    
+    g[[paste0(types[t], '_exp')]] = r[[types[t]]]$exp[ind]
+    g[[paste0(types[t], '_coef')]] = r[[types[t]]]$coef[ind]
+  }
   
   for(i in 1:nrow(g)){
-    Ytmp = c(filter(r$Y, method == g[i,1])$coef, filter(r$Y, method == g[i,1])$exp)
-    Ttmp = c(filter(r$TW, method == g[i,2])$coef, filter(r$TW, method == g[i,2])$exp)
-    Vtmp = c(filter(r$V, method == g[i,3])$coef, filter(r$V, method == g[i,3])$exp)
-    
-    ttt = c(Vtmp, Ttmp, Ytmp)
-    
-    g$c1[i] = round(prod(ttt[c(1,3,5)]), 3)
-    g$c2[i] = round(sum(ttt[c(2,4,6)]), 3)
-    
-    g$viable[i] = sum(
-      between(g$c1[i], 1-allowance, 1+allowance),
-      between(g$c2[i], 1-allowance, 1+allowance)) == 2
-    
-    f = fit(x = ttt,V, TW, Y, Q)
-    
-    g$tot_error[i] = sum(f)
-    g$V_error[i] = f[1]
-    g$TW_error[i] = f[2]
-    g$Y_error[i] = f[3]
-    
+    g = fit(g, i, V, TW, Y, Q)
   }
+  
+    
+    if(num == 3){
+      g$c1 = round(g$V_coef * g$Y_coef * g$TW_coef, 3)
+      g$c2 = round(g$V_exp + g$Y_exp + g$TW_exp, 3)
+      
+      g$viable =  (between(g$c1, 1-allowance, 1+allowance) +  between(g$c2, 1-allowance, 1+allowance)) == 2
+    }
+    
+    g$tot_error = rowSums(g[, grepl("error", names(g))], na.rm = TRUE)
 
-  g = g %>% 
-    arrange(tot_error) %>% 
-    rename(Y = Var1, TW = Var2, V = Var3)
- 
-  physical = g %>% 
-    filter(viable == TRUE) %>% 
-    mutate(improve = tot_error[nrow(.)] - tot_error[1])  %>% 
-    slice(1) %>% 
-    mutate(condition = "bestValid")
   
-  combo =  g %>% 
-    filter(apply(g,1,function(r){length(unique(r[1:3]))}) != 1) %>% 
-    filter(viable) %>% 
-    slice(1) %>%
-    mutate(condition = "combo")
-  
-  ols = g %>% 
-    filter(Y == "ols", TW == "ols", V == "ols") %>% 
-    mutate(condition = "ols")
-  
-  nls = g %>% 
-    filter(Y == "nls", TW == "nls", V == "nls") %>% 
-    mutate(condition = "nls")
-  
-  if("GA" %in% v){
-  ga = g %>% 
-    filter(Y == "GA", TW == "GA", V == "GA") %>% 
-    mutate(condition = "GA")
-  } else {
-    ga = NULL
+  if(num == 3){
+    physical = g %>% 
+      filter(viable == TRUE) %>% 
+      mutate(improve = tot_error[nrow(.)] - tot_error[1])  %>% 
+      slice(1) %>% 
+      mutate(condition = "bestValid")
+    
+    combo =  g %>% 
+      filter(apply(g,1,function(r){length(unique(r[1:3]))}) != 1) %>% 
+      filter(viable) %>% 
+      slice(1) %>%
+      mutate(condition = "combo")
+    
+    ols = g %>% 
+      filter(Y_method == "ols", TW_method == "ols", V_method == "ols") %>% 
+      mutate(condition = "ols")
+    
+    nls = g %>% 
+      filter(Y_method == "nls", TW_method == "nls", V_method == "nls") %>% 
+      mutate(condition = "nls")
+    
+    if("GA" %in% v){
+      ga = g %>% 
+        filter(Y_method == "GA", TW_method == "GA", V_method == "GA") %>% 
+        mutate(condition = "GA")
+      
+    } else {
+      ga = NULL
   }
-  
-  return(list(g = g %>% 
-                arrange(!viable, tot_error), 
+ 
+    return(list(g = g %>% 
+                  arrange(!viable, tot_error), 
                 summary = bind_rows(combo, ols, nls, ga) %>%  
-                dplyr::select(-c1, -c2) %>% 
-                arrange(!viable, tot_error)))
+                  dplyr::select(-c1, -c2) %>% 
+                  arrange(!viable, tot_error)))
+    
+  } else {
+    list(g = g %>% 
+          arrange(tot_error), 
+        summary = g %>%  
+          dplyr::select(-c1, -c2, -viable) %>% 
+          arrange(tot_error) %>% 
+          slice(1))
+  }
 }

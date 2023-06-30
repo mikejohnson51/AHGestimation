@@ -2,26 +2,28 @@
 % Please edit documentation in R/compute_ga.R
 \name{calc_ga}
 \alias{calc_ga}
-\title{Calculate GA AHG}
+\title{Calculate GA FHG}
 \usage{
-calc_ga(Q, Y, V, TW, allowance = 0.05, r)
+calc_ga(Q, Y, V, TW, allowance = 0.05, r, type = "nrmse")
 }
 \arguments{
-\item{Q}{streamflow timeseries}
+\item{Q}{streamflow time series}
 
-\item{Y}{streamflow timeseries}
+\item{Y}{river depth time series}
 
-\item{V}{streamflow timeseries}
+\item{V}{river velocity time series}
 
-\item{TW}{streamflow timeseries}
+\item{TW}{river top width time series}
 
-\item{allowance}{streamflow timeseries}
+\item{allowance}{allowable deviation from continuity}
 
-\item{r}{streamflow timeseries}
+\item{r}{rrr}
+
+\item{type}{metric to evaluate}
 }
 \value{
 data.frame
 }
 \description{
-Calculate GA AHG
+Calculate GA FHG
 }
