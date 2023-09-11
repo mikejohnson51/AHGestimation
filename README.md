@@ -13,7 +13,12 @@ load("extra/usgs_obs_hydraulics.rda")
 
 Taking a random station we subset data occurring after 2010-01-01 and
 that falls within the 2 year reoccurance interval (defined via NWM v21
-reanalysis product).
+reanalysis product). The filters are chosen based on logical bounds (in feet) found 
+in historical records of bigest rivers in the U.S. (i.e., Hudson, Mississippi).
+There are some gagues that are located in backwater zones and are affected by 
+the coastal processes including  sea level changes, tides and storm surge 
+that can extend hundreds of kilometers inland. These location often show negative
+discharge vlaues.
 
 ``` r
 index = 50
@@ -21,9 +26,9 @@ index = 50
 tmp = usgs_obs[[index]] %>% 
     filter(as.Date(date) > as.Date('2010-01-01')) %>% 
     filter(inChannel == TRUE) %>%
-    filter(Ymean > 0) %>%
+    filter(Ymean > 0 & Ymean < 216) %>%
     filter(V > 0) %>%
-    filter(TW > 0) %>%
+    filter(TW > 0 & TW < 50000) %>%
     filter(Q > 0) %>%
     filter(is.finite(Ymean)) %>% 
   select(date,Q, TW, V, Y = Ymean)
@@ -96,6 +101,18 @@ OLS/NLS methods.
 However a combined approach of a NLS, OLS, and GA fit was able to
 provide a physically valid result with only 0.9% more error the seen in
 the best performing NLS method.
+
+There are erroneous cases that are often casued by combination of limited 
+number of measurments (e.g., less than 5) and inaccurate or mistakes in 
+measurments that result in a flipped curve where the relation between
+discharge and width and/or depth is reversed. We can filterout such stations by:
+
+``` r
+x = x %>% 
+    filter(b > 0) %>% 
+    filter(f > 0) %>% 
+    filter(m > 0) %>% 
+```
 
 <img src="man/figures/README-unnamed-chunk-7-1.png" width="100%" />
 
