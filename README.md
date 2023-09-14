@@ -14,9 +14,9 @@ Active](https://www.repostatus.org/badges/latest/active.svg)](https://www.repost
 
 # FHGestimation
 
-> ***Citation:*** Johnson, J.M. FHGestimation[^1]: Tools for Estimating
-> Physically-Based, Computationally Efficient Feature Based Hydraulic
-> Geometry and Rating Curves 2022.
+> ***Citation:*** Johnson, J.M. (2022) FHGestimation[^1]: Tools for
+> Estimating Physically-Based, Computationally Efficient Feature Based
+> Hydraulic Geometry and Rating Curves.
 
 Using pre-processed observation data from the USGS manual measurement
 (Johnson, 2018), we can evaluate learn some things about estimating
@@ -135,18 +135,19 @@ the full data fit:
 
 # History
 
-The thoughts and development behind this package began in 2017 following
-the NOAA OWP Summer Institute and clear evidence channel shape may be a
-limiting factor in National Water Model Performance.
-
-The algorithm and implementation began as a graduate school project at
-UCSB. It has since developed and been applied with support from NSF and
-NOAA to provide an open source utility for robust large scale data
-synthesis and evaluation. **NSF** funding provided time to draft the
-[preprint here](https://www.preprints.org/manuscript/202212.0390/v1) and
-apply an early version of this tool to the
-[CFIM](https://cfim.ornl.gov/data/) synthetic rating curve dataset.
-**NOAA** funding supported the addition of data filtering methods,
-improved documentation, and code hardening.
+The development of this package began as a graduate school project
+between friends at UC Santa Barbara and UMass Amherst following the 2017
+NOAA OWP Summer Institute and clear evidence channel shape may be a
+limiting factor in National Water Model Performance. It has since
+evolved to provide an open source utility for robust large scale data
+synthesis and evaluation. Funding from the National Science Foundation
+(Grants 1937099, 2033607) provided time to draft the [preprint
+here](https://www.preprints.org/manuscript/202212.0390/v1) and apply an
+early version of this software to the [Continental Flood Inundation
+Mapping (CFIM)](https://cfim.ornl.gov/data/) synthetic rating curve
+dataset. Funding from the National Oceanic and Atmospheric
+Administration’s Office of Water Prediction supported the addition of
+data filtering and hydraulic estimation, improved documentation, and
+code hardening. We are grateful to all involved.
 
 [^1]: previously AHGestimation

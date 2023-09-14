@@ -5,7 +5,7 @@ template:
 authors:
    NOAA OWP: 
      html: "<img src='man/figures/noaa-logo.png' width=72 alt='ESIP'/>"
-     href: "https://www.esipfed.org"
+     href: "https://water.noaa.gov/"
    NSF: 
      html: "<img src='man/figures/nsf-logo.png' width=72 alt='ESIP'/>"
      href: "https://www.esipfed.org"
