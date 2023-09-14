@@ -3,10 +3,46 @@ template:
   bootstrap: 5
   bootswatch: litera
 authors:
+   NOAA OWP: 
+     html: "<img src='man/figures/noaa-logo.png' width=72 alt='ESIP'/>"
+     href: "https://www.esipfed.org"
    NSF: 
-     html: "<img src='man/figures/nsf-logo.png' height='36' alt='NSF'/>"
-     href: "https://www.nsf.gov"
+     html: "<img src='man/figures/nsf-logo.png' width=72 alt='ESIP'/>"
+     href: "https://www.esipfed.org"
    footer:
-    roles: [cre]
+    roles: [cre, ctb]
    citation:
     roles: [cre]
+   sidebar:
+    roles: [cre, ctb, fnd]
+articles:
+- title: FHG Estimation
+  desc: Quick Start
+  contents:
+  - traditonal-ahg
+  - improved-ahg
+  - optimize-nsga2
+  - data-filtering
+  - hydraulics
+reference:
+- title: FHG estimation
+- subtitle: 
+  desc: General tools for fitting AHG relations
+- contents:
+  - has_concept("FHG")
+- subtitle: Data Preprocessing
+  desc: Basic Data Filters
+  contents:
+  - has_concept("filters")
+- subtitle: Hydraulic Estimates
+  desc: Estimating general hydraulic characteristics
+  contents:
+  - has_concept("hydraulics")
+- subtitle: Evaluation
+  desc: Series evaluation
+  contents:
+  - has_concept("evaluation")
+- subtitle: Sample Data
+  desc: Manual feild measurments from USGS-01096500
+  contents:
+  - has_concept("data")

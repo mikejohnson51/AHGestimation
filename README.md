@@ -1,38 +1,42 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+<!-- badges: start -->
+
+[![R CMD
+Check](https://github.com/mikejohnson51/FHGestimation/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/mikejohnson51/FHGestimation/actions/workflows/R-CMD-check.yaml)
+[![License:
+MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://choosealicense.com/licenses/mit/)
+[![Project Status:
+Active](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
+[![codecov](https://codecov.io/github/mikejohnson51/FHGestimation/graph/badge.svg?token=YIY3BTM32H)](https://codecov.io/github/mikejohnson51/FHGestimation)
+[![Dependencies](https://img.shields.io/badge/dependencies-4/42-green?style=flat)](#)
+<!-- badges: end -->
 
 # FHGestimation
 
-Using pre-processed observation data from the USGS, we can evaluate
-learn some things about estimating power law fits from noisy data.
+> ***Citation:*** Johnson, J.M. FHGestimation[^1]: Tools for Estimating
+> Physically-Based, Computationally Efficient Feature Based Hydraulic
+> Geometry and Rating Curves 2022.
+
+Using pre-processed observation data from the USGS manual measurement
+(Johnson, 2018), we can evaluate learn some things about estimating
+power law fits from noisy data.
+
+Overall this package provides 4 capabilities:
+
+1.  Single Relation fits
+2.  Full hydraulic system fits
+3.  Data preprocessing
+4.  Derivation of cross sections and additonal hydraulic traits
+
+## Base data
 
 ``` r
 library(FHGestimation)
-load("extra/usgs_obs_hydraulics.rda")
+data = nwis
 ```
 
-Taking a random station we subset data occurring after 2010-01-01 and
-that falls within the 2 year reoccurance interval (defined via NWM v21
-reanalysis product).
-
-``` r
-index = 50
-  
-tmp = usgs_obs[[index]] %>% 
-    filter(as.Date(date) > as.Date('2010-01-01')) %>% 
-    filter(inChannel == TRUE) %>%
-    filter(Ymean > 0) %>%
-    filter(V > 0) %>%
-    filter(TW > 0) %>%
-    filter(Q > 0) %>%
-    filter(is.finite(Ymean)) %>% 
-  select(date,Q, TW, V, Y = Ymean)
-
-dim(tmp)
-#> [1] 80  5
-```
-
-<img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-3-1.png" width="100%" />
 
 ## Single Relationship fits
 
@@ -40,79 +44,109 @@ Here we use the `FHGestimation` package to fit the Q-Y relationship
 using OLS and NLS models:
 
 ``` r
-fhg_estimate(Q = tmp$Q, Y = tmp$Y, allowance = .05)
-#> NLS performs best for the Q-Y realtionship
-#>   type       exp      coef     nrmse   pb  mean_ape      min_ape  max_ape
-#> 1    Y 0.4781663 0.2122345 0.1324314 -0.8 0.1410238 0.0084845016 2.227273
-#> 2    Y 0.4102660 0.2540058 0.1542132 -2.3 0.1326987 0.0006162981 2.296017
-#>   method
-#> 1    nls
-#> 2    ols
+(sf = fhg_estimate(df = select(data, Q, Y), allowance = .05))
+#>   type       exp      coef nrmse    pb method
+#> 1    Y 0.5185496 0.1871979  8.35 -0.18    nls
+#> 2    Y 0.4797009 0.2004177  8.58 -6.19    ols
 ```
+
+<img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" />
 
 Overall the the NLS model provides a better fit (albeit small) when
 measured both by nRMSE and pBais.
 
 ## Full Hydraulic fits
 
-When we have data regarding all three hydraulic states (V,TW,Y) we can
+When we have data regarding three hydraulic states (V,TW,Y) we can
 ensure that the solutions found are physically valid (meets the
 continuity constraint Q = Y x V x TW).
 
 In this mode the OLS and NLS models are fit, and if continuity is not
-met, then a Evolutionary approach is implemented. Doing so produces
+met, then a Evolutionary Approach is implemented. Doing so produces
 three unique fits for three variables (27 total combinations). These are
 crossed to identify the best performing relationships that meet
 continuity at a prescribed allowance:
 
 ``` r
-(x = fhg_estimate(Q = tmp$Q, 
-             V = tmp$V, 
-             TW = tmp$TW, 
-             Y = tmp$Y, 
-             allowance = .05)$output)
-#> NLS performs best for the Q-Y realtionship
-#> NLS performs best for the Q-TW realtionship
-#> NLS performs best for the Q-V realtionship
-#> NLS meets continuity ...  👍
-#> OLS meets continuity ...  👍
-#> The best performing method (nls) is physically valid ... 😂
-#>     Y  TW   V viable   Y_error  TW_error   V_error tot_error condition
-#> 1 nls nls nls   TRUE 0.1324314 0.1228453 0.1710605 0.4263372       nls
-#> 2 ols nls ols   TRUE 0.1542132 0.1228453 0.1954694 0.4725279     combo
-#> 3 ols ols ols   TRUE 0.1542132 0.1238710 0.1954694 0.4735535       ols
-#>           c         f        a         b         k         m        r
-#> 1 0.2122345 0.4781663 18.37954 0.1746765 0.2682225 0.3370959 2.737440
-#> 2 0.2540058 0.4102660 18.37954 0.1746765 0.2074655 0.4250980 2.348719
-#> 3 0.2540058 0.4102660 18.73285 0.1638955 0.2074655 0.4250980 2.503217
+(x = fhg_estimate(data, allowance = .05))
+#>   V_method TW_method Y_method viable tot_error   V_error  TW_error   Y_error
+#> 1      ols       nls      ols   TRUE 0.8680517 0.2641997 0.1708646 0.4329873
+#> 2      ols       ols      ols   TRUE 0.8686964 0.2641997 0.1715093 0.4329873
+#> 3    nsga2     nsga2    nsga2   TRUE 1.1345364 0.4422426 0.1835315 0.5087623
+#> 4      nls       nls      nls  FALSE 0.8336534 0.2412345 0.1708646 0.4215543
+#>       V_coef  TW_coef    Y_coef     V_exp     TW_exp     Y_exp condition
+#> 1 0.21557110 23.30572 0.2004177 0.4093273 0.11111033 0.4797009 bestValid
+#> 2 0.21557110 23.01003 0.2004177 0.4093273 0.11041728 0.4797009       ols
+#> 3 0.07697966 27.46195 0.4652784 0.6141195 0.05904622 0.2969993     nsga2
+#> 4 0.28863153 23.30572 0.1871979 0.3273010 0.11111033 0.5185496       nls
 ```
 
-In the above example we see that NLS was able to provide better fits the
-OLS but neither NLS or OLS was able to provide physically valid
-solutions (c1, c2, viable). While the GA approach was able to provide a
-physically valid solution, its error was almost 10% higher then the
-OLS/NLS methods.
-
-However a combined approach of a NLS, OLS, and GA fit was able to
-provide a physically valid result with only 0.9% more error the seen in
-the best performing NLS method.
+Overall an combination of the OLS and NLS fit are able to provide a
+error minimizing solution:
 
 <img src="man/figures/README-unnamed-chunk-7-1.png" width="100%" />
 
-## Take home points of this work:
+In the above example we see that NLS was able to provide better fits the
+OLS but neither NLS or OLS was able to provide physically valid
+solutions (viable). While the nsga2 approach was able to provide a
+physically valid solution, its error was almost 10% higher then the
+OLS/NLS methods.
 
-> NLS is better then OLS for predicting single relationships in almost
-> every case and should become the defacto approach.
+However a combined approach of a NLS, OLS, and nsga2 was able to provide
+a physically valid result with only 0.03% more error the seen in the
+best performing NLS method.
 
-> When fitting an entire system, OLS and NLS often provide results that
-> are not physically valid.
+\*\* This was all done using raw, unrefined data! \*\*
 
-> EA approaches can always find a physically valid solution but often
-> introduce disproportionate error.
+## Data Filtering
 
-> Instead, using a mishmash of NLS, OLS, and GA fits (in cases of
-> non-valid solutions), can find solutions with minimal error AND
-> physical validity. We argue this approach is the proper way to fit FHG
-> relationships.
+Due to the volatility of river systems and deviations in measurement
+techniques and accuracy hydraulic data is often very noisy. While the
+`fhg_estimation` tool is intended to reduce this noise and produce a
+mass-conserving hydraulic fit, it is also possible to filter the data
+prior to fitting. The range of data filtering options provided are
+documented in the data-filtering vignette and an example is provided
+below:
 
-> This process in formalized in the FHGestimation R packages.
+``` r
+(xf = data %>% 
+  # Keep the most recent 10 year
+  date_filter(year = 10, keep_max = TRUE) %>% 
+  # Keep data within 3 Median absolute deviations (log residuals)
+  mad_filter() %>% 
+  # Keep data that respects the Q = vA critera w/in allowance
+  qva_filter() %>% 
+  fhg_estimate())
+#>   V_method TW_method Y_method viable tot_error   V_error  TW_error    Y_error
+#> 1      nls       nls      nls   TRUE 0.3868315 0.1737420 0.1235461 0.08954336
+#> 2      nls       nls      nls   TRUE 0.3868315 0.1737420 0.1235461 0.08954336
+#> 3      ols       ols      ols   TRUE 0.4869776 0.2216127 0.1255148 0.13985007
+#>      V_coef  TW_coef    Y_coef     V_exp    TW_exp     Y_exp condition
+#> 1 0.2938667 17.98606 0.1934940 0.3009787 0.1874598 0.5098970 bestValid
+#> 2 0.2938667 17.98606 0.1934940 0.3009787 0.1874598 0.5098970       nls
+#> 3 0.2204190 18.53150 0.2448765 0.3941493 0.1733737 0.4322574       ols
+```
+
+When the data is effecivly filtered we see NLS can provide an error
+minimizing, valid solution for the system that is quite different then
+the full data fit:
+
+<img src="man/figures/README-unnamed-chunk-9-1.png" width="100%" />
+
+# History
+
+The thoughts and development behind this package began in 2017 following
+the NOAA OWP Summer Institute and clear evidence channel shape may be a
+limiting factor in National Water Model Performance.
+
+The algorithm and implementation began as a graduate school project at
+UCSB. It has since developed and been applied with support from NSF and
+NOAA to provide an open source utility for robust large scale data
+synthesis and evaluation. **NSF** funding provided time to draft the
+[preprint here](https://www.preprints.org/manuscript/202212.0390/v1) and
+apply an early version of this tool to the
+[CFIM](https://cfim.ornl.gov/data/) synthetic rating curve dataset.
+**NOAA** funding supported the addition of data filtering methods,
+improved documentation, and code hardening.
+
+[^1]: previously AHGestimation

@@ -4,7 +4,7 @@
 \alias{compute_fhg}
 \title{Approximate FHG relationships}
 \usage{
-compute_fhg(Q, P, type = NA)
+compute_fhg(Q, P, type = "relation")
 }
 \arguments{
 \item{Q}{a stream flow time series}
@@ -19,3 +19,11 @@ data.frame
 \description{
 Approximate FHG relationships using both OLS and NLS methods
 }
+\seealso{
+Other FHG: 
+\code{\link{best_optimal}()},
+\code{\link{calc_nsga}()},
+\code{\link{fhg_estimate}()},
+\code{\link{mismash}()}
+}
+\concept{FHG}

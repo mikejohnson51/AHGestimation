@@ -7,9 +7,12 @@
 #' @param r rrr TODO
 #' @param allowance Allowable deviation from continuity
 #' @return list
+#' @family FHG
 #' @export
 
 mismash = function(v, V, TW, Y, Q, r, allowance){
+  
+  viable <- tot_error <-  Y_method <-  TW_method <- V_method <-  c1 <-  c2 <- NULL
   
   fit =  function(g, ind, V, TW, Y, Q) {
 
@@ -91,17 +94,18 @@ mismash = function(v, V, TW, Y, Q, r, allowance){
 
   
   if(num == 3){
-    physical = g %>% 
+    combo = g %>% 
       filter(viable == TRUE) %>% 
-      mutate(improve = tot_error[nrow(.)] - tot_error[1])  %>% 
+      arrange(tot_error) %>% 
       slice(1) %>% 
       mutate(condition = "bestValid")
-    
-    combo =  g %>% 
-      filter(apply(g,1,function(r){length(unique(r[1:3]))}) != 1) %>% 
-      filter(viable) %>% 
-      slice(1) %>%
-      mutate(condition = "combo")
+    # 
+    # combo =  g %>% 
+    #   filter(apply(g,1,function(r){length(unique(r[1:3]))}) != 1) %>% 
+    #   #filter(viable) %>% 
+    #   arrange(tot_error) %>% 
+    #   slice(1) %>%
+    #   mutate(condition = "combo")
     
     ols = g %>% 
       filter(Y_method == "ols", TW_method == "ols", V_method == "ols") %>% 
@@ -111,10 +115,10 @@ mismash = function(v, V, TW, Y, Q, r, allowance){
       filter(Y_method == "nls", TW_method == "nls", V_method == "nls") %>% 
       mutate(condition = "nls")
     
-    if("GA" %in% v){
+    if("nsga2" %in% v){
       ga = g %>% 
-        filter(Y_method == "GA", TW_method == "GA", V_method == "GA") %>% 
-        mutate(condition = "GA")
+        filter(Y_method == "nsga2", TW_method == "nsga2", V_method == "nsga2") %>% 
+        mutate(condition = "nsga2")
       
     } else {
       ga = NULL

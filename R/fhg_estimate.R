@@ -1,121 +1,166 @@
+check_validity = function(r, type = "nls", allowance = .05){
+  
+  method <- NULL
+  is_between = function(x, allowance) {
+    between(x, 1 - allowance, 1 + allowance)
+  }
+  
+  tw = filter(r$TW, method == !!type)
+  y = filter(r$Y, method == !!type)
+  v = filter(r$V, method == !!type)
+  
+  c1 = is_between(prod(y$coef, tw$coef, v$coef), allowance)
+  c2 = is_between(sum(y$exp, tw$exp,v$exp), allowance)
+  
+  sum(c1, c2) == 2
+  
+}
+
+
 #' @title Report best optimal
 #' @param best best performing method (character string)
 #' @param check values to check against
+#' @param verbose should messages be emitted
 #' @return vector
+#' @family FHG
 #' @export
 
-best_optimal = function(best, check){
-  
-  message(paste0("The best performing method (", best,") ", 
-                 ifelse(check, "is", "is not"), 
-                 " physically valid ... ", 
-                 ifelse(check, emo::ji("joy"), emo::ji("sad")), "\n")
-  )
+best_optimal = function(best, check, verbose = TRUE) {
+  if (verbose) {
+    message(
+      paste0(
+        "The best performing method (",
+        best,
+        ") ",
+        ifelse(check, "is", "is not"),
+        " physically valid ... ",
+        "\n"
+      )
+    )
+  }
   
   return(check)
 }
 
 #' @title Properly estimate FHG values
-#' @param Q streamflow time series
-#' @param Y depth time series
-#' @param V velocity time series
-#' @param TW top width time series
+#' @param df hydraulic data.frame
 #' @param allowance allowed deviation from continuity
-#' @param quiet should messages be emitted?
-#' @param forceGA use GA over nsga2
-#' @param nwis NWIS gage ID
-#' @param location provide a locations
+#' @param verbose should messages be emitted?
 #' @return list
+#' @details
+#' If filter_data is TRUE. An best fit curve is fit to the raw data relationships and is used to predict
+#' A value for each Q. Data is only retained if the provided value is within +/- the `filter_threshold` (as a percent) of 
+#' the estimated value
+#' @family FHG
 #' @export
 
-fhg_estimate = function(Q, Y = NULL, V = NULL, TW = NULL, 
-                        allowance = .05, quiet = FALSE, forceGA= FALSE,
-                        nwis = NULL, location = NULL){
+fhg_estimate = function(df,
+                        allowance = .05,
+                        verbose = FALSE) {
   
-  fhg_y  = if(!is.null(Y)){ compute_fhg(Q,Y, "Y") }
-  fhg_tw = if(!is.null(TW)){ compute_fhg(Q,TW, "TW") }
-  fhg_v  = if(!is.null(V)){ compute_fhg(Q,V, "V") }
+  type <- NULL
   
-  r = c(fhg_y, fhg_tw, fhg_v) 
+  if(!"Q" %in% names(df)){ stop("Q must be present in df") }
+  
+  if(!any(grepl("TW|V|Y", names(df)))){ stop("At least one of TW, V, or Y must be present in df") }
+
+  df = select(df, any_of(c("date", "TW", "V", "Y", "Q")))
+  df = df[df > 0,]
+  df = df[is.finite(rowSums(select(df, -any_of('date')))), ]
+  df = df[complete.cases(df), ]
+  
+  fhg_y  = if ("Y" %in% names(df)) {
+    compute_fhg(df$Q, df$Y, "Y")
+  }
+  
+  fhg_tw = if ("TW" %in% names(df)) {
+    compute_fhg(df$Q, df$TW, "TW")
+  }
+  
+  fhg_v  = if ("V" %in% names(df)) {
+    compute_fhg(df$Q, df$V, "V")
+  }
+  
+  r = list(fhg_y, fhg_tw, fhg_v)
+  r = Filter(Negate(is.null), r)
+  n = vector()
+  for(i in 1:length(r)){ n = append(n, r[[i]]$type[1])}
+  names(r)  = n
   
   best = NULL
   
-  for(i in 1:length(r)){ best[i] = r[[i]]$method[which.min(r[[i]]$nrmse)]}
-
-  if(!quiet){ message(paste0(unique(toupper(best)), " performs best for the Q-", names(r), ' realtionship\n')) }
+  for (i in 1:length(r)) {
+    best[i] = r[[i]]$method[which.min(r[[i]]$nrmse)]
+  }
+  
+  if (verbose) {
+    message(paste0(
+      unique(toupper(best)),
+      " performs best for the Q-",
+      names(r),
+      ' realtionship\n'
+    ))
+  }
+  
+  if (length(r) == 3) {
     
-  if(length(r) == 3){
+    nls_viable = check_validity(r, "nls", allowance)
+    ols_viable = check_validity(r, "ols", allowance)
     
-    is_between = function(x, allowance) { between(x, 1-allowance, 1+allowance)}
+    if (verbose) {
+      message(paste(
+        "NLS",
+        ifelse(nls_viable, "meets", "does not meet"),
+        "continuity ... "
+      ))
+      message(paste(
+        "OLS",
+        ifelse(ols_viable, "meets", "does not meet"),
+        "continuity ... ",
+        "\n"
+      ))
+    }
     
-    c1_nls = is_between(prod(r$Y$coef[2], r$TW$coef[2], r$V$coef[2] ), allowance)
-    c1_ols = is_between(prod(r$Y$coef[1], r$TW$coef[1], r$V$coef[1] ), allowance)
-    
-    c2_nls = is_between(sum(r$Y$exp[2], r$TW$exp[2], r$V$exp[2] ), allowance)
-    c2_ols = is_between(sum(r$Y$exp[1], r$TW$exp[1], r$V$exp[1] ), allowance)
-    
-    nls_viable = sum(c1_nls, c2_nls) == 2
-    ols_viable = sum(c1_ols, c2_ols) == 2
-    
-    message(paste("NLS", ifelse(nls_viable, "meets", "does not meet"), "continuity ... ",
-                  ifelse(nls_viable, emo::ji("+1"), emo::ji("-1"))
-                  ))
-    message(paste("OLS", ifelse(ols_viable, "meets", "does not meet"), "continuity ... ",
-                  ifelse(ols_viable, emo::ji("+1"), emo::ji("-1")), "\n"))
-
     best = unique(best)
     
-    cond = best_optimal(best, ifelse(best[1] == "nls", nls_viable, ols_viable))
-  
-    if(any(!cond) | forceGA){ 
-      message("Launching Evolutionary Algorithm... allowance (", allowance,") ", emo::ji("biceps"))
+    cond = best_optimal(best,
+                        ifelse(best[1] == "nls", nls_viable, ols_viable),
+                        verbose = verbose)
+    
+    if (any(!cond)) {
+      if (verbose) {
+        message(
+          "Launching Evolutionary Algorithm... allowance (",
+          allowance,
+          ") "
+        )
+      }
       
-      r = calc_ga(Q, Y, V, TW, allowance, r)
-      m = mismash(v = c("ols", "nls", "GA"), V, TW, Y, Q, r, allowance)
+      r = calc_nsga(
+        df,
+        allowance,
+        r
+      )
+      
+      m = mismash(v = c("ols", "nls", "nsga2"),
+                  V = df$V,
+                  TW = df$TW,
+                  Y = df$Y,
+                  Q = df$Q,
+                  r,
+                  allowance)
       
     } else{
-      m = mismash(v = c("ols", "nls"), V, TW, Y, Q, r, allowance)
+      m = mismash(v = c("ols", "nls"), df$V, df$TW, df$Y, df$Q, r, allowance)
     }
     
-    } else if(length(r) == 2){
-      m = mismash(v = c("ols", "nls"), V, TW, Y, Q, r, allowance)
-    } else {
-      m = NULL
-    }
+  } else if (length(r) == 2) {
+    m = mismash(v = c("ols", "nls"), df$V, df$TW, df$Y, df$Q, r, allowance)
+  } else {
+    return(arrange(bind_rows(r), type, nrmse))
+}
   
-  r = bind_rows(r) %>%  arrange(nrmse)
-
-  if(!is.null(nwis)) {
-    r$comid = dataRetrieval::findNLDI(nwis = nwis)$comid
-  } 
-  
-  if(!is.null(location)) {
-    r$comid = dataRetrieval::findNLDI(location = location)$comid
-  } 
-  
-    
-  # if(!is.null(m)){
-  #   tmp = filter(r, type == "Y")
-  #   m$summary$c =  tmp$coef[match(m$summary$Y, tmp$method)]
-  #   m$summary$f =  tmp$exp[match(m$summary$Y, tmp$method)]
-  # 
-  #   tmp = filter(r, type == "TW")
-  #   m$summary$a =  tmp$coef[match(m$summary$TW, tmp$method)]
-  #   m$summary$b =  tmp$exp[match(m$summary$TW, tmp$method)]
-  #   
-  #   tmp = filter(r, type == "V")
-  #   m$summary$k =  tmp$coef[match(m$summary$V, tmp$method)]
-  #   m$summary$m =  tmp$exp[match(m$summary$V, tmp$method)]
-  #   m$summary$comid = r$comid[1]
-  #   m$summary$r = m$summary$f / m$summary$b
-  # }
-      
-  out = list(summary = r, output = m$summary)
-  out = Filter(Negate(is.null), out)
-  if(length(out) == 1){ out = out[[1]]}
-  
-  return(out) 
+  return(m$summary)
 
 }
 
-  

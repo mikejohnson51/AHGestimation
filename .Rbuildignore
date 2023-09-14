@@ -5,6 +5,10 @@
 r2
 data
 inst/extdata
-img
 docs
 extra
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+usgs-field-data
+paper

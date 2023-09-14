@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">FHGestimation</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -21,10 +21,19 @@
       <ul class="navbar-nav me-auto"><li class="active nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
+<li class="nav-item">
+  <a class="nav-link" href="../articles/index.html">Articles</a>
+</li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
 
-      <ul class="navbar-nav"></ul></div>
+      <ul class="navbar-nav"><li class="nav-item">
+  <a class="external-link nav-link" href="https://github.com/mikejohnson51/FHGestimation/" aria-label="github">
+    <span class="fab fa fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul></div>
 
     
   </div>
@@ -32,7 +41,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Properly estimate FHG values</h1>
-      
+      <small class="dont-index">Source: <a href="https://github.com/mikejohnson51/FHGestimation/blob/HEAD/R/fhg_estimate.R" class="external-link"><code>R/fhg_estimate.R</code></a></small>
       <div class="d-none name"><code>fhg_estimate.Rd</code></div>
     </div>
 
@@ -42,55 +51,21 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">fhg_estimate</span><span class="op">(</span></span>
-<span>  <span class="va">Q</span>,</span>
-<span>  Y <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  V <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  TW <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  allowance <span class="op">=</span> <span class="fl">0.05</span>,</span>
-<span>  quiet <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  forceGA <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  nwis <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  location <span class="op">=</span> <span class="cn">NULL</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">fhg_estimate</span><span class="op">(</span><span class="va">df</span>, allowance <span class="op">=</span> <span class="fl">0.05</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
-    <dl><dt>Q</dt>
-<dd><p>streamflow time series</p></dd>
-
-
-<dt>Y</dt>
-<dd><p>depth time series</p></dd>
-
-
-<dt>V</dt>
-<dd><p>velocity time series</p></dd>
-
-
-<dt>TW</dt>
-<dd><p>top width time series</p></dd>
+    <dl><dt>df</dt>
+<dd><p>hydraulic data.frame</p></dd>
 
 
 <dt>allowance</dt>
 <dd><p>allowed deviation from continuity</p></dd>
 
 
-<dt>quiet</dt>
+<dt>verbose</dt>
 <dd><p>should messages be emitted?</p></dd>
-
-
-<dt>forceGA</dt>
-<dd><p>use GA over nsga2</p></dd>
-
-
-<dt>nwis</dt>
-<dd><p>NWIS gage ID</p></dd>
-
-
-<dt>location</dt>
-<dd><p>provide a locations</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -98,6 +73,20 @@
     
 
 <p>list</p>
+    </div>
+    <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p>If filter_data is TRUE. An best fit curve is fit to the raw data relationships and is used to predict
+A value for each Q. Data is only retained if the provided value is within +/- the `filter_threshold` (as a percent) of 
+the estimated value</p>
+    </div>
+    <div class="section level2">
+    <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
+    <div class="dont-index"><p>Other FHG: 
+<code><a href="best_optimal.html">best_optimal</a>()</code>,
+<code><a href="calc_nsga.html">calc_nsga</a>()</code>,
+<code><a href="compute_fhg.html">compute_fhg</a>()</code>,
+<code><a href="mismash.html">mismash</a>()</code></p></div>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

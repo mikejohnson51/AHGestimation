@@ -4,12 +4,14 @@
 \alias{best_optimal}
 \title{Report best optimal}
 \usage{
-best_optimal(best, check)
+best_optimal(best, check, verbose = TRUE)
 }
 \arguments{
 \item{best}{best performing method (character string)}
 
 \item{check}{values to check against}
+
+\item{verbose}{should messages be emitted}
 }
 \value{
 vector
@@ -17,3 +19,11 @@ vector
 \description{
 Report best optimal
 }
+\seealso{
+Other FHG: 
+\code{\link{calc_nsga}()},
+\code{\link{compute_fhg}()},
+\code{\link{fhg_estimate}()},
+\code{\link{mismash}()}
+}
+\concept{FHG}

@@ -7,7 +7,7 @@
 cross_section(r, TW = 30, Ymax = 2)
 }
 \arguments{
-\item{r}{The corresponding Dingman's r coeficent}
+\item{r}{The corresponding Dingman's r coefficient}
 
 \item{TW}{width of the channel at bankfull}
 
@@ -19,3 +19,9 @@ depth values every 1m along the cross section
 \description{
 Get a list of points from x axis of a cross section and max depth and produce depth values for those points based on channel shape
 }
+\seealso{
+Other hydraulics: 
+\code{\link{compute_hydraulic_params}()},
+\code{\link{compute_n}()}
+}
+\concept{hydraulics}

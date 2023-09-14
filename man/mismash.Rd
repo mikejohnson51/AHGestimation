@@ -27,3 +27,11 @@ list
 \description{
 Compute all combos!
 }
+\seealso{
+Other FHG: 
+\code{\link{best_optimal}()},
+\code{\link{calc_nsga}()},
+\code{\link{compute_fhg}()},
+\code{\link{fhg_estimate}()}
+}
+\concept{FHG}

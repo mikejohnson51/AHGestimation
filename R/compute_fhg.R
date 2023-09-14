@@ -4,9 +4,12 @@
 #' @param P a corresponding time series of a second hydraulic variable
 #' @param type relationship being tested
 #' @return data.frame
+#' @family FHG
 #' @export
 
-compute_fhg = function(Q, P, type = NA){
+compute_fhg = function(Q, P, type = "relation"){
+  
+  Qlog <- Ylog <- NULL
   
   df = data.frame(Q,P) %>% 
     arrange(Q) %>% 
@@ -36,32 +39,24 @@ compute_fhg = function(Q, P, type = NA){
   
   res  = list()
   
-  res[[type]] = data.frame(
+  res = data.frame(
     type = type,
     exp = exp,
     coef = coef,
-    nrmse = hydroGOF::rmse(OLS, df$P) / mean(df$P),
-    pb = hydroGOF::pbias(OLS, df$P),
-    mean_ape = mean(abs((df$P - OLS) / df$P)),
-    min_ape = min(abs((df$P - OLS) / df$P)),
-    max_ape = max(abs((df$P - OLS) / df$P)),
+    nrmse = nrmse(OLS, df$P),
+    pb = pbias(OLS, df$P),
     method = "ols",
-    row.names = NULL,
-    stringsAsFactors = FALSE) %>% 
+    row.names = NULL) %>% 
   rbind(
     data.frame(
     type = type,
     exp  = exp2,
     coef = coef2,
-    nrmse  = hydroGOF::rmse(NLS, df$P) / mean(df$P),
-    pb = hydroGOF::pbias(NLS, df$P),
-    mean_ape = mean(abs((df$P - NLS) / df$P)),
-    min_ape = min(abs((df$P - NLS) / df$P)),
-    max_ape = max(abs((df$P - NLS) / df$P)),
+    nrmse = nrmse(NLS, df$P),
+    pb = pbias(NLS, df$P),
     method = "nls",
-    row.names = NULL,
-    stringsAsFactors = FALSE))
+    row.names = NULL))
       
 
-  res
+  arrange(res, nrmse)
 }

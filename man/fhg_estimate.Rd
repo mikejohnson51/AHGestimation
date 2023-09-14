@@ -4,36 +4,14 @@
 \alias{fhg_estimate}
 \title{Properly estimate FHG values}
 \usage{
-fhg_estimate(
-  Q,
-  Y = NULL,
-  V = NULL,
-  TW = NULL,
-  allowance = 0.05,
-  quiet = FALSE,
-  forceGA = FALSE,
-  nwis = NULL,
-  location = NULL
-)
+fhg_estimate(df, allowance = 0.05, verbose = FALSE)
 }
 \arguments{
-\item{Q}{streamflow time series}
-
-\item{Y}{depth time series}
-
-\item{V}{velocity time series}
-
-\item{TW}{top width time series}
+\item{df}{hydraulic data.frame}
 
 \item{allowance}{allowed deviation from continuity}
 
-\item{quiet}{should messages be emitted?}
-
-\item{forceGA}{use GA over nsga2}
-
-\item{nwis}{NWIS gage ID}
-
-\item{location}{provide a locations}
+\item{verbose}{should messages be emitted?}
 }
 \value{
 list
@@ -41,3 +19,16 @@ list
 \description{
 Properly estimate FHG values
 }
+\details{
+If filter_data is TRUE. An best fit curve is fit to the raw data relationships and is used to predict
+A value for each Q. Data is only retained if the provided value is within +/- the `filter_threshold` (as a percent) of 
+the estimated value
+}
+\seealso{
+Other FHG: 
+\code{\link{best_optimal}()},
+\code{\link{calc_nsga}()},
+\code{\link{compute_fhg}()},
+\code{\link{mismash}()}
+}
+\concept{FHG}

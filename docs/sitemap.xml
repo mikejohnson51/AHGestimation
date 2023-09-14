@@ -4,7 +4,28 @@
     <loc>/404.html</loc>
   </url>
   <url>
+    <loc>/LICENSE-text.html</loc>
+  </url>
+  <url>
     <loc>/LICENSE.html</loc>
+  </url>
+  <url>
+    <loc>/articles/data-filtering.html</loc>
+  </url>
+  <url>
+    <loc>/articles/hydraulics.html</loc>
+  </url>
+  <url>
+    <loc>/articles/improved-ahg.html</loc>
+  </url>
+  <url>
+    <loc>/articles/index.html</loc>
+  </url>
+  <url>
+    <loc>/articles/optimize-nsga2.html</loc>
+  </url>
+  <url>
+    <loc>/articles/traditonal-ahg.html</loc>
   </url>
   <url>
     <loc>/authors.html</loc>
@@ -22,7 +43,28 @@
     <loc>/reference/calc_ga_2.html</loc>
   </url>
   <url>
+    <loc>/reference/calc_nsga.html</loc>
+  </url>
+  <url>
     <loc>/reference/compute_fhg.html</loc>
+  </url>
+  <url>
+    <loc>/reference/compute_hydraulic_params.html</loc>
+  </url>
+  <url>
+    <loc>/reference/compute_n.html</loc>
+  </url>
+  <url>
+    <loc>/reference/compute_r.html</loc>
+  </url>
+  <url>
+    <loc>/reference/compute_r_p.html</loc>
+  </url>
+  <url>
+    <loc>/reference/cross_section.html</loc>
+  </url>
+  <url>
+    <loc>/reference/date_filter.html</loc>
   </url>
   <url>
     <loc>/reference/fhg_estimate.html</loc>
@@ -31,6 +73,24 @@
     <loc>/reference/index.html</loc>
   </url>
   <url>
+    <loc>/reference/mad_filter.html</loc>
+  </url>
+  <url>
     <loc>/reference/mismash.html</loc>
+  </url>
+  <url>
+    <loc>/reference/nls_filter.html</loc>
+  </url>
+  <url>
+    <loc>/reference/nrmse.html</loc>
+  </url>
+  <url>
+    <loc>/reference/pbias.html</loc>
+  </url>
+  <url>
+    <loc>/reference/qva_filter.html</loc>
+  </url>
+  <url>
+    <loc>/reference/significance_check.html</loc>
   </url>
 </urlset>
