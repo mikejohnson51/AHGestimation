@@ -67,13 +67,12 @@
 <blockquote>
 <p><strong><em>Citation:</em></strong> Johnson, J.M. (2022) FHGestimation<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content="&lt;p&gt;previously AHGestimation&lt;/p&gt;"><sup>1</sup></a>: Tools for Estimating Physically-Based, Computationally Efficient Feature Based Hydraulic Geometry and Rating Curves.</p>
 </blockquote>
-<p>Using pre-processed observation data from the USGS manual measurement (Johnson, 2018), we can evaluate learn some things about estimating power law fits from noisy data.</p>
-<p>Overall this package provides 4 capabilities:</p>
+<p>Using data from the USGS manual measurement (Johnson, 2018), we can illustrate the utilities in this package. Overall this package provides 4 capabilities:</p>
 <ol style="list-style-type: decimal">
 <li>Single Relation fits</li>
 <li>Full hydraulic system fits</li>
 <li>Data preprocessing</li>
-<li>Derivation of cross sections and additonal hydraulic traits</li>
+<li>Derivation of cross sections and additional hydraulic traits</li>
 </ol>
 <div class="section level2">
 <h2 id="base-data">Base data<a class="anchor" aria-label="anchor" href="#base-data"></a>
@@ -128,7 +127,7 @@
 <span>  <span class="fu"><a href="reference/date_filter.html">date_filter</a></span><span class="op">(</span>year <span class="op">=</span> <span class="fl">10</span>, keep_max <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
 <span>  <span class="co"># Keep data within 3 Median absolute deviations (log residuals)</span></span>
 <span>  <span class="fu"><a href="reference/mad_filter.html">mad_filter</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="co"># Keep data that respects the Q = vA critera w/in allowance</span></span>
+<span>  <span class="co"># Keep data that respects the Q = vA criteria w/in allowance</span></span>
 <span>  <span class="fu"><a href="reference/qva_filter.html">qva_filter</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
 <span>  <span class="fu"><a href="reference/fhg_estimate.html">fhg_estimate</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   V_method TW_method Y_method viable tot_error   V_error  TW_error    Y_error</span></span>
@@ -139,8 +138,36 @@
 <span><span class="co">#&gt; 1 0.2938667 17.98606 0.1934940 0.3009787 0.1874598 0.5098970 bestValid</span></span>
 <span><span class="co">#&gt; 2 0.2938667 17.98606 0.1934940 0.3009787 0.1874598 0.5098970       nls</span></span>
 <span><span class="co">#&gt; 3 0.2204190 18.53150 0.2448765 0.3941493 0.1733737 0.4322574       ols</span></span></code></pre></div>
-<p>When the data is effecivly filtered we see NLS can provide an error minimizing, valid solution for the system that is quite different then the full data fit:</p>
+<p>When the data is effectively filtered we see NLS can provide an error minimizing, valid solution for the system that is quite different then the full data fit:</p>
 <p><img src="reference/figures/README-unnamed-chunk-9-1.png" width="100%"></p>
+</div>
+<div class="section level2">
+<h2 id="hydraulic-estimation">Hydraulic Estimation<a class="anchor" aria-label="anchor" href="#hydraulic-estimation"></a>
+</h2>
+<p>Lastly, a range of functions have been added to extend the AHG parameters into cross section hydraulics and geometry:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">filter_data</span> <span class="op">=</span> <span class="va">data</span> <span class="op">%&gt;%</span> </span>
+<span>  <span class="fu"><a href="reference/date_filter.html">date_filter</a></span><span class="op">(</span><span class="fl">10</span>, keep_max <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
+<span>  <span class="fu"><a href="reference/nls_filter.html">nls_filter</a></span><span class="op">(</span>allowance <span class="op">=</span> <span class="fl">.5</span><span class="op">)</span> </span>
+<span></span>
+<span><span class="va">ahg_fit</span> <span class="op">=</span> <span class="fu"><a href="reference/fhg_estimate.html">fhg_estimate</a></span><span class="op">(</span><span class="va">filter_data</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span>,<span class="op">]</span></span>
+<span></span>
+<span><span class="op">(</span><span class="va">shape</span> <span class="op">=</span> <span class="fu"><a href="reference/compute_hydraulic_params.html">compute_hydraulic_params</a></span><span class="op">(</span><span class="va">ahg_fit</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt;          r         p        d        R        bd        fd        md</span></span>
+<span><span class="co">#&gt; 1 2.749318 0.6103574 5.427385 1.363727 0.1842508 0.5065641 0.3091851</span></span>
+<span></span>
+<span><span class="va">cs</span> <span class="op">=</span> <span class="fu"><a href="reference/cross_section.html">cross_section</a></span><span class="op">(</span>r <span class="op">=</span> <span class="va">shape</span><span class="op">$</span><span class="va">r</span>,  </span>
+<span>                   TW <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">filter_data</span><span class="op">$</span><span class="va">TW</span><span class="op">)</span>, </span>
+<span>                   Ymax <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">filter_data</span><span class="op">$</span><span class="va">Y</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">glimpse</span><span class="op">(</span><span class="va">cs</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Rows: 50</span></span>
+<span><span class="co">#&gt; Columns: 4</span></span>
+<span><span class="co">#&gt; $ ind &lt;int&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,…</span></span>
+<span><span class="co">#&gt; $ x   &lt;dbl&gt; 0.000000, 1.040816, 2.081633, 3.122449, 4.163265, 5.204082, 6.2448…</span></span>
+<span><span class="co">#&gt; $ Y   &lt;dbl&gt; 3.5656665613, 3.1871221498, 2.8351885546, 2.5090304653, 2.20780341…</span></span>
+<span><span class="co">#&gt; $ A   &lt;dbl&gt; 1.318953e+02, 1.130112e+02, 9.618829e+01, 8.127753e+01, 6.813466e+…</span></span></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-11-1.png" width="100%"></p>
 </div>
 </div>
 <div class="section level1">

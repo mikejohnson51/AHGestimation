@@ -18,16 +18,14 @@ Active](https://www.repostatus.org/badges/latest/active.svg)](https://www.repost
 > Estimating Physically-Based, Computationally Efficient Feature Based
 > Hydraulic Geometry and Rating Curves.
 
-Using pre-processed observation data from the USGS manual measurement
-(Johnson, 2018), we can evaluate learn some things about estimating
-power law fits from noisy data.
-
-Overall this package provides 4 capabilities:
+Using data from the USGS manual measurement (Johnson, 2018), we can
+illustrate the utilities in this package. Overall this package provides
+4 capabilities:
 
 1.  Single Relation fits
 2.  Full hydraulic system fits
 3.  Data preprocessing
-4.  Derivation of cross sections and additonal hydraulic traits
+4.  Derivation of cross sections and additional hydraulic traits
 
 ## Base data
 
@@ -114,7 +112,7 @@ below:
   date_filter(year = 10, keep_max = TRUE) %>% 
   # Keep data within 3 Median absolute deviations (log residuals)
   mad_filter() %>% 
-  # Keep data that respects the Q = vA critera w/in allowance
+  # Keep data that respects the Q = vA criteria w/in allowance
   qva_filter() %>% 
   fhg_estimate())
 #>   V_method TW_method Y_method viable tot_error   V_error  TW_error    Y_error
@@ -127,11 +125,42 @@ below:
 #> 3 0.2204190 18.53150 0.2448765 0.3941493 0.1733737 0.4322574       ols
 ```
 
-When the data is effecivly filtered we see NLS can provide an error
+When the data is effectively filtered we see NLS can provide an error
 minimizing, valid solution for the system that is quite different then
 the full data fit:
 
 <img src="man/figures/README-unnamed-chunk-9-1.png" width="100%" />
+
+## Hydraulic Estimation
+
+Lastly, a range of functions have been added to extend the AHG
+parameters into cross section hydraulics and geometry:
+
+``` r
+filter_data = data %>% 
+  date_filter(10, keep_max = TRUE) %>% 
+  nls_filter(allowance = .5) 
+
+ahg_fit = fhg_estimate(filter_data)[1,]
+
+(shape = compute_hydraulic_params(ahg_fit))
+#>          r         p        d        R        bd        fd        md
+#> 1 2.749318 0.6103574 5.427385 1.363727 0.1842508 0.5065641 0.3091851
+
+cs = cross_section(r = shape$r,  
+                   TW = max(filter_data$TW), 
+                   Ymax = max(filter_data$Y))
+
+glimpse(cs)
+#> Rows: 50
+#> Columns: 4
+#> $ ind <int> 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,…
+#> $ x   <dbl> 0.000000, 1.040816, 2.081633, 3.122449, 4.163265, 5.204082, 6.2448…
+#> $ Y   <dbl> 3.5656665613, 3.1871221498, 2.8351885546, 2.5090304653, 2.20780341…
+#> $ A   <dbl> 1.318953e+02, 1.130112e+02, 9.618829e+01, 8.127753e+01, 6.813466e+…
+```
+
+<img src="man/figures/README-unnamed-chunk-11-1.png" width="100%" />
 
 # History
 

@@ -30,14 +30,12 @@ library(patchwork)
 > **_Citation:_** Johnson, J.M. (2022) FHGestimation^[previously AHGestimation]: Tools for Estimating Physically-Based, Computationally Efficient Feature Based Hydraulic
 Geometry and Rating Curves.
 
-Using pre-processed observation data from the USGS manual measurement (Johnson, 2018), we can evaluate learn some things about estimating power law fits from noisy data. 
-
-Overall this package provides 4 capabilities:
+Using data from the USGS manual measurement (Johnson, 2018), we can illustrate the utilities in this package. Overall this package provides 4 capabilities:
 
 1. Single Relation fits
 2. Full hydraulic system fits
 3. Data preprocessing
-4. Derivation of cross sections and additonal hydraulic traits 
+4. Derivation of cross sections and additional hydraulic traits 
 
 ## Base data
 
@@ -130,11 +128,12 @@ Due to the volatility of river systems and deviations in measurement techniques 
   date_filter(year = 10, keep_max = TRUE) %>% 
   # Keep data within 3 Median absolute deviations (log residuals)
   mad_filter() %>% 
-  # Keep data that respects the Q = vA critera w/in allowance
+  # Keep data that respects the Q = vA criteria w/in allowance
   qva_filter() %>% 
   fhg_estimate())
 ```
-When the data is effecivly filtered we see NLS can provide an error minimizing, valid solution for the system that is quite different then the full data fit:
+
+When the data is effectively filtered we see NLS can provide an error minimizing, valid solution for the system that is quite different then the full data fit:
 
 ```{r, echo = F}
 
@@ -170,6 +169,44 @@ ggplot(data = data ) +
   plot_layout(guides = "collect") & 
   theme(legend.position = 'bottom')
 ```
+
+## Hydraulic Estimation
+
+Lastly, a range of functions have been added to extend the AHG parameters into cross section hydraulics and geometry:
+
+```{r}
+filter_data = data %>% 
+  date_filter(10, keep_max = TRUE) %>% 
+  nls_filter(allowance = .5) 
+
+ahg_fit = fhg_estimate(filter_data)[1,]
+
+(shape = compute_hydraulic_params(ahg_fit))
+
+cs = cross_section(r = shape$r,  
+                   TW = max(filter_data$TW), 
+                   Ymax = max(filter_data$Y))
+
+glimpse(cs)
+```
+
+```{r, echo = FALSE}
+ggplot(data = cs) + 
+  geom_point(aes(x = x, y = Y)) + 
+  geom_line(aes(x = x, y = Y)) + 
+  theme_light() + 
+  geom_hline(yintercept = max(cs$Y), color = "darkgreen") +
+  geom_hline(yintercept = 2, color = "blue", linewidth = 2) +
+  geom_vline(xintercept = mean(cs$x), color = "darkgreen") + 
+  labs(x = "Relative Width", y = "Depth", title = "Shape") +
+ggplot(data = cs) + 
+  geom_point(aes(x = A, y = Y)) + 
+  geom_line(aes(x = A, y = Y)) + 
+  geom_hline(yintercept = 2, color = "blue", linewidth = 2) +
+  theme_light() +
+  labs(Y = "Depth", x = "Cross Sectional Area", title = "Area to Depth") 
+```
+
 
 # History 
 
