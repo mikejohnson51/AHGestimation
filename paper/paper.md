@@ -68,13 +68,13 @@ Estimating AHG's has predominately occurred on a location-by-location basis with
 
 The package documentation includes several examples on the theory, design, and application of this tool set.
 
-The first stable version of `FHGestimation` was made available in 2019 and applied to an aggregated dataset of USGS manual field measurements. Since then, it has been actively developed to better understand and quantify these fundamental relationships in the face of noisy, large, tabular data sources. Applications of the software have been used to support PhD research at UC Santa Barbara, a National Science Foundation project focused on delivering actionable flood forecasts from the NOAA National Water Model [@johnson2022knowledge], and NOAA Office of Water Prediction's efforts to develop a 3D hydrography to improve national hydrologic and flood prediction and bolster the co-agency National Hydrologic Geospatial Fabric [@referencefabric]
+The first stable version of `FHGestimation` was made available in 2019 and applied to an aggregated dataset of USGS manual field measurements. Since then, it has been actively developed to better understand and quantify these fundamental relationships in the face of noisy, large, tabular data sources. Applications of the software have been used to support PhD research at UC Santa Barbara, a National Science Foundation project focused on delivering actionable flood forecasts from the NOAA National Water Model [@johnson2022knowledge], and NOAA Office of Water Prediction's efforts to develop a 3D hydrography to improve national hydrologic and flood prediction and bolster the co-agency National Hydrologic Geospatial Fabric [@referencefabric], [@blodgett2021mainstems], [@blodgett2023generating], [@blodgett2023generating]]
 
 # Statement of need
 
 Large scale models simulating river flow are critical for forecasting water availability, drought, and flood inundation. Such models must represent the shape of river channels in some generalized way. 
 
-While hydraulic geometry relationships have been extensively studied, they remain unquantified for the majority of stream reaches across the country. Consequently, large-scale  models frequently use simplistic approaches that impact the accuracy of streamflow estimates and flood forecasting ([@zheng2018river]. [@maidment2014national], [@johnson2019integrated], [@fim]). At NOAA, these relationships have been based on trapezoidal geometries (e.g. [@wrfhydro]) derived from drainage area assumptions (e.g. [@blackburn2017development]). 
+While hydraulic geometry relationships have been extensively studied, they remain unquantified for the majority of stream reaches across the country. Consequently, large-scale  models frequently use simplistic approaches that impact the accuracy of streamflow estimates [@hess-26-6121-2022] [@johnson2023comprehensive] and flood forecasting ([@zheng2018river]. [@maidment2014national], [@johnson2019integrated], [@fim]). At NOAA, these relationships have been based on trapezoidal geometries (e.g. [@wrfhydro]) derived from drainage area assumptions (e.g. [@blackburn2017development]). 
 
 This package is idealized to handle and resolve the following challenges with hydraulic data that need to be overcome to advance the science of large scale hydrologic modeling:
 
@@ -84,7 +84,7 @@ This package is idealized to handle and resolve the following challenges with hy
 
 The aim of this software is that data from a variety of sources can be aggregated and used to estimate hydraulic equations that reduce data volume, enforce continuity, and allow for representing uncertainty in an open source, reproducible way.
 
-Other efforts have aimed to calculate, and synthesize river channel data at a large scale in the United States (e.g. [@enzminger_thomas_l_2023_7868764], [@afshari_shahab_2019_2558565]) however each of these relied on traditional OLS fitting methods AND data preprocessing. And while both efforts produced valuable data products, the software used is not shared.
+Other efforts have aimed to calculate, and synthesize river channel data at a large scale in the United States (e.g. [@enzminger_thomas_l_2023_7868764], [@afshari_shahab_2019_2558565]) however each of these relied on traditional OLS fitting methods AND data preprocessing [@afshari2017statistical]. And while both efforts produced valuable data products, the software used is not shared.
 
 # Example of use
 

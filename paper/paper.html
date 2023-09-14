@@ -12,7 +12,7 @@
 
 <meta name="date" content="2023-09-11" />
 
-<title>FHGestimation: an R package for hybrid estimation of at a feature hydraulic geoemtry</title>
+<title>FHGestimation: an R package for hybrid estimation of at a feature hydraulic geometry</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -372,7 +372,7 @@ display: none;
 
 
 <h1 class="title toc-ignore">FHGestimation: an R package for hybrid
-estimation of at a feature hydraulic geoemtry</h1>
+estimation of at a feature hydraulic geometry</h1>
 <h4 class="date">11 September 2023</h4>
 
 </div>
@@ -386,7 +386,7 @@ estimation of at a feature hydraulic geoemtry</h1>
 river channel at a given cross section using power law equations
 relating top width (TW), mean depth (Y), and velocity (V) to a given
 discharge (Q). Collectively these equations define the “at a station
-hydraulic geometry” <span class="citation">(Leopold and Maddock
+hydraulic geometry” (AHG) <span class="citation">(Leopold and Maddock
 1953)</span>.</p>
 <p><span class="math display">\[
 TW = a *Q^b
@@ -409,7 +409,7 @@ Q = TW·Y·V
 \begin{eqnarray} b + f + m &amp;=&amp; \\ a·c·k &amp;=&amp;  \\
 &amp;=&amp; 1  \end{eqnarray}
 \]</span></p>
-<p>When either of these is violated, the fit AHG’s will cause mass
+<p>When either of these is violated, the AHG’s equations will cause mass
 imbalances in computations.</p>
 </div>
 <div id="software" class="section level3">
@@ -417,7 +417,7 @@ imbalances in computations.</p>
 <p>Estimating AHG’s has predominately occurred on a location-by-location
 basis with site specific knowledge guiding the data used and the
 validation of the outputs. As efforts seek to extend to coverage of
-hydrologic and flood innudation mapping (FIM) models the need to
+hydrologic and flood inundation mapping (FIM) models the need to
 estimate these relations from disparate and often noisy datasets is
 increasingly important.</p>
 <p><code>FHGestimation</code> is an R package <span class="citation">(R
@@ -426,35 +426,34 @@ Core Team 2023)</span> aimed to provide 3 capabilities:</p>
 <li><p>Tools to estimate single and full system AHG relations using a
 robust estimation techniques that enforces flow continuity and minimizes
 total system error (<code>fhg_estimate</code>). This is accomplished by
-introducing a hybrid approach that mixes the traditional Ordinary Least
-Squares approach, with a suplimental nonlinear Least Square regression,
-Evolutionary computing (NSGA-2; <span class="citation">(Mersmann
-2020)</span>), and ensemble modeling approach that ensures flow
-continuity is met with and minimal error regardless of the input
-data.</p></li>
-<li><p>Methods to filter data outliers based on time
+introducing a hybrid approach that supplements the traditional Ordinary
+Least Squares approach, with a nonlinear Least Square regression,
+Evolutionary algorithm (NSGA-2; <span class="citation">(Mersmann
+2020)</span>), and ensemble modeling approach to ensures flow continuity
+is met and error is minimized regardless of the input data.</p></li>
+<li><p>Methods to filter outliers based on time
 (<code>date_filter</code>), mass conservation (<code>qva_filter</code>),
 and statistical detection (<code>mad_filter</code>,
 <code>nls_filter</code>).</p></li>
 <li><p>Formalize, in code, many of the concepts derived in <span class="citation">(Dingman and Afshari 2018)</span> that relate AHG
-coefficients to cross-section hydraulics and geometry. These include the
-derivation of cross sections and additional hydraulic traits
+coefficients to cross-section hydraulics and geometry. These include
 (<code>cross_section</code>, <code>compute_hydraulic_params</code>,
 <code>compute_n</code>).</p></li>
 </ol>
 <p>The package documentation includes several examples on the theory,
-design, and application of this toolset.</p>
+design, and application of this tool set.</p>
 <p>The first stable version of <code>FHGestimation</code> was made
 available in 2019 and applied to an aggregated dataset of USGS manual
 field measurements. Since then, it has been actively developed to better
 understand and quantify these fundamental relationships in the face of
 noisy, large, tabular data sources. Applications of the software have
-been used to support PhD research at UCSB, a National Science Foundation
-project focused on delivering actionable flood forecasts from the NOAA
-National Water Model <span class="citation">(J. M. Johnson et al.
-2022)</span>, and NOAA Office of Water Prediction’s efforts to develop a
-3D hydrography to improve national hydrologic and flood prediction and
-bolster the co-agency National Hydrologic Geospatial Fabric <span class="citation">(Bock 2022)</span></p>
+been used to support PhD research at UC Santa Barbara, a National
+Science Foundation project focused on delivering actionable flood
+forecasts from the NOAA National Water Model <span class="citation">(J.
+M. Johnson et al. 2022)</span>, and NOAA Office of Water Prediction’s
+efforts to develop a 3D hydrography to improve national hydrologic and
+flood prediction and bolster the co-agency National Hydrologic
+Geospatial Fabric <span class="citation">(Bock 2022)</span>, <span class="citation">(Blodgett et al. 2021)</span>, <span class="citation">(Blodgett, Johnson, and Bock 2023)</span>, <span class="citation">(Blodgett, Johnson, and Bock 2023)</span>]</p>
 </div>
 </div>
 <div id="statement-of-need" class="section level1">
@@ -463,9 +462,9 @@ bolster the co-agency National Hydrologic Geospatial Fabric <span class="citatio
 water availability, drought, and flood inundation. Such models must
 represent the shape of river channels in some generalized way.</p>
 <p>While hydraulic geometry relationships have been extensively studied,
-they remain unquantified for thousands of stream reaches across the
+they remain unquantified for the majority of stream reaches across the
 country. Consequently, large-scale models frequently use simplistic
-approaches that impact the accuracy of streamflow estimates and flood
+approaches that impact the accuracy of streamflow estimates <span class="citation">(Heldmyer et al. 2022)</span> <span class="citation">(J. M. Johnson et al., n.d.)</span> and flood
 forecasting (<span class="citation">(Zheng et al. 2018)</span>. <span class="citation">(Maidment et al. 2014)</span>, <span class="citation">(J. M. Johnson et al. 2019)</span>, <span class="citation">(Water Prediction 2023)</span>). At NOAA, these
 relationships have been based on trapezoidal geometries (e.g. <span class="citation">(Gochis 2020)</span>) derived from drainage area
 assumptions (e.g. <span class="citation">(Blackburn-Lynch, Agouridis,
@@ -482,21 +481,12 @@ continental datasets a challenge.</li>
 <p>The aim of this software is that data from a variety of sources can
 be aggregated and used to estimate hydraulic equations that reduce data
 volume, enforce continuity, and allow for representing uncertainty in an
-open source, reproducable way.</p>
+open source, reproducible way.</p>
 <p>Other efforts have aimed to calculate, and synthesize river channel
-data at a large scale in the United Staets (e.g. <span class="citation">(Enzminger, Minear, and Livneh 2023)</span>, <span class="citation">(Afshari 2019)</span>) however each of these relied on
-traditional OLS fitting methods AND data preprocessing. And while both
-efforts produced valuable data products, the software used is not
-shared.</p>
-<p>Overall this package provides 4 capabilities:</p>
-<ol style="list-style-type: decimal">
-<li>Single Relation fits</li>
-<li>Full hydraulic system fits</li>
-<li>Data preprocessing</li>
-<li>Derivation of cross sections and additional hydraulic traits based
-on methods in <span class="citation">(Dingman and Afshari
-2018)</span></li>
-</ol>
+data at a large scale in the United States (e.g. <span class="citation">(Enzminger, Minear, and Livneh 2023)</span>, <span class="citation">(Afshari 2019)</span>) however each of these relied on
+traditional OLS fitting methods AND data preprocessing <span class="citation">(<strong>afshari2017statistical?</strong>)</span>. And
+while both efforts produced valuable data products, the software used is
+not shared.</p>
 </div>
 <div id="example-of-use" class="section level1">
 <h1>Example of use</h1>
@@ -505,9 +495,10 @@ be installed as follows:</p>
 <pre class="r"><code>#install.packages(remotes)
 remotes::install.packages(&quot;mikejohnson51/FHGestimation&quot;)</code></pre>
 <p>This example shows how the package can be used to (1) remove data
-outliers by time and an NLS envelope (2) fit AHG paramters using our
-hybrid modeling approach and (3) estimate and plot the shape of the
-associated cross-section with an area-depth relation.</p>
+outliers based on time critera and an NLS envelope (2) fit AHG
+parameters using our hybrid modeling approach and (3) estimate and plot
+the shape of the associated cross-section with an area-depth
+relation.</p>
 <pre class="r"><code>data = readRDS(../insta)  %&gt;% 
   date_filter(10, keep_max = TRUE) %&gt;% 
   nls_filter(allowance = .5) 
@@ -525,11 +516,11 @@ estimate.</div>
 <p>As a proof o concept, this approach was applied to the synthetic
 rating curves in FIM4 data set (<span class="citation">(Water Prediction
 2023)</span>). The package allowed the size of their rating curve
-database to be reduced by 99.7% and maintained average accuracy within
-0.5% nRMSE or the source data. Further, the reduction to a consisent AHG
-formulation allows them to become more interoprable with efforts like
+database to be reduced by 99.68% and maintained average accuracy within
+0.4% nRMSE or the source data. Further, the reduction to a consistent
+AHG formulation allows them to be more interoperable with efforts like
 <span class="citation">(Enzminger, Minear, and Livneh 2023)</span>,
-<span class="citation">(Afshari 2019)</span> while also begining to
+<span class="citation">(Afshari 2019)</span> while also beginning to
 provide key training data for more advanced prediction methods.</p>
 </div>
 <div id="acknowledgements" class="section level1">
@@ -545,7 +536,7 @@ synthesis and evaluation. Funding from the National Science Foundation
 early version of this software to the Continental Flood Inundation
 Mapping (CFIM) synthetic rating curve dataset <span class="citation">(Liu and Maidment 2020)</span>. Funding from the
 National Oceanic and Atmospheric Administration’s Office of Water
-Prediction supported the addition of data filtering and hydraulci
+Prediction supported the addition of data filtering and hydraulic
 estimation, improved documentation, and code hardening. We are grateful
 to all involved.</p>
 </div>
@@ -561,6 +552,19 @@ Blackburn-Lynch, Whitney, Carmen T Agouridis, and Christopher D Barton.
 2017. <span>“Development of Regional Curves for Hydrologic Landscape
 Regions (HLR) in the Contiguous United States.”</span> <em>JAWRA Journal
 of the American Water Resources Association</em> 53 (4): 903–28.
+</div>
+<div id="ref-blodgett2023generating" class="csl-entry">
+Blodgett, David, J Michael Johnson, and Andy Bock. 2023.
+<span>“Generating a Reference Flow Network with Improved Connectivity to
+Support Durable Data Integration and Reproducibility in the Coterminous
+US.”</span> <em>Environmental Modelling &amp; Software</em> 165: 105726.
+</div>
+<div id="ref-blodgett2021mainstems" class="csl-entry">
+Blodgett, David, J Michael Johnson, Mark Sondheim, Michael Wieczorek,
+and Nels Frazier. 2021. <span>“Mainstems: A Logical Data Model
+Implementing Mainstem and Drainage Basin Feature Types Based on WaterML2
+Part 3: HY Features Concepts.”</span> <em>Environmental Modelling &amp;
+Software</em> 135: 104927.
 </div>
 <div id="ref-referencefabric" class="csl-entry">
 Bock, Blodgett, A. R. 2022. <em>National Hydrologic Geospatial Fabric
@@ -581,6 +585,19 @@ States</span>.”</span> Zenodo. <a href="https://doi.org/10.5281/zenodo.7868764
 Gochis, M. Barlage, D. J. 2020. <em>The WRF-Hydro® Modeling System
 Technical Description, (Version 5.2.0)</em>. <em>NCAR Technical
 Note</em>. <a href="https://ral.ucar.edu/sites/default/files/public/projects/wrf-hydro/technical-description-user-guide/wrf-hydrov5.2technicaldescription.pdf">https://ral.ucar.edu/sites/default/files/public/projects/wrf-hydro/technical-description-user-guide/wrf-hydrov5.2technicaldescription.pdf</a>.
+</div>
+<div id="ref-hess-26-6121-2022" class="csl-entry">
+Heldmyer, A., B. Livneh, J. McCreight, L. Read, J. Kasprzyk, and T.
+Minear. 2022. <span>“Evaluation of a New Observationally Based Channel
+Parameterization for the National Water Model.”</span> <em>Hydrology and
+Earth System Sciences</em> 26 (23): 6121–36. <a href="https://doi.org/10.5194/hess-26-6121-2022">https://doi.org/10.5194/hess-26-6121-2022</a>.
+</div>
+<div id="ref-johnson2023comprehensive" class="csl-entry">
+Johnson, J Michael, Shiqi Fang, Arumugam Sankarasubramanian, Arash
+Modaresi Rad, Luciana Kindl da Cunha, Keith C Clarke, Amirhossein
+Mazrooei, and Lilit Yeghiazarian. n.d. <span>“Comprehensive Analysis of
+the NOAA National Water Model: A Call for Heterogeneous Formulations and
+Diagnostic Model Selection.”</span>
 </div>
 <div id="ref-johnson2019integrated" class="csl-entry">
 Johnson, J Michael, Dinuke Munasinghe, Damilola Eyelade, and Sagy Cohen.
