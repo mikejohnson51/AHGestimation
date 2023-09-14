@@ -21,11 +21,17 @@ library(dplyr)
 
 # nwis Filtering Functions
 
-Often the nwis that comes from long records of steam observation are noisy. Noise can come from changes in the river itself, changes in measurement methods, or even measurement locations.
+Often the nwis that comes from long records of stream observation are noisy. The records of dicharge, width, depth and velocity from gauges although being extremly valuble require carfull consideration, and filttering due to reasons including but not limited to:
+
+1- Changes in measurement instruments
+
+2- Changes in location of measurements (slight deviations form cross sections can result in significant differences in geometry)
+
+3- Changes in river due to flooding and etc. (river meandering)
 
 While the FHG algorithm implemented in this package can deal with this noise through the hybrid the `OLS --> NLS --> NSGA2 --> combo` fitting method, it is also possible, and even advisable, to filter the nwis prior to fitting.
 
-Here we will illustrate the packaged methods. An assumption of _all_ filtering methods is that if it reduces the nwisset to less then 10 observations, a warning is emited and the input nwis is returned.
+Here we will illustrate the packaged methods. An assumption of _all_ filtering methods is that if it reduces the nwisset to less then 10 observations, a warning is emited and the input nwis is returned. The intiall step in filtering is to screened for any negative, inf values. Negative value in observations is often associated with gagues that are located in backwater zones and are affected by the coastal processes including sea level changes, tides and storm surge that can extend hundreds of kilometers inland.
 
 ## 1. Median Absolute Deviation (mad)
 
