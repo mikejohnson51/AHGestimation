@@ -4,11 +4,11 @@ template:
   bootswatch: litera
 authors:
    NOAA OWP: 
-     html: "<img src='man/figures/noaa-logo.png' width=72 alt='ESIP'/>"
+     html: "<img src='man/figures/noaa-logo.png' width=72 alt='NOAA OWP'/>"
      href: "https://water.noaa.gov/"
    NSF: 
-     html: "<img src='man/figures/nsf-logo.png' width=72 alt='ESIP'/>"
-     href: "https://www.esipfed.org"
+     html: "<img src='man/figures/nsf-logo.png' width=72 alt='NSF'/>"
+     href: "https://www.nsf.gov/"
    footer:
     roles: [cre, ctb]
    citation:
