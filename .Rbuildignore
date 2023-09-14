@@ -3,7 +3,6 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 r2
-data
 inst/extdata
 docs
 extra
