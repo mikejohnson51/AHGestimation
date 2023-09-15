@@ -40,6 +40,7 @@ An iterative outlier detection procedure can be run iteritivly on the residuals 
 This approach can be implemented using `mad_filter`:
 
 ```{r}
+load("data/nwis.rda")
 mad_nwis = mad_filter(nwis, envelope = 3)
 ```
 

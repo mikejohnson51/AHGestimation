@@ -26,11 +26,11 @@ library(dplyr)
 
 # Hydraulic Estimation
 
-A primary application for AHG relations is hydraulic simulation and approximation. AHG relationships are not only useful for translating one hydraulic variable to an estimate of another, but they can be used to parameterize the shape, roughness, and behavior of a channel for routing applications applications (e.g. see Heldmeyer 2019)
+A primary application for AHG relations is hydraulic simulation and approximation. AHG relationships are not only useful for translating one hydraulic variable to an estimate of another, but they can be used to parameterize the shape, roughness, and behavior of a channel for routing applications (e.g. see Heldmeyer 2019)
 
 ## Example data
 
-Staring with the same data in other examples, we can retain the last 10 year of data and apply an NLS filter (see section of data filtering for more)
+Staring with the same data in other examples, we can retain the last 10 year of data and apply an NLS filter (see section of [data filtering](/vignettes/data-filtering.Rmd) for more)
 
 ```{r}
 data = nwis %>% 
@@ -169,6 +169,7 @@ head(cs)
 }
 
 ```
+![hydaulics1](/man/figures/hydaulics1.png)
 
 # Future Work
 

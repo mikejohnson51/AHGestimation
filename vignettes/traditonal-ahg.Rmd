@@ -24,7 +24,7 @@ library(FHGestimation)
 
 # The AHG relationships
 
-The idea of hydraulic geometry was introduced by Leopold and Maddock (1953) and the concept of 'at-a-station hydraulic geometry' (AHG) provides three power laws that relate water-surface width (TW), average depth (Y), and average velocity (V) to the stream flow (Q) in a given river cross section:
+The idea of hydraulic geometry was introduced by [Leopold and Maddock (1953)](https://books.google.com/books?hl=en&lr=&id=K496gE_YsJoC&oi=fnd&pg=PA1&dq=Leopold+and+Maddock+hydraulic+geometry&ots=FjsEDxo5Ci&sig=vysaOxNq0Y9RSDeZpASbHaQHs6E) and the concept of 'at-a-station hydraulic geometry' (AHG) provides three power laws that relate water-surface width (TW), average depth (Y), and average velocity (V) to the stream flow (Q) in a given river cross section:
 
 $$
 TW = a *Q^b
@@ -36,8 +36,8 @@ $$
 V = k*Q^m
 $$
 
-A  set of AHG relations applies to within-bank flows at a
-specific cross section and assumes the channel characteristics do not change sensibly with discharge. Under these assumptions, continuity dictates that no water is gained or lost in the system such that:
+A set of AHG relations applies to within-bank flows at a
+specific cross section and assumes steady-state flow and the channel characteristics do not change sensibly with discharge. Under these assumptions, continuity dictates that no water is gained or lost in the system such that:
 
 $$
 Q = TW·Y·V
