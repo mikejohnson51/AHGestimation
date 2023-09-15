@@ -78,7 +78,7 @@ ggplot(data) +
   theme_light() + 
   labs(x = "Q", y  = "Y")
 ```
-
+![tahg1](/man/figures/tahg1.png)
 
 ### Full Fits
 
@@ -129,3 +129,4 @@ ggplot() +
   geom_col(data = err, aes(x = name, y = value)) + 
   theme_light() + labs(x = "Relationship", y = "nRMSE")
 ```
+![tahg2](/man/figures/tahg2.png)

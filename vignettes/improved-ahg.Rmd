@@ -77,6 +77,7 @@ ggplot() +
            stat = "identity", position = position_dodge(), alpha = 0.75) + 
   theme_light() + labs(x = "Relationship", y = "nRMSE")
 ```
+![ahg1](/man/figures/ahg1.png)
 
 ### NLS
 
@@ -126,6 +127,7 @@ ggplot() +
            stat = "identity", position = position_dodge(), alpha = 0.75) + 
   theme_light() + labs(x = "Relationship", y = "nRMSE")
 ```
+![ahg2](/man/figures/ahg2.png)
 
 ## NSGA-II
 
@@ -203,7 +205,7 @@ ggplot() +
            stat = "identity", position = position_dodge(), alpha = 0.75) + 
   theme_light() + labs(x = "Relationship", y = "nRMSE")
 ```
-
+![ahg3](/man/figures/ahg3.png)
 
 # Combination Approach
 
