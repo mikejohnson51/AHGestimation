@@ -2,7 +2,7 @@
 % Please edit documentation in R/channel_shape.R
 \name{compute_hydraulic_params}
 \alias{compute_hydraulic_params}
-\title{Approximate channel coeffiecent}
+\title{Approximate channel coefficient}
 \usage{
 compute_hydraulic_params(fit)
 }

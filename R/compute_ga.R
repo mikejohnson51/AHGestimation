@@ -6,81 +6,80 @@
 #' @family evaluation
 #' @export
 
-pbias = function(sim, obs){
+pbias = function(sim, obs) {
   vi <- valindex(sim, obs)
   
-  if (length(vi) > 0) {	 
+  if (length(vi) > 0) {
     obs <- obs[vi]
     sim <- sim[vi]
     
     # length of the data sets that will be considered for the computations
     n <- length(obs)
     
-    denominator <- sum( obs )
+    denominator <- sum(obs)
     
-    if (denominator != 0) {      
-      pbias <- 100 * ( sum( sim - obs ) / denominator )
-      pbias <- round(pbias, 2)     
+    if (denominator != 0) {
+      pbias <- 100 * (sum(sim - obs) / denominator)
+      pbias <- round(pbias, 2)
     } else {
       pbias <- NA
-      warning("'sum((obs)=0' -> it is not possible to compute 'pbias' !")  
-    } 
+      warning("'sum((obs)=0' -> it is not possible to compute 'pbias' !")
+    }
   } else {
     pbias <- NA
     warning("There are no pairs of 'sim' and 'obs' without missing values !")
-  } 
+  }
   
-  return( pbias )
+  return(pbias)
 }
 
 #' Normalized Root Mean Square Error
-#' @description Normalized root mean square error (NRMSE) between sim and obs, with treatment of missing values
+#' @description Normalized root mean square error (NRMSE) between simulated and Observed data, with error handling for missing values
 #' @param sim numeric vector simulated values
 #' @param obs numeric vector observed values
 #' @return numeric
 #' @family evaluation
 #' @export
-#' 
+#'
 nrmse <- function(sim, obs) {
-  
-  # index of those elements that are present both in 'sim' and 'obs' (NON- NA values)
+  # index of those elements that are present both in 'sim' and 'obs' (NON-NA values)
   vi <- valindex(sim, obs)
   
-  if (length(vi) > 0) {	 
+  if (length(vi) > 0) {
     obs <- obs[vi]
     sim <- sim[vi]
     
-    cte <- ( max(obs, na.rm= TRUE) - min(obs, na.rm =TRUE) )
+    cte <- (max(obs, na.rm = TRUE) - min(obs, na.rm = TRUE))
     
-    rmse <- rmse(sim, obs, TRUE) 
+    rmse <- rmse(sim, obs, TRUE)
     
-    if (max(obs, na.rm= TRUE) - min(obs, na.rm= TRUE) != 0) {     
-      nrmse <- rmse / cte     
+    if (max(obs, na.rm = TRUE) - min(obs, na.rm = TRUE) != 0) {
+      nrmse <- rmse / cte
     } else {
       nrmse <- NA
-      warning("'obs' is constant -> it is not possible to compute 'nrmse' !")  
-    } 
+      warning("'obs' is constant -> it is not possible to compute 'nrmse' !")
+    }
   } else {
     nrmse <- NA
     warning("There are no pairs of 'sim' and 'obs' without missing values !")
   } # ELSE end
   
-  return( round( 100*nrmse, 2) )
+  return(round(100 * nrmse, 2))
   
 }
 
-valindex <- function(sim, obs) {  
-    index <- which(!is.na(sim) & !is.na(obs))
-    if (length(index)==0) warning("'sim' and 'obs' are empty or they do not have any common pair of elements with data !!")
-    return( index  )
-} 
+valindex <- function(sim, obs) {
+  index <- which(!is.na(sim) & !is.na(obs))
+  if (length(index) == 0)
+    warning("'sim' and 'obs' are empty or do not have any common pair of elements with data !!")
+  return(index)
+}
 
-rmse <- function (sim, obs, na.rm=TRUE) {
+rmse <- function (sim, obs, na.rm = TRUE) {
+  if (length(obs) != length(sim))
+    stop("Invalid argument: 'sim' & 'obs' don't have the same length !")
   
-  if ( length(obs) != length(sim) ) 
-    stop("Invalid argument: 'sim' & 'obs' doesn't have the same length !")     
-  
-  rmse <- sqrt( mean( (sim - obs)^2, na.rm = na.rm) )
+  rmse <- sqrt(mean((sim - obs) ^ 2, na.rm = na.rm))
   
   return(rmse)
   
@@ -88,36 +87,35 @@ rmse <- function (sim, obs, na.rm=TRUE) {
 
 #' @title Calculate GA FHG
 #' @param df hydraulic data.frame
-#' @param allowance allowable deviation from continuity
+#' @param allowance allowable deviation from continuity as elaborated on 
 #' @param r fit list
 #' @param type metric to evaluate
 #' @return data.frame
 #' @family FHG
 #' @export
 
-calc_nsga = function(df, allowance = .05, r, type = "nrmse") {
-  
+calc_nsga = function(df,
+                     allowance = .05,
+                     r,
+                     type = "nrmse") {
   if (type == "nrmse") {
-    
     fitness <- function(x) {
       ## order: k,m,a,b,c,f
       ## order: k,m,a,b,c,f
-      V.tmp = x[1]*df$Q^x[2]
-      v = nrmse(V.tmp, df$V) 
+      V.tmp = x[1] * df$Q ^ x[2]
+      v = nrmse(V.tmp, df$V)
       
-      T.tmp = x[3]*df$Q^x[4]
-      t =nrmse(T.tmp, df$TW) 
+      T.tmp = x[3] * df$Q ^ x[4]
+      t = nrmse(T.tmp, df$TW)
       
-      D.tmp = x[5]*df$Q^x[6]
-      d = nrmse(D.tmp, df$Y) 
+      D.tmp = x[5] * df$Q ^ x[6]
+      d = nrmse(D.tmp, df$Y)
       
-      return(c(v,t,d))
+      return(c(v, t, d))
     }
     
   } else {
-    
     fitness <- function(x) {
-      
       ## order: k,m,a,b,c,f
       v = mean(abs((df$V - (x[1] * df$Q ^ x[2])) / df$V))
       t = mean(abs((df$TW - (x[3] * df$Q ^ x[4])) / df$TW))
@@ -182,13 +180,13 @@ calc_nsga = function(df, allowance = .05, r, type = "nrmse") {
     
     vals = nsga$value[nsga$pareto.optimal, ]
     
-    if(is.null(nrow(vals))){
+    if (is.null(nrow(vals))) {
       vals = matrix(vals, byrow = 1, nrow = 1)
     }
     vals = vals[!duplicated(vals), ]
     par  = nsga$par[nsga$pareto.optimal, ]
     
-    if(is.null(nrow(par))){
+    if (is.null(nrow(par))) {
       par = matrix(par, byrow = 1, nrow = 1)
     }
     par  = par[!duplicated(par), ]
@@ -214,30 +212,44 @@ calc_nsga = function(df, allowance = .05, r, type = "nrmse") {
   
   g = expand.grid(m, c)
   
-  o2 = rbind(run_it(fitness, c4, 1, g$Var2[1], g$Var1[1]),
-             run_it(fitness, c4, 2, g$Var2[2], g$Var1[2]),
-             run_it(fitness, c4, 3, g$Var2[3], g$Var1[3]),
-             run_it(fitness, c4, 4, g$Var2[4], g$Var1[4]),
-             run_it(fitness, c4, 5, g$Var2[5], g$Var1[5]),
-             run_it(fitness, c4, 6, g$Var2[6], g$Var1[6]),
-             run_it(fitness, c4, 7, g$Var2[7], g$Var1[7]),
-             run_it(fitness, c4, 8, cprob = g$Var2[8], mprob = g$Var1[8]),
-             run_it(fitness, c4, 9, cprob = g$Var2[9], mprob = g$Var1[9]))
+  o2 = rbind(
+    run_it(fitness, c4, 1, g$Var2[1], g$Var1[1]),
+    run_it(fitness, c4, 2, g$Var2[2], g$Var1[2]),
+    run_it(fitness, c4, 3, g$Var2[3], g$Var1[3]),
+    run_it(fitness, c4, 4, g$Var2[4], g$Var1[4]),
+    run_it(fitness, c4, 5, g$Var2[5], g$Var1[5]),
+    run_it(fitness, c4, 6, g$Var2[6], g$Var1[6]),
+    run_it(fitness, c4, 7, g$Var2[7], g$Var1[7]),
+    run_it(
+      fitness,
+      c4,
+      8,
+      cprob = g$Var2[8],
+      mprob = g$Var1[8]
+    ),
+    run_it(
+      fitness,
+      c4,
+      9,
+      cprob = g$Var2[9],
+      mprob = g$Var1[9]
+    )
+  )
   
-  err = apply(o2, 1, fitness) %>% 
+  err = apply(o2, 1, fitness) %>%
     apply(2, sum)
-
+  
   min = o2[which.min(err), ]
   
   vp = (min[1] * df$Q ^ min[2])
   tp = (min[3] * df$Q ^ min[4])
   dp = (min[5] * df$Q ^ min[6])
   
-  nrmse_v = nrmse(vp, df$V) 
-  nrmse_t = nrmse(tp, df$TW) 
-  nrmse_d = nrmse(dp, df$Y) 
+  nrmse_v = nrmse(vp, df$V)
+  nrmse_t = nrmse(tp, df$TW)
+  nrmse_d = nrmse(dp, df$Y)
   
-  pbias_v = pbias(vp,df$V)
+  pbias_v = pbias(vp, df$V)
   pbias_t = pbias(tp, df$TW)
   pbias_d = pbias(dp, df$Y)
   
@@ -247,7 +259,8 @@ calc_nsga = function(df, allowance = .05, r, type = "nrmse") {
     coef = min[5],
     nrmse = nrmse_d,
     pb = pbias_d,
-    method = "nsga2")
+    method = "nsga2"
+  )
   
   r$TW[3, ] = data.frame(
     type = "TW",
@@ -267,6 +280,6 @@ calc_nsga = function(df, allowance = .05, r, type = "nrmse") {
     method = "nsga2",
     stringsAsFactors = FALSE
   )
-
+  
   return(r)
 }

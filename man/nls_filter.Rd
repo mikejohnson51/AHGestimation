@@ -15,7 +15,7 @@ nls_filter(df, allowance = 0.5)
 data.frame
 }
 \description{
-An NLS fit provides the best relation by relation fit. For each provided relationship, an NLS fit is computed and used to 
+An NLS fit provides the best relation by relation fit. For each provided relationship, an NLS fit is computed and used to
 estimate the predicted {V,TW,Y} for a given Q. If the actual value is outside the specified allowance it is removed.
 }
 \seealso{

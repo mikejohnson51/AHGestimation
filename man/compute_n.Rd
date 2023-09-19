@@ -9,7 +9,7 @@ compute_n(df, S = 0.02)
 \arguments{
 \item{df}{a data.frame with at least Y and V.}
 
-\item{S}{reach scale longitudinal slope (m/m). Default mean of the nhdplusV2}
+\item{S}{reach scale longitudinal slope (m/m). Default mean of the NHDPlusV2}
 }
 \value{
 numeric

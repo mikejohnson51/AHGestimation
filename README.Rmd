@@ -41,22 +41,22 @@ Using data from the USGS manual measurement (Johnson, 2018), we can illustrate t
 
 ```{r}
 library(FHGestimation)
-data = nwis
+data = FHGestimation::nwis
 ```
 
 ```{r, echo = F}
-ggplot(data = data ) + 
-  geom_point(aes(x = Q, y = Y)) + 
-  theme_light()  + 
-  labs(title = 'Q-Y Relationship') +
-ggplot(data = data ) + 
-  geom_point(aes(x = Q, y = TW)) + 
-  theme_light() + 
-  labs(title = 'Q-TW Relationship') + 
-ggplot(data = data ) + 
-  geom_point(aes(x = Q, y = V)) + 
-  theme_light()  + 
-  labs(title = 'Q-V Relationship')
+ggplot2::ggplot(data = data) +
+  ggplot2::geom_point(ggplot2::aes(x = Q, y = Y)) +
+  ggplot2::theme_light()  +
+  ggplot2::labs(title = 'Q-Y Relationship') +
+  ggplot2::ggplot(data = data) +
+  ggplot2::geom_point(ggplot2::aes(x = Q, y = TW)) +
+  ggplot2::theme_light() +
+  ggplot2::labs(title = 'Q-TW Relationship') +
+  ggplot2::ggplot(data = data) +
+  ggplot2::geom_point(ggplot2::aes(x = Q, y = V)) +
+  ggplot2::theme_light()  +
+  ggplot2::labs(title = 'Q-V Relationship')
 ```
 
 ## Single Relationship fits
@@ -64,18 +64,26 @@ ggplot(data = data ) +
 Here we use the `FHGestimation` package to fit the Q-Y relationship using OLS and NLS models:
 
 ```{r}
-(sf = fhg_estimate(df = select(data, Q, Y), allowance = .05))
+(sf = FHGestimation::fhg_estimate(df = select(data, Q, Y), allowance = .05))
 ```
 
 ```{r, echo = FALSE}
-ggplot() + 
-  geom_point(data = data, aes(x = Q, y = Y), col = "black") + 
-  geom_line(data = data, aes(x = Q, y = sf$coef[1] * Q ^ (sf$exp[1]), col = "NLS")) +
-  geom_line(data = data, aes(x = Q, y = sf$coef[2] * Q ^ (sf$exp[2]), col = "OLS")) +
-  theme_light()  +
-  theme(legend.position = "bottom") +
-  labs(title = 'Q-Y Relationship', color = "Fit") + 
-  scale_color_manual(values = c( "NLS" = "blue", "OLS" = "red"))
+ggplot2::ggplot() +
+  ggplot2::geom_point(data = data, ggplot2::aes(x = Q, y = Y), col = "black") +
+  ggplot2::geom_line(data = data, ggplot2::aes(
+    x = Q,
+    y = sf$coef[1] * Q ^ (sf$exp[1]),
+    col = "NLS"
+  )) +
+  ggplot2::geom_line(data = data, ggplot2::aes(
+    x = Q,
+    y = sf$coef[2] * Q ^ (sf$exp[2]),
+    col = "OLS"
+  )) +
+  ggplot2::theme_light()  +
+  ggplot2::theme(legend.position = "bottom") +
+  ggplot2::labs(title = 'Q-Y Relationship', color = "Fit") +
+  ggplot2::scale_color_manual(values = c("NLS" = "blue", "OLS" = "red"))
 
 ```
 
@@ -88,28 +96,40 @@ When we have data regarding three hydraulic states (V,TW,Y) we can ensure that t
 In this mode the OLS and NLS models are fit, and if continuity is not met, then a Evolutionary Approach is implemented. Doing so produces three unique fits for three variables (27 total combinations). These are crossed to identify the best performing relationships that meet continuity at a prescribed allowance:
 
 ```{r}
-(x = fhg_estimate(data, allowance = .05))
+(x = FHGestimation::fhg_estimate(data, allowance = .05))
 ```
 Overall an combination of the OLS and NLS fit are able to provide a error minimizing solution:
 
 ```{r, echo = F}
-ggplot() + 
-  geom_point(data = data, aes(x = Q, y = Y), col = "black") + 
-  geom_line(data = data, aes(x = Q, y = x$Y_coef[1] * Q ^ (x$Y_exp[1]), col = "bestValid")) +
-  theme_light()  + 
-  labs(title = 'Q-Y Relationship', color = "Fit") + 
-ggplot(data = data ) + 
-  geom_point(data = data, aes(x = Q, y = Y), col = "black") + 
-  geom_line(data = data, aes(x = Q, y = x$Y_coef[1] * Q ^ (x$Y_exp[1]), col = "bestValid")) +
-  theme_light() + 
-  labs(title = 'Q-TW Relationship', color = "Fit") + 
-ggplot(data = data ) + 
-  geom_point(data = data, aes(x = Q, y = V), col = "black") + 
-  geom_line(data = data, aes(x = Q, y = x$V_coef[1] * Q ^ (x$V_exp[1]), col = "bestValid")) +
-  theme_light()  + 
-  labs(title = 'Q-V Relationship', color = "Fit") + 
-  plot_layout(guides = "collect") & 
-  theme(legend.position = 'bottom')
+ggplot2::ggplot() +
+  ggplot2::geom_point(data = data, ggplot2::aes(x = Q, y = Y), col = "black") +
+  ggplot2::geom_line(data = data, ggplot2::aes(
+    x = Q,
+    y = x$Y_coef[1] * Q ^ (x$Y_exp[1]),
+    col = "bestValid"
+  )) +
+  ggplot2::theme_light()  +
+  ggplot2::labs(title = 'Q-Y Relationship', color = "Fit") +
+  ggplot2::ggplot(data = data) +
+  ggplot2::geom_point(data = data, ggplot2::aes(x = Q, y = Y), col = "black") +
+  ggplot2::geom_line(data = data, ggplot2::aes(
+    x = Q,
+    y = x$Y_coef[1] * Q ^ (x$Y_exp[1]),
+    col = "bestValid"
+  )) +
+  ggplot2::theme_light() +
+  ggplot2::labs(title = 'Q-TW Relationship', color = "Fit") +
+  ggplot2::ggplot(data = data) +
+  ggplot2::geom_point(data = data, ggplot2::aes(x = Q, y = V), col = "black") +
+  ggplot2::geom_line(data = data, ggplot2::aes(
+    x = Q,
+    y = x$V_coef[1] * Q ^ (x$V_exp[1]),
+    col = "bestValid"
+  )) +
+  ggplot2::theme_light()  +
+  ggplot2::labs(title = 'Q-V Relationship', color = "Fit") +
+  patchwork::plot_layout(guides = "collect") &
+  ggplot2::theme(legend.position = 'bottom')
 ```
 
 In the above example we see that NLS was able to provide better fits the OLS but neither  NLS or OLS was able to provide physically valid solutions (viable). While the nsga2 approach was able to provide a physically valid solution, its error was almost 10% higher then the OLS/NLS methods.
@@ -123,51 +143,77 @@ However a combined approach of a NLS, OLS, and nsga2 was able to provide a physi
 Due to the volatility of river systems and deviations in measurement techniques and accuracy hydraulic data is often very noisy. While the `fhg_estimation` tool is intended to reduce this noise and produce a mass-conserving hydraulic fit, it is also possible to filter the data prior to fitting. The range of data filtering options provided are documented in the data-filtering vignette and an example is provided below:
 
 ```{r}
-(xf = data %>% 
-  # Keep the most recent 10 year
-  date_filter(year = 10, keep_max = TRUE) %>% 
-  # Keep data within 3 Median absolute deviations (log residuals)
-  mad_filter() %>% 
-  # Keep data that respects the Q = vA criteria w/in allowance
-  qva_filter() %>% 
-  fhg_estimate())
+(
+  xf = data %>%
+    # Keep the most recent 10 year
+    FHGestimation::date_filter(year = 10, keep_max = TRUE) %>%
+    # Keep data within 3 Median absolute deviations (log residuals)
+    FHGestimation::mad_filter() %>%
+    # Keep data that respects the Q = vA criteria w/in allowance
+    FHGestimation::qva_filter() %>%
+    FHGestimation::fhg_estimate()
+)
 ```
 
 When the data is effectively filtered we see NLS can provide an error minimizing, valid solution for the system that is quite different then the full data fit:
 
 ```{r, echo = F}
+hf_data = data %>%
+  FHGestimation::date_filter(year = 10, keep_max = TRUE) %>%
+  FHGestimation::mad_filter() %>%
+  FHGestimation::qva_filter()
 
-hf_data = data %>% 
-  date_filter(year = 10, keep_max = TRUE) %>% 
-  mad_filter() %>% 
-  qva_filter()
-
-ggplot() +  
-  geom_point(data = data, aes(x = Q, y = Y, col = "Full")) + 
-  geom_line(data = data, aes(x = Q, y = x$Y_coef[1] * Q ^ (x$Y_exp[1]), col = "Full")) +
-  geom_point(data = hf_data, aes(x = Q, y = Y, col = "Filter")) + 
-  geom_line(data = hf_data, aes(x = Q, y = xf$Y_coef[1] * Q ^ (xf$Y_exp[1]), col = "Filter")) +
-  theme_light()  + 
-  labs(title = 'Q-Y Relationship') + 
-  scale_color_manual(values = c("Filter" = "red", "Full" = "black")) + 
-ggplot(data = data ) + 
-  geom_point(data = data, aes(x = Q, y = Y, col = "Full")) + 
-  geom_line(data = data, aes(x = Q, y = x$Y_coef[1] * Q ^ (x$Y_exp[1]), col = "Full")) +
-  geom_point(data = hf_data, aes(x = Q, y = Y, col = "Filter")) + 
-  geom_line(data = hf_data, aes(x = Q, y = xf$Y_coef[1] * Q ^ (xf$Y_exp[1]), col = "Filter")) +
-  theme_light() + 
-  labs(title = 'Q-TW Relationship') + 
-  scale_color_manual(values = c("Filter" = "red", "Full" = "black")) + 
-ggplot(data = data ) + 
-  geom_point(data = data, aes(x = Q, y = V, col = "Full")) + 
-  geom_line(data = data, aes(x = Q, y = x$V_coef[1] * Q ^ (x$V_exp[1]), col = "Full")) +
-  geom_point(data = hf_data, aes(x = Q, y = V, col = "Filter")) + 
-  geom_line(data = hf_data, aes(x = Q, y = xf$V_coef[1] * Q ^ (xf$V_exp[1]), col = "Filter")) +
-  theme_light()  + 
-  labs(title = 'Q-V Relationship') + 
-  scale_color_manual(values = c("Filter" = "red", "Full" = "black")) + 
-  plot_layout(guides = "collect") & 
-  theme(legend.position = 'bottom')
+ggplot2::ggplot() +
+  ggplot2::geom_point(data = data, ggplot2::aes(x = Q, y = Y, col = "Full")) +
+  ggplot2::geom_line(data = data, ggplot2::aes(
+    x = Q,
+    y = x$Y_coef[1] * Q ^ (x$Y_exp[1]),
+    col = "Full"
+  )) +
+  ggplot2::geom_point(data = hf_data, ggplot2::aes(x = Q, y = Y, col = "Filter")) +
+  ggplot2::geom_line(data = hf_data, ggplot2::aes(
+    x = Q,
+    y = xf$Y_coef[1] * Q ^ (xf$Y_exp[1]),
+    col = "Filter"
+  )) +
+  ggplot2::theme_light()  +
+  ggplot2::labs(title = 'Q-Y Relationship') +
+  ggplot2::scale_color_manual(values = c("Filter" = "red", "Full" = "black")) +
+  ggplot2::ggplot(data = data) +
+  ggplot2::geom_point(data = data, ggplot2::aes(x = Q, y = Y, col = "Full")) +
+  ggplot2::geom_line(data = data, ggplot2::aes(
+    x = Q,
+    y = x$Y_coef[1] * Q ^ (x$Y_exp[1]),
+    col = "Full"
+  )) +
+  ggplot2::geom_point(data = hf_data, ggplot2::aes(x = Q, y = Y, col = "Filter")) +
+  ggplot2::geom_line(data = hf_data, ggplot2::aes(
+    x = Q,
+    y = xf$Y_coef[1] * Q ^ (xf$Y_exp[1]),
+    col = "Filter"
+  )) +
+  ggplot2::theme_light() +
+  ggplot2::labs(title = 'Q-TW Relationship') +
+  ggplot2::scale_color_manual(values = c("Filter" = "red", "Full" = "black")) +
+  ggplot2::ggplot(data = data) +
+  ggplot2::geom_point(data =
+                        data, ggplot2::aes(x = Q, y = V, col = "Full")) +
+  ggplot2::geom_line(data = data, ggplot2::aes(
+    x = Q,
+    y = x$V_coef[1] * Q ^ (x$V_exp[1]),
+    col = "Full"
+  )) +
+  ggplot2::geom_point(data = hf_data, ggplot2::aes(x = Q, y = V, col = "Filter")) +
+  ggplot2::geom_line(data = hf_data, ggplot2::aes(
+    x = Q,
+    y = xf$V_coef[1] * Q ^ (xf$V_exp[1]),
+    col = "Filter"
+  )) +
+  ggplot2::theme_light()  +
+  ggplot2::labs(title = 'Q-V Relationship') +
+  ggplot2::scale_color_manual(values = c("Filter" = "red", "Full" = "black")) +
+  patchwork::plot_layout(guides = "collect") &
+  ggplot2::theme(legend.position = 'bottom')
 ```
 
 ## Hydraulic Estimation
@@ -175,39 +221,56 @@ ggplot(data = data ) +
 Lastly, a range of functions have been added to extend the AHG parameters into cross section hydraulics and geometry:
 
 ```{r}
-filter_data = data %>% 
-  date_filter(10, keep_max = TRUE) %>% 
-  nls_filter(allowance = .5) 
+filter_data = data %>%
+  FHGestimation::date_filter(10, keep_max = TRUE) %>%
+  FHGestimation::nls_filter(allowance = .5)
 
-ahg_fit = fhg_estimate(filter_data)[1,]
+ahg_fit = FHGestimation::fhg_estimate(filter_data)[1,]
 
-(shape = compute_hydraulic_params(ahg_fit))
+(shape = FHGestimation::compute_hydraulic_params(ahg_fit))
 
-cs = cross_section(r = shape$r,  
-                   TW = max(filter_data$TW), 
-                   Ymax = max(filter_data$Y))
+cs = FHGestimation::cross_section(
+  r = shape$r,
+  TW = max(filter_data$TW),
+  Ymax = max(filter_data$Y)
+)
 
-glimpse(cs)
+dplyr::glimpse(cs)
 ```
 
 ```{r, echo = FALSE}
-ggplot(data = cs) + 
-  geom_point(aes(x = x, y = Y)) + 
-  geom_line(aes(x = x, y = Y)) + 
-  theme_light() + 
-  geom_hline(yintercept = max(cs$Y), color = "darkgreen") +
-  geom_hline(yintercept = 2, color = "blue", linewidth = 2) +
-  geom_vline(xintercept = mean(cs$x), color = "darkgreen") + 
-  labs(x = "Relative Width", y = "Depth", title = "Shape") +
-ggplot(data = cs) + 
-  geom_point(aes(x = A, y = Y)) + 
-  geom_line(aes(x = A, y = Y)) + 
-  geom_hline(yintercept = 2, color = "blue", linewidth = 2) +
-  theme_light() +
-  labs(Y = "Depth", x = "Cross Sectional Area", title = "Area to Depth") 
+ggplot2::ggplot(data = cs) +
+  ggplot2::geom_point(ggplot2::aes(x = x, y = Y)) +
+  ggplot2::geom_line(ggplot2::aes(x = x, y = Y)) +
+  ggplot2::theme_light() +
+  ggplot2::geom_hline(yintercept = max(cs$Y), color = "darkgreen") +
+  ggplot2::geom_hline(yintercept = 2,
+                      color = "blue",
+                      linewidth = 2) +
+  ggplot2::geom_vline(xintercept = mean(cs$x), color = "darkgreen") +
+  ggplot2::labs(x = "Relative Width", y = "Depth", title = "Shape") +
+  ggplot2::ggplot(data = cs) +
+  ggplot2::geom_point(ggplot2::aes(x = A, y = Y)) +
+  ggplot2::geom_line(ggplot2::aes(x = A, y = Y)) +
+  ggplot2::geom_hline(yintercept = 2,
+                      color = "blue",
+                      linewidth = 2) +
+  ggplot2::theme_light() +
+  ggplot2::labs(Y = "Depth", x = "Cross Sectional Area", title = "Area to Depth") 
 ```
 
 
 # History 
 
 The development of this package began as a graduate school project between friends at UC Santa Barbara and UMass Amherst following the 2017 NOAA OWP Summer Institute and clear evidence channel shape may be a limiting factor in National Water Model Performance. It has since evolved to provide an open source utility for robust large scale data synthesis and evaluation. Funding from the National Science Foundation (Grants 1937099, 2033607) provided time to draft the [preprint here](https://www.preprints.org/manuscript/202212.0390/v1) and apply an early version of this software to the [Continental Flood Inundation Mapping (CFIM)](https://cfim.ornl.gov/data/) synthetic rating curve dataset. Funding from the National Oceanic and Atmospheric Administration's Office of Water Prediction supported the addition of data filtering and hydraulic estimation, improved documentation, and code hardening. We are grateful to all involved.
+
+# Community guidelines 
+
+Disclaimer: These data and software are preliminary or provisional and are subject to revision. They are being provided to meet the need for timely best science. and are made freely available.  All contributions to this project are released to the public domain.  There are two primary ways to help:
+
+* Using the issue tracker
+* Changing the code-base.
+
+Use the issue tracker to suggest feature requests, report bugs, and ask questions.  This is also a great way to connect with the developers of the project as well as others who are interested in this solution or working in the same problem space.  Use the issue tracker to find ways to contribute. Find a bug or a feature, mention in the issue that you will take on that effort, then follow the _Changing the code-base_ guidance below.
+
+We welcome relevant and well executed additions to this repository.  Generally speaking, you should fork this repository, make changes in your own fork, and then submit a pull request. All new code should have associated unit tests that validate implemented features and the presence or lack of defects. Additionally, the code should follow any stylistic and architectural guidelines prescribed by the project. In the absence of such guidelines, mimic the styles and patterns in the existing code-base.

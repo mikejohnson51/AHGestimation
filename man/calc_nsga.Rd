@@ -9,7 +9,7 @@ calc_nsga(df, allowance = 0.05, r, type = "nrmse")
 \arguments{
 \item{df}{hydraulic data.frame}
 
-\item{allowance}{allowable deviation from continuity}
+\item{allowance}{allowable deviation from continuity as elaborated on}
 
 \item{r}{fit list}
 
