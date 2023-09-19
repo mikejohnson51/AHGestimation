@@ -1,10 +1,10 @@
-#' @title Compute all combos!
+#' @title Compute all permutations of fitting types
 #' @param v values
 #' @param V Velocity time series
 #' @param TW Top width time series
 #' @param Y Depth time series
 #' @param Q Discharge time series
-#' @param r rrr TODO
+#' @param r list of fitting methods and parameters
 #' @param allowance Allowable deviation from continuity
 #' @return list
 #' @family FHG

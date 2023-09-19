@@ -14,7 +14,7 @@ cross_section(r, TW = 30, Ymax = 2)
 \item{Ymax}{maximum depth of the channel at bankfull}
 }
 \value{
-depth values every 1m along the cross section
+depth values every 1 m along the cross section
 }
 \description{
 Get a list of points from x axis of a cross section and max depth and produce depth values for those points based on channel shape

@@ -15,8 +15,8 @@ mad_filter(df, envelope = 3)
 data.frame
 }
 \description{
-An iterative outlier detection procedure is run based on to the linear regression residuals. 
-Values of log-transformed TW, V, and Y residuals falling outside a specified median absolute deviation (MAD) envelope are excluded. 
+An iterative outlier detection procedure is run based on to the linear regression residuals.
+Values of log-transformed TW, V, and Y residuals falling outside a specified median absolute deviation (MAD) envelope are excluded.
 Regression coefficients were recalculated and the outlier detection procedure was reapplied until no outliers are detected. This method
  was identified in \href{https://zenodo.org/record/7868764}{HyG}
 }

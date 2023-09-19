@@ -15,7 +15,7 @@ qva_filter(df, allowance = 0.05)
 data.frame
 }
 \description{
-The function tests if the measured Q is outside of the expected range based on the product 
+The function tests if the measured Q is outside of the expected range based on the product
 of measured velocity, top-width, and depth (e.g. Q≠vA)
 }
 \seealso{

@@ -2,7 +2,7 @@
 % Please edit documentation in R/mishmash.R
 \name{mismash}
 \alias{mismash}
-\title{Compute all combos!}
+\title{Compute all permutations of fitting types}
 \usage{
 mismash(v, V, TW, Y, Q, r, allowance)
 }
@@ -17,7 +17,7 @@ mismash(v, V, TW, Y, Q, r, allowance)
 
 \item{Q}{Discharge time series}
 
-\item{r}{rrr TODO}
+\item{r}{list of fitting methods and parameters}
 
 \item{allowance}{Allowable deviation from continuity}
 }
@@ -25,7 +25,7 @@ mismash(v, V, TW, Y, Q, r, allowance)
 list
 }
 \description{
-Compute all combos!
+Compute all permutations of fitting types
 }
 \seealso{
 Other FHG: 
