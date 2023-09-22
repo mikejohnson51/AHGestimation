@@ -43,6 +43,6 @@ reference:
   contents:
   - has_concept("evaluation")
 - subtitle: Sample Data
-  desc: Manual feild measurments from USGS-01096500
+  desc: Manual field measurements from USGS-01096500
   contents:
   - has_concept("data")
