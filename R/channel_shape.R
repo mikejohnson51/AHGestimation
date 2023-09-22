@@ -35,7 +35,7 @@ compute_hydraulic_params = function(fit){
 compute_n = function(df, S = .02){
   # Method from: https://zenodo.org/record/7868764
   if(all(c("Y", "V") %in% names(df))){
-    # median streamdepth as approximation of R
+    # median stream depth as an approximation of R
     r = (median(df$Y)) ^ (2/3)
     # Median V for V
     v = median(df$V)
@@ -49,11 +49,11 @@ compute_n = function(df, S = .02){
 }
 
 #' @title Approximate channel shape
-#' @description Get a list of points from x axis of a cross section and max depth and produce depth values for those points based on channel shape
+#' @description Get a list of points from x axis of a cross-section and max depth and produce depth values for those points based on channel shape
 #' @param r The corresponding Dingman's r coefficient 
 #' @param TW width of the channel at bankfull 
 #' @param Ymax maximum depth of the channel at bankfull 
-#' @return depth values every 1m along the cross section  
+#' @return depth values every 1m along the cross-section  
 #' @family hydraulics 
 #' @export
 

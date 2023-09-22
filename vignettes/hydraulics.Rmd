@@ -169,7 +169,6 @@ head(cs)
 }
 
 ```
-![hydaulics1](/man/figures/hydaulics1.png)
 
 # Future Work
 

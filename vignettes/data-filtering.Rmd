@@ -40,7 +40,6 @@ An iterative outlier detection procedure can be run iteritivly on the residuals 
 This approach can be implemented using `mad_filter`:
 
 ```{r}
-load("data/nwis.rda")
 mad_nwis = mad_filter(nwis, envelope = 3)
 ```
 
@@ -56,7 +55,6 @@ ggplot() +
   geom_point(data = mad_nwis, aes(x = Q, y = V), color = "red", alpha = .5)
 
 ```
-![cleaning1](/man/figures/cleaning1.png)
 
 ## 2. Temporal
 
@@ -78,7 +76,6 @@ ggplot() +
   geom_point(data = date_data, aes(x = Q, y = V), color = "red", alpha = .5)
 
 ```
-![cleaning2](/man/figures/cleaning2.png)
 
 ## 3. Q = vA Assumption
 
@@ -100,7 +97,6 @@ ggplot() +
   geom_point(data = qva_nwis, aes(x = Q, y = V), color = "red", alpha = .5)
 
 ```
-![cleaning3](/man/figures/cleaning3.png)
 
 ## 4. NLS prediciton
 
@@ -122,7 +118,6 @@ ggplot() +
   geom_point(data = nls_nwis, aes(x = Q, y = V), color = "red", alpha = .5)
 
 ```
-![cleaning4](/man/figures/cleaning4.png)
 
 # Chaining Commands
 
@@ -150,7 +145,6 @@ ggplot() +
   geom_point(data = xf, aes(x = Q, y = V), color = "red")
 
 ```
-![cleaning5](/man/figures/cleaning5.png)
 
 # Example(s)
 
@@ -208,7 +202,6 @@ ggplot() +
   plot_layout(guides = "collect") & 
   theme(legend.position = 'bottom')
 ```
-![cleaning6](/man/figures/cleaning6.png)
 
 # Significance
 
