@@ -211,3 +211,18 @@ ggplot(data = cs) +
 # History 
 
 The development of this package began as a graduate school project between friends at UC Santa Barbara and UMass Amherst following the 2017 NOAA OWP Summer Institute and clear evidence channel shape may be a limiting factor in National Water Model Performance. It has since evolved to provide an open source utility for robust large scale data synthesis and evaluation. Funding from the National Science Foundation (Grants 1937099, 2033607) provided time to draft the [preprint here](https://www.preprints.org/manuscript/202212.0390/v1) and apply an early version of this software to the [Continental Flood Inundation Mapping (CFIM)](https://cfim.ornl.gov/data/) synthetic rating curve dataset. Funding from the National Oceanic and Atmospheric Administration's Office of Water Prediction supported the addition of data filtering and hydraulic estimation, improved documentation, and code hardening. We are grateful to all involved.
+
+# Community guidelines 
+
+Disclaimer: These data and software are preliminary or provisional and are subject to revision. They are being provided to meet the need for timely best science. and are made freely available.  All contributions to this project are released to the public domain.  There are two primary ways to help:
+
+* Using the issue tracker
+* Changing the code-base.
+
+## Using the issue tracker and GitHub features
+
+Use the issue tracker to suggest feature requests, report bugs, and ask questions.  This is also a great way to connect with the developers of the project as well as others who are interested in this solution or working in the same problem space.  Use the issue tracker to find ways to contribute. Find a bug or a feature, mention in the issue that you will take on that effort, then follow the _Changing the code-base_ guidance below.
+
+## Changing the code-bas
+
+We welcome relevant and well executed additions to this repository.  Generally speaking, you should fork this repository, make changes in your own fork, and then submit a pull request. All new code should have associated unit tests that validate implemented features and the presence or lack of defects. Additionally, the code should follow any stylistic and architectural guidelines prescribed by the project. In the absence of such guidelines, mimic the styles and patterns in the existing code-base.
