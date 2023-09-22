@@ -19,7 +19,7 @@ library(patchwork)
 library(dplyr)
 ```
 
-# nwis Filtering Functions
+# NWIS Filtering Functions
 
 Often the nwis that comes from long records of stream observation are noisy. The records of dicharge, width, depth and velocity from gauges although being extremly valuble require carfull consideration, and filttering due to reasons including but not limited to:
 
@@ -29,13 +29,14 @@ Often the nwis that comes from long records of stream observation are noisy. The
 
 3- Changes in river due to flooding and etc. (river meandering)
 
-While the FHG algorithm implemented in this package can deal with this noise through the hybrid the `OLS --> NLS --> NSGA2 --> combo` fitting method, it is also possible, and even advisable, to filter the nwis prior to fitting.
 
-Here we will illustrate the packaged methods. An assumption of _all_ filtering methods is that if it reduces the nwisset to less then 10 observations, a warning is emited and the input nwis is returned. The intiall step in filtering is to screened for any negative, inf values. Negative value in observations is often associated with gagues that are located in backwater zones and are affected by the coastal processes including sea level changes, tides and storm surge that can extend hundreds of kilometers inland.
+While the FHG algorithm implemented in this package can deal with this noise through the hybrid the `OLS --> NLS --> NSGA2 --> combo` fitting method, it is also possible, and even advisable, to filter the NWIS data prior to fitting.
+
+Here we will illustrate the packaged methods. An assumption of _all_ filtering methods is that if it reduces the NWIS set to less then 10 observations, a warning is emited and the input NWIS is returned.
 
 ## 1. Median Absolute Deviation (mad)
 
-An iterative outlier detection procedure can be run iteritivly on the residuals of linear regressions for each relationship following the procedure described in the [HyG nwisset](https://zenodo.org/record/7868764). Values of log-transformed TW, V, and Y residuals falling outside a specified median absolute deviation (MAD) are excluded with each pass until no outliers are left.
+An iterative outlier detection procedure can be run on the residuals of linear regressions for each relationship following the procedure described in the [HyG Dataset](https://zenodo.org/record/7868764). Values of log-transformed TW, V, and Y residuals falling outside a specified median absolute deviation (MAD) are excluded with each pass until no outliers are left.
 
 This approach can be implemented using `mad_filter`:
 
@@ -58,7 +59,7 @@ ggplot() +
 
 ## 2. Temporal
 
-Rivers change with time. To minimize the effects of long-term channel evolution it can be advantageous to limit the records to the most recent years. This approach can be implemented using `date_filter`. Users can specify the number of years to keep (in reference to the most recent observation) and whether the maximum flow value should be kept regradless of when it was taken.
+Rivers change with time. To minimize the effects of long-term channel evolution it can be advantageous to limit the records to the most recent years. This approach can be implemented using `date_filter`. Users can specify the number of years to keep (in reference to the most recent observation) and whether the maximum flow value should be kept regardless of when it was taken.
 
 ```{r}
 date_data = date_filter(nwis, years = 5, keep_max = TRUE)

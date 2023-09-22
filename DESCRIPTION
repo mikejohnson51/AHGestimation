@@ -13,6 +13,11 @@ Authors@R:
              role = c("ctb"), 
              email = "arashmod@gmail.com", 
              comment = c(ORCID = "0000-0002-6030-7923")),
+      person(given = "James", 
+             family = "Coll",
+             role = c("ctb"),
+             email = "jamesmcoll@gmail.com",
+             comment = c(ORCID = "0000-0002-6994-6668")),
       person(given = "NOAA OWP",  role = "fnd"),
       person(given = "NSF",  role = "fnd"))
 Maintainer: Mike Johnson <mikecp11@gmail.com>

@@ -1,7 +1,7 @@
 #' Percent Bias
-#' @description Percent Bias between sim and obs, with treatment of missing values.
-#' @param sim numeric vector simulated values
-#' @param obs numeric vector observed values
+#' @description Percent bias between sim and obs, with treatment of missing values.
+#' @param sim numeric vector of simulated values
+#' @param obs numeric vector of observed values
 #' @return numeric
 #' @family evaluation
 #' @export
@@ -35,8 +35,8 @@ pbias = function(sim, obs){
 
 #' Normalized Root Mean Square Error
 #' @description Normalized root mean square error (NRMSE) between sim and obs, with treatment of missing values
-#' @param sim numeric vector simulated values
-#' @param obs numeric vector observed values
+#' @param sim numeric vector of simulated values
+#' @param obs numeric vector of observed values
 #' @return numeric
 #' @family evaluation
 #' @export
@@ -78,7 +78,7 @@ valindex <- function(sim, obs) {
 rmse <- function (sim, obs, na.rm=TRUE) {
   
   if ( length(obs) != length(sim) ) 
-    stop("Invalid argument: 'sim' & 'obs' doesn't have the same length !")     
+    stop("Invalid argument: 'sim' & 'obs' don't have the same length !")     
   
   rmse <- sqrt( mean( (sim - obs)^2, na.rm = na.rm) )
   
