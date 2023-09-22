@@ -3,7 +3,7 @@ title: "Improving AHG Estimates"
 author:
   - name: "Mike Johnson"
     url: https://github.com/mikejohnson51
-    affiliation: Lynker, NOAA-Affilate
+    affiliation: Lynker, NOAA-Affiliate
     affiliation_url: https://lynker.com
 output: distill::distill_article
 vignette: >
@@ -37,7 +37,7 @@ In the last section we saw the traditional OLS based fit on our sample data prov
 
 When fitting a nonlinear curve to a set of data, the options are: (1) linearize the relationship by transforming the data; (2) fit a polynomial spline to the data; or (3) fit a nonlinear function. With our emphasis on interoperable power law relations, only the linear (1) and nonlinear (3) approaches are appropriate. 
 
-Nonlinear Least Square (NLS) regression provides more flexible curve fitting through an iterative optimization. NLS approaches require a specified starting value for each unknown parameter to ensure the solver converges on a global rather than a local minimum. When suboptimal starting values are provided, NLS solvers may converge on a local minimum or may fail to converge at all.
+Nonlinear Least Square (NLS) regression provides more flexible curve fitting through an iterative optimization. NLS approaches require a specified starting value for each unknown parameter to ensure the solver converges on a global rather than a local minimum. When suboptimal starting values are provided, NLS solvers may converge on a local minimum, or, not at all.
 
 ### OLS
 

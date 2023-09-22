@@ -3,7 +3,7 @@ title: "Traditional AHG fitting"
 author:
   - name: "Mike Johnson"
     url: https://github.com/mikejohnson51
-    affiliation: Lynker, NOAA-Affilate
+    affiliation: Lynker, NOAA-Affiliate
     affiliation_url: https://lynker.com
 output: distill::distill_article
 vignette: >
@@ -51,7 +51,7 @@ $$
 
 In practice, the enforcement of continuity is determined by the quality of the data, and is not enforced in the estimation of the AHG relationships.
 
-## Traditonal Fitting Technique
+## Traditional Fitting Technique
 
 While the AHG power laws provide an elegant theory for representing a mass-constrained hydraulic system, the data available to determine these relations are rarely as clean. In most cases, hydraulic data is reported as a table(s) relating values of Q to values of one or more hydraulic variables. Thus, the relationships require the power law relationships to be fit,
 

@@ -3,7 +3,7 @@ title: "Data Preprocessing"
 author:
   - name: "Mike Johnson"
     url: https://github.com/mikejohnson51
-    affiliation: Lynker, NOAA-Affilate
+    affiliation: Lynker, NOAA-Affiliate
     affiliation_url: https://lynker.com
 output: distill::distill_article
 vignette: >
@@ -19,9 +19,9 @@ library(patchwork)
 library(dplyr)
 ```
 
-# NWIS Filtering Functions
+# nwis Filtering Functions
 
-Often the nwis that comes from long records of stream observation are noisy. The records of dicharge, width, depth and velocity from gauges although being extremly valuble require carfull consideration, and filttering due to reasons including but not limited to:
+Often the nwis that comes from long records of stream observation are noisy. The records of discharge, width, depth and velocity from gauges although being extremely valuable require careful consideration, and flittering due to reasons including but not limited to:
 
 1- Changes in measurement instruments
 
@@ -29,14 +29,13 @@ Often the nwis that comes from long records of stream observation are noisy. The
 
 3- Changes in river due to flooding and etc. (river meandering)
 
+While the FHG algorithm implemented in this package can deal with this noise through the hybrid the `OLS --> NLS --> NSGA2 --> combo` fitting method, it is also possible, and even advisable, to filter the nwis prior to fitting.
 
-While the FHG algorithm implemented in this package can deal with this noise through the hybrid the `OLS --> NLS --> NSGA2 --> combo` fitting method, it is also possible, and even advisable, to filter the NWIS data prior to fitting.
-
-Here we will illustrate the packaged methods. An assumption of _all_ filtering methods is that if it reduces the NWIS set to less then 10 observations, a warning is emited and the input NWIS is returned.
+Here we will illustrate the packaged methods. An assumption of _all_ filtering methods is that if it reduces the nwisset to less then 10 observations, a warning is emitted and the input nwis is returned. The initial step in filtering is to screened for any negative, inf values. Negative value in observations is often associated with gauges that are located in backwater zones and are affected by the coastal processes including sea level changes, tides and storm surge that can extend hundreds of kilometers inland.
 
 ## 1. Median Absolute Deviation (mad)
 
-An iterative outlier detection procedure can be run on the residuals of linear regressions for each relationship following the procedure described in the [HyG Dataset](https://zenodo.org/record/7868764). Values of log-transformed TW, V, and Y residuals falling outside a specified median absolute deviation (MAD) are excluded with each pass until no outliers are left.
+An iterative outlier detection procedure can be run iteratively on the residuals of linear regressions for each relationship following the procedure described in the [HyG nwisset](https://zenodo.org/record/7868764). Values of log-transformed TW, V, and Y residuals falling outside a specified median absolute deviation (MAD) are excluded with each pass until no outliers are left.
 
 This approach can be implemented using `mad_filter`:
 
@@ -99,7 +98,7 @@ ggplot() +
 
 ```
 
-## 4. NLS prediciton
+## 4. NLS prediction
 
 Through out the development of this package it became evident that the NLS approach, when using OLS estimates as seeds, provided the best relation by relation fit. This approach fits the NLS equations for each provided relationship. This fit is used to predict [V,TW,Y] for all given Q's.  If the actual value is outside the specified allowance (default = +/- 50%) it is removed.
 
@@ -156,7 +155,7 @@ hf_df = nwis %>%
   qva_filter(allowance = .05) %>% 
   mad_filter(envelope = 3) 
 
-# NLS basec filtering
+# NLS basic filtering
 nls_df = nwis %>% 
   date_filter(10, keep_max = TRUE) %>% 
   nls_filter(allowance = .5)

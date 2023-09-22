@@ -3,11 +3,11 @@ title: "Hydraulic Data Generation"
 author:
   - name: "Mike Johnson"
     url: https://github.com/mikejohnson51
-    affiliation: Lynker, NOAA-Affilate
+    affiliation: Lynker, NOAA-Affiliate
     affiliation_url: https://lynker.com
   - name: "Arash Modaresi Rad"
     url: https://github.com/arashmodrad
-    affiliation: Lynker, NOAA-Affilate
+    affiliation: Lynker, NOAA-Affiliate
     affiliation_url: https://lynker.com
 output: distill::distill_article
 vignette: >
@@ -86,7 +86,7 @@ knitr::include_graphics('../man/figures/dingman-r.png')
 
 The exponent `p` (along with `q`) exist in Chézy and Manning uniform-flow equations. In Chézy, `p` = 1/2 and Manning's, `p` = 2/3 while in both Chézy and Manning `q` = 1/2.
 
-Since neither equation is considered dimensionally correct, they require unit adjustments. and several studies have indicated that p and q have different values than was initally assumed in the Chézy/Manning relations [e.g. Riggs (1976), Dingman and Sharma (1997), Bjerklie et al. (2005), Lopez et al. (2007), Ferguson (2007), Ferguson (2010)].
+Since neither equation is generally dimensionally correct they require unit adjustments. and several studies have indicated that p and q have different values than assumed in the Chézy/Manning relations [e.g. Riggs (1976), Dingman and Sharma (1997), Bjerklie et al. (2005), Lopez et al. (2007), Ferguson (2007), Ferguson (2010)].
 
 `p` can be computed as:
 
@@ -94,7 +94,7 @@ $$
 p = m/f
 $$
 
-**The general determination of κ and p from channel characteristics (especially slope and boundary roughness) is a central problem in open-channel hydraulics that has resisted simple solution**. In practice, coefficient κ and  exponent p can be determined by regression of `ln(V)` on `ln(Y)`
+** The general determination of κ and p from channel characteristics (especially slope and boundary roughness) is a central problem in open-channel hydraulics that has resisted simple solution**. In practice, coefficient κ and  exponent p can be determined by regression of `ln(V)` on `ln(Y)`
 
 ```{r}
 compute_fhg(Q = data$Y,  P = data$V, type = "kp")[1,] %>% 
