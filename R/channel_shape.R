@@ -1,4 +1,4 @@
-#' @title Approximate channel coeffiecent
+#' @title Approximate channel coefficient
 #' @description Approximate the hydraulic values from FHG fit
 #' @param fit output of fhg_estimate
 #' @return numeric 
@@ -27,7 +27,7 @@ compute_hydraulic_params = function(fit){
 #' @title Approximate Roughness
 #' @description Approximate median roughness using Manning Equation
 #' @param df a data.frame with at least Y and V. 
-#' @param S reach scale longitudinal slope (m/m). Default mean of the nhdplusV2
+#' @param S reach scale longitudinal slope (m/m). Default mean of the NHDPlusV2
 #' @return numeric
 #' @family hydraulics 
 #' @export
@@ -53,7 +53,7 @@ compute_n = function(df, S = .02){
 #' @param r The corresponding Dingman's r coefficient 
 #' @param TW width of the channel at bankfull 
 #' @param Ymax maximum depth of the channel at bankfull 
-#' @return depth values every 1m along the cross section  
+#' @return depth values every 1 m along the cross section  
 #' @family hydraulics 
 #' @export
 
