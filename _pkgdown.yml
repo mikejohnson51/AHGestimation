@@ -16,7 +16,7 @@ authors:
    sidebar:
     roles: [cre, ctb, fnd]
 articles:
-- title: FHG Estimation
+- title: AHG Estimation
   desc: Quick Start
   contents:
   - traditonal-ahg
@@ -25,11 +25,11 @@ articles:
   - data-filtering
   - hydraulics
 reference:
-- title: FHG estimation
+- title: AHG estimation
 - subtitle: 
   desc: General tools for fitting AHG relations
 - contents:
-  - has_concept("FHG")
+  - has_concept("AHG")
 - subtitle: Data Preprocessing
   desc: Basic Data Filters
   contents:

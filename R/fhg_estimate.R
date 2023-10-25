@@ -22,7 +22,7 @@ check_validity = function(r, type = "nls", allowance = .05){
 #' @param check values to check against
 #' @param verbose should messages be emitted
 #' @return vector
-#' @family FHG
+#' @family AHG
 #' @export
 
 best_optimal = function(best, check, verbose = TRUE) {
@@ -42,7 +42,7 @@ best_optimal = function(best, check, verbose = TRUE) {
   return(check)
 }
 
-#' @title Properly estimate FHG values
+#' @title Properly estimate AHG values
 #' @param df hydraulic data.frame
 #' @param allowance allowed deviation from continuity
 #' @param gen Number of generations to breed. 
@@ -52,10 +52,10 @@ best_optimal = function(best, check, verbose = TRUE) {
 #' @param scale should a scale factor be applied to data pre NSGA-2 fitting
 #' @param verbose should messages be emitted?
 #' @return list
-#' @family FHG
+#' @family AHG
 #' @export
 
-fhg_estimate = function(df,
+ahg_estimate = function(df,
                         allowance = .05,
                         gen = 192,
                         pop = 200,
@@ -76,19 +76,19 @@ fhg_estimate = function(df,
   df = df[is.finite(rowSums(select(df, -any_of('date')))), ]
   df = df[complete.cases(df), ]
   
-  fhg_y  = if ("Y" %in% names(df)) {
-    compute_fhg(df$Q, df$Y, "Y")
+  ahg_y  = if ("Y" %in% names(df)) {
+    compute_ahg(df$Q, df$Y, "Y")
   }
   
-  fhg_tw = if ("TW" %in% names(df)) {
-    compute_fhg(df$Q, df$TW, "TW")
+  ahg_tw = if ("TW" %in% names(df)) {
+    compute_ahg(df$Q, df$TW, "TW")
   }
   
-  fhg_v  = if ("V" %in% names(df)) {
-    compute_fhg(df$Q, df$V, "V")
+  ahg_v  = if ("V" %in% names(df)) {
+    compute_ahg(df$Q, df$V, "V")
   }
   
-  r = list(fhg_y, fhg_tw, fhg_v)
+  r = list(ahg_y, ahg_tw, ahg_v)
   r = Filter(Negate(is.null), r)
   n = vector()
   

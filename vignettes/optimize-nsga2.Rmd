@@ -22,7 +22,7 @@ knitr::opts_chunk$set(
 library(ggplot2)
 library(patchwork)
 library(dplyr)
-library(FHGestimation)
+library(AHGestimation)
 ```
 
 Evolutionary Algorithms are inspired by traits of biological evolution including reproduction, mutation, recombination, and selection. Possible solutions to a given problem act as members of a population, while a prescribed fitness function determines the quality of each member. 
@@ -51,7 +51,7 @@ Our method for setting these bounds is as follows:
 3. This limits the exponent at coefficients to the range of {(1/scale) * nls; scale * nls}
 
 ```{r, echo = FALSE}
-mm = FHGestimation:::min_max(nwis, 1.5)
+mm = AHGestimation:::min_max(nwis, 1.5)
 
 ggplot(data = nwis ) + 
   geom_point(aes(x = Q, y = V)) + 
@@ -251,9 +251,9 @@ ggplot(data = s) +
 
 # Flexibility
 
-Certainly, this in not a end all be all solution and different objectives might want different solutions. In this case the following options are exposed in `fhg_estimate`:
+Certainly, this in not a end all be all solution and different objectives might want different solutions. In this case the following options are exposed in `ahg_estimate`:
 
-- **times** represents the number of times the solution should be run with different seeds (`1:n()`) and is exposed in `fhg_estimate`
+- **times** represents the number of times the solution should be run with different seeds (`1:n()`) and is exposed in `ahg_estimate`
 
 - **gen**
 - **pop**

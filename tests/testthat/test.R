@@ -1,11 +1,11 @@
-data = FHGestimation::nwis
+data = AHGestimation::nwis
 
 library(dplyr)
 
 test_that("One Series", {
   
   x =  select(data, Q, Y) %>% 
-     fhg_estimate()
+     ahg_estimate()
   
   expect_true(length(x) == 6)
   expect_true(nrow(x) == 2)
@@ -16,7 +16,7 @@ test_that("One Series", {
 test_that("Two Series", {
   
   x = select(data, Q, Y, V = V) %>% 
-    fhg_estimate()
+    ahg_estimate()
   
   expect_true(length(x) == 9)
   expect_true(nrow(x) == 1)
@@ -27,14 +27,14 @@ test_that("Two Series", {
 test_that("Three Series", {
   
   x =  df = select(data, Q, Y, V, TW) %>% 
-    fhg_estimate()
+    ahg_estimate()
   
   expect_true(length(x) == 15)
   expect_true(nrow(x) == 4)
   expect_true(which.min(filter(x, viable)$tot_error) == 1)
   
   y = select(data, Q, Y, V, TW) %>% 
-    fhg_estimate(verbose = TRUE)
+    ahg_estimate(verbose = TRUE)
   
   expect_true(length(y) == 15)
   expect_true(nrow(y) == 4)
@@ -93,7 +93,7 @@ test_that("sig", {
 test_that("hydraulics", {
  
   x =  select(data, Q, Y, V, TW) %>% 
-    fhg_estimate()
+    ahg_estimate()
   
   h = compute_hydraulic_params(x)
   

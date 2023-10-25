@@ -18,16 +18,16 @@ library(patchwork)
 ```
 
 <!-- badges: start -->
-[![R CMD Check](https://github.com/mikejohnson51/FHGestimation/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/mikejohnson51/FHGestimation/actions/workflows/R-CMD-check.yaml)
+[![R CMD Check](https://github.com/mikejohnson51/AHGestimation/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/mikejohnson51/AHGestimation/actions/workflows/R-CMD-check.yaml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://choosealicense.com/licenses/mit/)
 [![Project Status: Active](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
-[![codecov](https://codecov.io/github/mikejohnson51/FHGestimation/graph/badge.svg?token=YIY3BTM32H)](https://codecov.io/github/mikejohnson51/FHGestimation)
+[![codecov](https://codecov.io/github/mikejohnson51/AHGestimation/graph/badge.svg?token=YIY3BTM32H)](https://codecov.io/github/mikejohnson51/AHGestimation)
 [![Dependencies](https://img.shields.io/badge/dependencies-4/42-green?style=flat)](#)
 <!-- badges: end -->
 
-# FHGestimation
+# AHGestimation
 
-> **_Citation:_** Johnson, J.M. (2022) FHGestimation^[previously AHGestimation]: Tools for Estimating Physically-Based, Computationally Efficient Feature Based Hydraulic
+> **_Citation:_** Johnson, J.M. (2022) AHGestimation: Tools for Estimating Physically-Based, Computationally Efficient Feature Based Hydraulic
 Geometry and Rating Curves.
 
 Using data from the USGS manual measurement (Johnson, 2018), we can illustrate the utilities in this package. Overall this package provides 4 capabilities:
@@ -40,8 +40,8 @@ Using data from the USGS manual measurement (Johnson, 2018), we can illustrate t
 ## Base data
 
 ```{r}
-library(FHGestimation)
-data = nwis
+library(AHGestimation)
+data = AHGestimation::nwis
 ```
 
 ```{r, echo = F}
@@ -61,10 +61,10 @@ ggplot(data = data ) +
 
 ## Single Relationship fits
 
-Here we use the `FHGestimation` package to fit the Q-Y relationship using OLS and NLS models:
+Here we use the `AHGestimation` package to fit the Q-Y relationship using OLS and NLS models:
 
 ```{r}
-(sf = fhg_estimate(df = select(data, Q, Y), allowance = .05))
+(sf = ahg_estimate(df = select(data, Q, Y), allowance = .05))
 ```
 
 ```{r, echo = FALSE}
@@ -76,7 +76,6 @@ ggplot() +
   theme(legend.position = "bottom") +
   labs(title = 'Q-Y Relationship', color = "Fit") + 
   scale_color_manual(values = c( "NLS" = "blue", "OLS" = "red"))
-
 ```
 
 Overall the the NLS model provides a better fit (albeit small) when measured both by nRMSE and pBais.
@@ -88,7 +87,7 @@ When we have data regarding three hydraulic states (V,TW,Y) we can ensure that t
 In this mode the OLS and NLS models are fit, and if continuity is not met, then a Evolutionary Approach is implemented. Doing so produces three unique fits for three variables (27 total combinations). These are crossed to identify the best performing relationships that meet continuity at a prescribed allowance:
 
 ```{r}
-(x = fhg_estimate(data, allowance = .05))
+(x = ahg_estimate(data, allowance = .05))
 ```
 Overall an combination of the OLS and NLS fit are able to provide a error minimizing solution:
 
@@ -120,7 +119,7 @@ However a combined approach of a NLS, OLS, and nsga2 was able to provide a physi
 
 ## Data Filtering
 
-Due to the volatility of river systems and deviations in measurement techniques and accuracy hydraulic data is often very noisy. While the `fhg_estimation` tool is intended to reduce this noise and produce a mass-conserving hydraulic fit, it is also possible to filter the data prior to fitting. The range of data filtering options provided are documented in the data-filtering vignette and an example is provided below:
+Due to the volatility of river systems and deviations in measurement techniques and accuracy hydraulic data is often very noisy. While the `ahg_estimation` tool is intended to reduce this noise and produce a mass-conserving hydraulic fit, it is also possible to filter the data prior to fitting. The range of data filtering options provided are documented in the data-filtering vignette and an example is provided below:
 
 ```{r}
 (xf = data %>% 
@@ -130,7 +129,7 @@ Due to the volatility of river systems and deviations in measurement techniques 
   mad_filter() %>% 
   # Keep data that respects the Q = vA criteria w/in allowance
   qva_filter() %>% 
-  fhg_estimate())
+  ahg_estimate())
 ```
 
 When the data is effectively filtered we see NLS can provide an error minimizing, valid solution for the system that is quite different then the full data fit:
@@ -179,7 +178,7 @@ filter_data = data %>%
   date_filter(10, keep_max = TRUE) %>% 
   nls_filter(allowance = .5) 
 
-ahg_fit = fhg_estimate(filter_data)[1,]
+ahg_fit = ahg_estimate(filter_data)[1,]
 
 (shape = compute_hydraulic_params(ahg_fit))
 

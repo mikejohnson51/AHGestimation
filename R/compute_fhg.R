@@ -1,13 +1,13 @@
-#' @title Approximate FHG relationships
-#' @description Approximate FHG relationships using both OLS and NLS methods
+#' @title Approximate AHG relationships
+#' @description Approximate AHG relationships using both OLS and NLS methods
 #' @param Q a stream flow time series
 #' @param P a corresponding time series of a second hydraulic variable
 #' @param type relationship being tested
 #' @return data.frame
-#' @family FHG
+#' @family AHG
 #' @export
 
-compute_fhg = function(Q, P, type = "relation"){
+compute_ahg = function(Q, P, type = "relation"){
   
   Qlog <- Ylog <- NULL
   

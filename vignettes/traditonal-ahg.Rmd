@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 )
 library(ggplot2)
 library(dplyr)
-library(FHGestimation)
+library(AHGestimation)
 ```
 
 # The AHG relationships

@@ -124,11 +124,11 @@ nls_filter = function(df, allowance = .5){
   
   method <- NULL
   
-  predict_nls_fhg = function(Q, Y) {
+  predict_nls_ahg = function(Q, Y) {
     if(is.null(Y)){
       NULL
     } else {
-      o = compute_fhg(Q, Y, "zzz") %>% 
+      o = compute_ahg(Q, Y, "zzz") %>% 
         filter(method == "nls")
       o$coef * (Q ^ o$exp)
     }
@@ -137,9 +137,9 @@ nls_filter = function(df, allowance = .5){
   n = nrow(df)
   
   df2 = df
-  df2$pY  = predict_nls_fhg(Q = df2$Q, Y = df2$Y)
-  df2$pTW = predict_nls_fhg(df2$Q, df2$TW)
-  df2$pV  = predict_nls_fhg(df2$Q, df2$V)
+  df2$pY  = predict_nls_ahg(Q = df2$Q, Y = df2$Y)
+  df2$pTW = predict_nls_ahg(df2$Q, df2$TW)
+  df2$pV  = predict_nls_ahg(df2$Q, df2$V)
   
   if(!is.null(df2$pY)){
     df2 = df2 %>%

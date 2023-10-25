@@ -101,7 +101,7 @@ data = nwis  %>%
   date_filter(10, keep_max = TRUE) %>% 
   nls_filter(allowance = .5) 
   
-ahg_fit = fhg_estimate(data)
+ahg_fit = ahg_estimate(data)
 
 shape = compute_hydraulic_params(ahg_fit)
 

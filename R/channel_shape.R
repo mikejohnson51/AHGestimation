@@ -1,6 +1,6 @@
 #' @title Approximate channel coeffiecent
-#' @description Approximate the hydraulic values from FHG fit
-#' @param fit output of fhg_estimate
+#' @description Approximate the hydraulic values from AHG fit
+#' @param fit output of ahg_estimate
 #' @return numeric 
 #' @family hydraulics 
 #' @export

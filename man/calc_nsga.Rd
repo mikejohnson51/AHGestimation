@@ -2,7 +2,7 @@
 % Please edit documentation in R/compute_ga.R
 \name{calc_nsga}
 \alias{calc_nsga}
-\title{Calculate GA FHG}
+\title{Calculate NSGA2 AHG}
 \usage{
 calc_nsga(
   df,
@@ -39,13 +39,13 @@ calc_nsga(
 data.frame
 }
 \description{
-Calculate GA FHG
+Calculate NSGA2 AHG
 }
 \seealso{
-Other FHG: 
+Other AHG: 
+\code{\link{ahg_estimate}()},
 \code{\link{best_optimal}()},
-\code{\link{compute_fhg}()},
-\code{\link{fhg_estimate}()},
+\code{\link{compute_ahg}()},
 \code{\link{mismash}()}
 }
-\concept{FHG}
+\concept{AHG}

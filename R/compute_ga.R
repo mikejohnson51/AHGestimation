@@ -9,7 +9,7 @@ min_max = function(df, s = 2) {
       high  = c(3.5, 1, 642, 1, 20, 1)
     )
   } else {
-    o = filter(compute_fhg(df$Q, df$Y, "Y"), method == "nls")
+    o = filter(compute_ahg(df$Q, df$Y, "Y"), method == "nls")
       Y_e_l =  (1 / s) * o$exp
       Y_e_h =  s     * o$exp
       Y_c_l = (1 / s) * o$coef
@@ -18,7 +18,7 @@ min_max = function(df, s = 2) {
       Y_e_nls = o$exp
       Y_c_nls = o$coef
     
-    o = filter(compute_fhg(df$Q, df$V, "V"), method == "nls")
+    o = filter(compute_ahg(df$Q, df$V, "V"), method == "nls")
       V_e_l =  (1 / s) * o$exp
       V_e_h =  s     * o$exp
       V_c_l = (1 / s) * o$coef
@@ -27,7 +27,7 @@ min_max = function(df, s = 2) {
       V_e_nls = o$exp
       V_c_nls = o$coef
     
-    o = filter(compute_fhg(df$Q, df$TW, "TW"), method == "nls")
+    o = filter(compute_ahg(df$Q, df$TW, "TW"), method == "nls")
       TW_e_l =  (1 / s) * o$exp
       TW_e_h =  s     * o$exp
       TW_c_l = (1 / s) * o$coef
@@ -216,13 +216,13 @@ rmse <- function (sim, obs, na.rm=TRUE) {
   
 }
 
-#' @title Calculate GA FHG
+#' @title Calculate NSGA2 AHG
 #' @param df hydraulic data.frame
 #' @param allowance allowable deviation from continuity
 #' @param r fit list
-#' @inheritParams fhg_estimate
+#' @inheritParams ahg_estimate
 #' @return data.frame
-#' @family FHG
+#' @family AHG
 #' @export
 
 calc_nsga = function(df, 

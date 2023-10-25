@@ -13,7 +13,7 @@ vignette: >
 ---
 
 ```{r, include = FALSE}
-library(FHGestimation)
+library(AHGestimation)
 library(ggplot2)
 library(patchwork)
 library(dplyr)
@@ -154,9 +154,9 @@ nls_df = nwis %>%
   date_filter(10, keep_max = TRUE) %>% 
   nls_filter(allowance = .5)
   
-x1 = fhg_estimate(df = nwis)
-x2 = fhg_estimate(df = hf_df)
-x3 = fhg_estimate(df = nls_df)
+x1 = ahg_estimate(df = nwis)
+x2 = ahg_estimate(df = hf_df)
+x3 = ahg_estimate(df = nls_df)
 ```
 
 ```{r, echo = FALSE, out.width="100%"}

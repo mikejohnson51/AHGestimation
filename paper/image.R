@@ -1,6 +1,6 @@
 
 
-library(FHGestimation)
+library(AHGestimation)
 
 data = readRDS('inst/extdata/no_ga.rds') 
 
@@ -8,7 +8,7 @@ filter_data = data %>%
   date_filter(10, keep_max = TRUE) %>% 
   nls_filter(allowance = .5) 
 
-ahg_fit = fhg_estimate(filter_data)[1,]
+ahg_fit = ahg_estimate(filter_data)[1,]
 
 shape = compute_hydraulic_params(ahg_fit)
 

@@ -7,7 +7,7 @@
 #' @param r rrr TODO
 #' @param allowance Allowable deviation from continuity
 #' @return list
-#' @family FHG
+#' @family AHG
 #' @export
 
 mismash = function(v, V, TW, Y, Q, r, allowance){

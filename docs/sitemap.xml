@@ -34,6 +34,9 @@
     <loc>/index.html</loc>
   </url>
   <url>
+    <loc>/reference/ahg_estimate.html</loc>
+  </url>
+  <url>
     <loc>/reference/best_optimal.html</loc>
   </url>
   <url>
@@ -44,6 +47,9 @@
   </url>
   <url>
     <loc>/reference/calc_nsga.html</loc>
+  </url>
+  <url>
+    <loc>/reference/compute_ahg.html</loc>
   </url>
   <url>
     <loc>/reference/compute_fhg.html</loc>

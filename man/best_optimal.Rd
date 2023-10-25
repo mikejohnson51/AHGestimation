@@ -20,10 +20,10 @@ vector
 Report best optimal
 }
 \seealso{
-Other FHG: 
+Other AHG: 
+\code{\link{ahg_estimate}()},
 \code{\link{calc_nsga}()},
-\code{\link{compute_fhg}()},
-\code{\link{fhg_estimate}()},
+\code{\link{compute_ahg}()},
 \code{\link{mismash}()}
 }
-\concept{FHG}
+\concept{AHG}

@@ -7,13 +7,13 @@
 compute_hydraulic_params(fit)
 }
 \arguments{
-\item{fit}{output of fhg_estimate}
+\item{fit}{output of ahg_estimate}
 }
 \value{
 numeric
 }
 \description{
-Approximate the hydraulic values from FHG fit
+Approximate the hydraulic values from AHG fit
 }
 \seealso{
 Other hydraulics: 

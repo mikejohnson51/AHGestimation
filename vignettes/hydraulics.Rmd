@@ -17,7 +17,7 @@ vignette: >
 ---
 
 ```{r, include = FALSE}
-library(FHGestimation)
+library(AHGestimation)
 library(ggplot2)
 library(patchwork)
 library(dplyr)
@@ -97,7 +97,7 @@ $$
 ** The general determination of κ and p from channel characteristics (especially slope and boundary roughness) is a central problem in open-channel hydraulics that has resisted simple solution**. In practice, coefficient κ and  exponent p can be determined by regression of `ln(V)` on `ln(Y)`
 
 ```{r}
-compute_fhg(Q = data$Y,  P = data$V, type = "kp")[1,] %>% 
+compute_ahg(Q = data$Y,  P = data$V, type = "kp")[1,] %>% 
   rename(k = coef, p = exp)
 ```
 
@@ -119,7 +119,7 @@ $$
 To estimate the suite of these parameters, we provide the `compute_hydraulic_params`
 
 ```{r}
-fit = fhg_estimate(data)[1,]
+fit = ahg_estimate(data)[1,]
 fit = compute_hydraulic_params(fit)
 
 t(fit)
@@ -170,7 +170,4 @@ head(cs)
 
 ```
 
-# Future Work
-
-Moving forward the ability to produce traditional AHG, FHG, and Dingman based representations of cross-section hydraulics and geometry will be critical to advancing more robust
 

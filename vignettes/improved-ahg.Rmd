@@ -24,7 +24,7 @@ library(mco)
 ```
 
 ```{r setup}
-library(FHGestimation)
+library(AHGestimation)
 data = nwis
 ```
 
@@ -278,11 +278,11 @@ knitr::include_graphics('../man/figures/ahg_workflow.png')
 And can be executed like this:
 
 ```{r, eval = FALSE}
-fhg = fhg_estimate(data)
+ahg = ahg_estimate(data)
 ```
 
 **NOTE** Single relationships can also be fit like this:
 
 ```{r}
-fhg_estimate(select(data, Q, Y))
+ahg_estimate(select(data, Q, Y))
 ```

@@ -1,6 +1,6 @@
-Package: FHGestimation
+Package: AHGestimation
 Title: Compute robust, mass preserving Hydrualic Geometries
-Description: Compute FHG fits from river measurements.
+Description: Compute AHG fits from river measurements.
 Version: 0.2
 Authors@R: 
     c(person(given = "Mike", 
@@ -11,8 +11,8 @@ Authors@R:
       person(given = "NOAA OWP",  role = "fnd"),
       person(given = "NSF",  role = "fnd"))
 Maintainer: Mike Johnson <mikecp11@gmail.com>
-BugReports: https://github.com/mikejohnson51/FHGestimation/issues
-URL: https://github.com/mikejohnson51/FHGestimation
+BugReports: https://github.com/mikejohnson51/AHGestimation/issues
+URL: https://github.com/mikejohnson51/AHGestimation
 Depends: 
     R(>= 3.5.0)
 Imports:
