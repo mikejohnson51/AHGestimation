@@ -1,6 +1,6 @@
 #' Sample gage data
 #' Manual measurements made at NWIS site 01096500
-#' @format #' @format ## `nwis`
+#' @format
 #' A data frame with 245 rows and 6 columns:
 #' \describe{
 #'   \item{siteID}{NWIS ID}
@@ -10,5 +10,6 @@
 #'   \item{V}{Velocity}
 #'   \item{TW}{Top width}
 #' }
+#' @family data
 
 "nwis"

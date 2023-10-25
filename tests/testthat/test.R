@@ -26,7 +26,7 @@ test_that("Two Series", {
 
 test_that("Three Series", {
   
-  x =  select(data, Q, Y, V, TW) %>% 
+  x =  df = select(data, Q, Y, V, TW) %>% 
     fhg_estimate()
   
   expect_true(length(x) == 15)
@@ -99,7 +99,7 @@ test_that("hydraulics", {
   
   expect_equal(nrow(h), 4)
   expect_equal(ncol(h), 7)
-  expect_equal(round(h$r[1], 2), 4.32)
+  expect_equal(round(h$r[1], 2), 5.01)
   
   expect_equal(round(compute_n(data),2), .14)
   

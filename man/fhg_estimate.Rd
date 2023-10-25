@@ -4,12 +4,34 @@
 \alias{fhg_estimate}
 \title{Properly estimate FHG values}
 \usage{
-fhg_estimate(df, allowance = 0.05, verbose = FALSE)
+fhg_estimate(
+  df,
+  allowance = 0.05,
+  gen = 192,
+  pop = 200,
+  cprob = 0.4,
+  mprob = 0.4,
+  times = 1,
+  scale = 1.5,
+  verbose = FALSE
+)
 }
 \arguments{
 \item{df}{hydraulic data.frame}
 
 \item{allowance}{allowed deviation from continuity}
+
+\item{gen}{Number of generations to breed.}
+
+\item{pop}{Size of population}
+
+\item{cprob}{Crossover probability}
+
+\item{mprob}{Mutation probability}
+
+\item{times}{how many times (seeds) should nsga2 be run}
+
+\item{scale}{should a scale factor be applied to data pre NSGA-2 fitting}
 
 \item{verbose}{should messages be emitted?}
 }
@@ -18,11 +40,6 @@ list
 }
 \description{
 Properly estimate FHG values
-}
-\details{
-If filter_data is TRUE. An best fit curve is fit to the raw data relationships and is used to predict
-A value for each Q. Data is only retained if the provided value is within +/- the `filter_threshold` (as a percent) of 
-the estimated value
 }
 \seealso{
 Other FHG: 

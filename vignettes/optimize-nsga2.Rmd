@@ -15,9 +15,247 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  out.width = "100%"
 )
+
 library(ggplot2)
+library(patchwork)
 library(dplyr)
 library(FHGestimation)
 ```
+
+Evolutionary Algorithms are inspired by traits of biological evolution including reproduction, mutation, recombination, and selection. Possible solutions to a given problem act as members of a population, while a prescribed fitness function determines the quality of each member. 
+
+Evolutionary algorithms often perform well for all types of problems because they do not make assumptions about the underlying fitness landscape. That said, there are things we can do to 
+  (1) set expectations about the fitness landscape 
+  (2) define an idealized population to solve our given task and 
+  (3) understand the nuances of which EA implementation we use (and how we use it)
+
+Doing all of these well provides a more robust solver that can more readily handle a range of inputs, without re calibration.
+
+The solver we use the the `NSGA-2` solver implemented in the `mco` package.
+
+# Solver
+
+We use NSGA-2 as prior experiments showed that solving AHG relationship, in a mass conserving way, is often a multi-criterion problem with a Pareto front of solutions.
+
+# Defining bounds
+
+The NSGA solver requests (but doesn't require) a set of lower and upper limits over which to search. Setting these helps limit the search space, and therefore returns skilled solution more quickly (if at all).
+
+Our method for setting these bounds is as follows:
+
+1. Fit NLS to each individual relation as prior work showed that in every case NLS (seeded with OLS solutions) provides the best estimation of an individual relationship but often fails to meet continuity.
+2. Scale by set factor
+3. This limits the exponent at coefficients to the range of {(1/scale) * nls; scale * nls}
+
+```{r, echo = FALSE}
+mm = FHGestimation:::min_max(nwis, 1.5)
+
+ggplot(data = nwis ) + 
+  geom_point(aes(x = Q, y = V)) + 
+  geom_line(aes(x = nwis$Q, y = mm$low[1] * nwis$Q ^ mm$low[2], col = "low")) +
+  geom_line(aes(x = nwis$Q, y = mm$base[1] * nwis$Q ^ mm$base[2], col = "NLS")) +
+  geom_line(aes(x = nwis$Q, y = mm$high[1] * nwis$Q ^ mm$high[2], col = "high")) +
+  theme_light()  + 
+  labs(title = 'Q-V Relationship') +
+ggplot(data = nwis ) + 
+  geom_point(aes(x = Q, y = TW)) + 
+  geom_line(aes(x = nwis$Q, y = mm$low[3] * nwis$Q ^ mm$low[4], col = "low")) +
+  geom_line(aes(x = nwis$Q, y = mm$base[3] * nwis$Q ^ mm$base[4], col = "NLS")) +
+  geom_line(aes(x = nwis$Q, y = mm$high[3] * nwis$Q ^ mm$high[4], col = "high")) +
+  theme_light() + 
+  labs(title = 'Q-TW Relationship') + 
+ggplot(data = nwis ) + 
+    geom_point(aes(x = Q, y = V)) + 
+  geom_line(aes(x = nwis$Q, y = mm$low[5] * nwis$Q ^ mm$low[6], col = "low")) +
+  geom_line(aes(x = nwis$Q, y = mm$base[5] * nwis$Q ^ mm$base[6], col = "NLS")) +
+  geom_line(aes(x = nwis$Q, y = mm$high[5] * nwis$Q ^ mm$high[6], col = "high")) +
+  theme_light()  + 
+  labs(title = 'Q-Y Relationship') + plot_layout(guides = "collect") & theme(legend.position = 'bottom')
+```
+
+The default for scale is 1.5, and if left to NULL the respective parameters limits will be set to the maximums (+10%) found in Asfari 2018.
+
+# Parameterizing the model
+
+Fine tuning an evolutionary algorithm is a balancing act between time to converge and accuracy.
+
+In the NSGA-2 model there are 4 parameters that can be tuned:
+
+- **Population Size**: How many solutions are created in each generation
+- **Generation**: How many generations are created
+- **Cross over probability**:  Determines the likelihood that crossover will occur between two parent solutions.
+- **Mutation probability**: Determines the likelihood that an individual will undergo the mutation process
+
+
+# Population & Generation
+
+First we will try to identify a optimal population and generation size for this problem by holding the cross over and mutation probabilities constant at the middle value of our total grid.
+
+To do this, we build out a text matrix of `generation` and `population` sizes, and use the default `mprob` and `cprob` (all with a `seed` of 1).
+
+The plot and table below show how solutions balance the % gain from the "best" solution against time to solve. The effective Pareto front of solutions is colored and labeled and all are equally valid solutions depending on the desired goal (maximum speed, minimal error, some balance)
+
+```{r, eval = FALSE}
+seed  = 1
+mprob = c(.2)
+cprob = c(.7)
+gen   = c(16, 24, 32, 48, 96, 144, 192)
+pop   = c(100, 200, 300, 500, 700, 1000)
+```
+
+```{r, echo = FALSE, eval = TRUE}
+tt = readRDS("../data-raw/pop-gen-experiment.rds") %>% 
+  group_by(gen, pop) %>% 
+  summarise(s = sum(rank),
+            na = sum(is.na(error)),
+            e = mean(error, na.rm = TRUE),
+            t = mean(time, na.rm = TRUE)) %>% 
+  ungroup() %>% 
+  mutate(er = round(e),
+         mind = min(e),
+         dd = (-100 *(mind - e)) / mind) %>%
+  #filter(er == min(er)) %>% 
+  arrange(dd) %>% 
+  select(gen, pop, total_error = e, time = t, percent_gain = dd) %>% 
+  filter(percent_gain < .1) %>%
+  mutate(col  = case_when(
+    gen == 192 & pop == 1000 ~ 'red',
+    gen == 96 & pop == 500   ~ 'blue',
+    gen == 144 & pop == 500  ~ 'purple',
+    gen == 96 & pop == 1000  ~ 'orange',
+    gen == 192 & pop == 200  ~ 'green',
+    TRUE ~ "gray"
+  ),
+    lab  = case_when(
+      gen == 192 & pop == 1000 ~ 'Gen: 192, Pop: 1,000',
+      gen == 96 & pop == 500   ~ 'Gen: 96, Pop: 500',
+      gen == 144 & pop == 500  ~ 'Gen: 144, Pop: 500',
+      gen == 96 & pop == 1000  ~ 'Gen: 96, Pop: 1,000',
+      gen == 192 & pop == 200  ~ 'Gen: 192, Pop: 200',
+      TRUE ~ NA
+    ))
+
+
+ggplot(tt) + 
+  geom_point(aes(x = time, y = percent_gain), col = tt$col, size = 3 ) + 
+  ggrepel::geom_label_repel(aes(x = time, y = percent_gain, label = lab), 
+                            box.padding   = 0.35,  
+                            point.padding = 0.5, 
+                            segment.color = 'grey50') +
+  labs(y = 'Percent Gain in Total Error Compared to Best', x = "Time to Solve (seconds)",
+       title = "Covergence vs. Error",
+       subtitle = "Colored Pareto Front") + 
+  theme_light()
+
+DT::datatable(select(filter(tt, !is.na(lab)), -lab))  %>%
+  DT::formatRound(columns=c('time', 'percent_gain', 'total_error'), digits=3) 
+```
+
+# Cross over and Mutation Probability
+
+Next, using our idealized generation and population size, we can turn to the other two probabilistic inputs:
+
+  - Cross over
+  - Mutation
+
+```{r, eval = FALSE}
+# high crossover, low mutation
+c(.8, .05)
+
+# high-ish crossover, low-ish mutation (nearly mco default)
+c(.6, .2)
+
+# moderate crossover, moderate mutation
+c(.4, .4)
+```
+
+Here, we tested the 15 combinations (3 probabilities, 5 gen/pop combinations) for 25 gauged locations.
+
+Below plot (A) shows the mean error of each combination across the 25 locations against the mean time to converge. Plot (B) shows the mean variance in each grouping against the mean time to converge.
+
+```{r, echo = FALSE}
+x = readRDS("../data-raw/prob-experiment.rds")
+
+tt = x %>% 
+  group_by(spawn) %>% 
+  summarise(me = mean(error, na.rm = TRUE),
+         ve = var(error, na.rm = T),
+         mt = mean(time, na.rm = T),
+         mp = mean(pop),
+         mg = mean(gen),
+         mc = mean(cprob),
+         mm = mean(mprob)) %>% 
+  ungroup() %>% 
+  arrange(mt) 
+
+tt$col1 = ifelse(tt$spawn %in% c(10,15,5,12,7,2,4,11), "red", "gray")
+tt$col2 = ifelse(tt$spawn %in% c(10,15,5,12,2,11), "blue", "gray")
+
+ggplot(data = tt) + 
+  geom_point(aes(x = mt, y = me), col = tt$col1, size = 3 ) + 
+  ggrepel::geom_label_repel(aes(x = mt, y = me, label = spawn), 
+                            box.padding   = 0.35,  
+                            point.padding = 0.5, 
+                            segment.color = 'grey50') +
+  labs(x = "Mean Time", y = "Mean Total Error") + 
+  theme_light() + 
+ggplot(data = tt) + 
+  geom_point(aes(x = mt, y = ve), col = tt$col2, size = 3 ) + 
+  ggrepel::geom_label_repel(aes(x = mt, y = ve, label = spawn), 
+                            box.padding   = 0.35,  
+                            point.padding = 0.5, 
+                            segment.color = 'grey50') +
+    labs(x = "Mean Time", y = "Mean Total Variation") +
+  theme_light()
+
+DT::datatable(arrange(select(filter(tt, col1 != "gray" & col2 != "gray"), label = spawn,pop = mp, gen = mg, mprob = mm, cprob = mc, total_error = me, mean_variation = ve,  time = mt), time))  %>%
+  DT::formatRound(columns=c('time', 'total_error', 'mean_variation'), digits=2) 
+```
+### Winner
+
+The winner was the moderate crossover and mutation probability matrix with a small population size and large generation count: 
+
+`Combination 15:  pop = 200; gen = 192; cprob = 	0.4; mprob =	0.4`
+
+# Influence of Seed
+
+The only way to get repeatable results from an algorithm like `nsga2` is to set a `seed`.
+
+To illustrate this, and ensure the solution found above is not overly sensitive to seed, we ran the algorithm 100 times using seeds 1 - 100.  
+
+Overall, 96% of the tests fell within 2.5% of the best solutions error. In total there was a range of 0.76 total nRMSE across solutions. 
+
+This give us confidence that the solution space defined is adequate for solving this problem in a general way.
+
+```{r, echo = FALSE}
+s = readRDS('../data-raw/seed-test-200.rds')
+
+s$color = ifelse(between(s$error, min(s$error), 1.025*min(s$error)), "red", "grey")
+
+ggplot(data = s) + 
+  geom_point(aes(x = s, y = error), col = s$color, size = 3 ) +
+  geom_point(data = slice_min(s, error),aes(x = s, y = error), col = "blue", size = 3 ) +
+  theme_light() + 
+  labs(title = "Imapct of seed on Overall Error",
+       x = "seed") + 
+  geom_hline(yintercept = 1.025*min(s$error)) + 
+  geom_hline(yintercept = 1.01*min(s$error)) + 
+  geom_hline(yintercept = 1.005*min(s$error)) + 
+  geom_label(aes(x = 10, y = 18.0605, label = "2.5% of minumum")) + 
+  geom_label(aes(x = 10, y = 17.7962,  label = "1% of minumum")) + 
+  geom_label(aes(x = 10, y = 17.7081, label = "0.5% of minumum"))
+```
+
+# Flexibility
+
+Certainly, this in not a end all be all solution and different objectives might want different solutions. In this case the following options are exposed in `fhg_estimate`:
+
+- **times** represents the number of times the solution should be run with different seeds (`1:n()`) and is exposed in `fhg_estimate`
+
+- **gen**
+- **pop**
+- **cprob**
+- **mprob**

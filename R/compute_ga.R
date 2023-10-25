@@ -1,3 +1,133 @@
+min_max = function(df, s = 2) {
+  
+  method <- NULL
+  
+  if (is.null(scale)) {
+    list(
+      value = c('k', 'm', 'a', 'b', 'c', 'f'),
+      low   = c(0, 0, 0, 0, 0, 0),
+      high  = c(3.5, 1, 642, 1, 20, 1)
+    )
+  } else {
+    o = filter(compute_fhg(df$Q, df$Y, "Y"), method == "nls")
+      Y_e_l =  (1 / s) * o$exp
+      Y_e_h =  s     * o$exp
+      Y_c_l = (1 / s) * o$coef
+      Y_c_h = s     * o$coef
+      Y_e = o$nrmse
+      Y_e_nls = o$exp
+      Y_c_nls = o$coef
+    
+    o = filter(compute_fhg(df$Q, df$V, "V"), method == "nls")
+      V_e_l =  (1 / s) * o$exp
+      V_e_h =  s     * o$exp
+      V_c_l = (1 / s) * o$coef
+      V_c_h = s     * o$coef
+      V_e = o$nrmse 
+      V_e_nls = o$exp
+      V_c_nls = o$coef
+    
+    o = filter(compute_fhg(df$Q, df$TW, "TW"), method == "nls")
+      TW_e_l =  (1 / s) * o$exp
+      TW_e_h =  s     * o$exp
+      TW_c_l = (1 / s) * o$coef
+      TW_c_h = s     * o$coef
+      TW_e     = o$nrmse
+      TW_e_nls = o$exp
+      TW_c_nls = o$coef
+    
+    list(
+      value = c('k', 'm', 'a', 'b', 'c', 'f'),
+      error = c(Y_e, NA, V_e, NA, TW_e),
+      base  = c(V_c_nls, V_e_nls, TW_c_nls, TW_e_nls, Y_c_nls, Y_e_nls),
+      low   = c(V_c_l, V_e_l, TW_c_l, TW_e_l, Y_c_l, Y_e_l),
+      high  = c(V_c_h, V_e_h, TW_c_h, TW_e_h, Y_c_h, Y_e_h)
+    )
+  }
+}
+
+run_it = function(fitness, 
+                  constraints, 
+                  seed, 
+                  cprob, 
+                  mprob,  
+                  gen, 
+                  pop,
+                  lower.bounds  = c(0, 0, 0, 0, 0, 0),
+                  upper.bounds  = c(3.5, 1, 642, 1, 20, 1)) {
+  
+  set.seed(seed)
+  
+  cont = function(par) {
+    c1 <- c2 <- c1_e <- c2_e <- c3 <- NULL
+    data.frame(
+      id = 1:nrow(par),
+      r = par[, 6] / par[, 4],
+      c1 = par[, 1] * par[, 3] * par[, 5],
+      c2 = par[, 2] + par[, 4] + par[, 6]
+    ) %>%
+      mutate(
+        c1_e = abs(1 - c1),
+        c2_e = abs(1 - c2),
+        c3 = c1_e + c2_e,
+        rank = rank(c3)
+      )
+  }
+  
+  errors = function(vals) {
+    error <- NULL
+    vals %>% data.frame() %>%
+      mutate(id = 1:nrow(vals), error = rowSums(vals)) %>%
+      mutate(rank = rank(error))
+  }
+  
+  error <-  floor_error <- rank.y <-  NULL
+  
+  nsga = nsga2(
+    fitness,
+    idim = 6,
+    odim = 3,
+    lower.bounds  = lower.bounds,
+    upper.bounds  = upper.bounds,
+    generations   = gen,
+    popsize       = pop,
+    cprob = cprob,
+    mprob = mprob,
+    constraints   = constraints,
+    cdim = 4
+  )
+  
+  vals = nsga$value[nsga$pareto.optimal, ]
+  
+  if(is.null(nrow(vals))){
+    vals = matrix(vals, byrow = 1, nrow = 1)
+  }
+  vals = vals[!duplicated(vals), ]
+  par  = nsga$par[nsga$pareto.optimal, ]
+  
+  if(is.null(nrow(par))){
+    par = matrix(par, byrow = 1, nrow = 1)
+  }
+  par  = par[!duplicated(par), ]
+  
+  
+  
+  if (!is.null(dim(vals))) {
+    err  = left_join(errors(vals), cont(par), by = "id") %>%
+      mutate(floor_error = floor(error)) %>%
+      filter(floor_error == min(floor_error)) %>%
+      slice_min(rank.y, n = 1)
+    
+    min = par[err[1, "id"],]
+    
+  } else {
+    min = vals
+  }
+  min
+}
+
+
+
 #' Percent Bias
 #' @description Percent Bias between sim and obs, with treatment of missing values.
 #' @param sim numeric vector simulated values
@@ -90,45 +220,34 @@ rmse <- function (sim, obs, na.rm=TRUE) {
 #' @param df hydraulic data.frame
 #' @param allowance allowable deviation from continuity
 #' @param r fit list
-#' @param type metric to evaluate
+#' @inheritParams fhg_estimate
 #' @return data.frame
 #' @family FHG
 #' @export
 
-calc_nsga = function(df, allowance = .05, r, type = "nrmse") {
+calc_nsga = function(df, 
+                     allowance = .05, 
+                     r, 
+                     scale = 2, 
+                     gen = 96,
+                     pop = 500,
+                     cprob = .8,
+                     mprob = .05, 
+                     times = 1) {
   
-  if (type == "nrmse") {
-    
     fitness <- function(x) {
-      ## order: k,m,a,b,c,f
       ## order: k,m,a,b,c,f
       V.tmp = x[1]*df$Q^x[2]
-      v = nrmse(V.tmp, df$V) 
-      
       T.tmp = x[3]*df$Q^x[4]
-      t =nrmse(T.tmp, df$TW) 
-      
       D.tmp = x[5]*df$Q^x[6]
-      d = nrmse(D.tmp, df$Y) 
-      
-      return(c(v,t,d))
-    }
-    
-  } else {
-    
-    fitness <- function(x) {
-      
-      ## order: k,m,a,b,c,f
-      v = mean(abs((df$V - (x[1] * df$Q ^ x[2])) / df$V))
-      t = mean(abs((df$TW - (x[3] * df$Q ^ x[4])) / df$TW))
-      d = mean(abs((df$Y - (x[5] * df$Q ^ x[6])) / df$Y))
-      return(c(v, t, d))
-    }
-    
-  }
   
+      return(c(nrmse(V.tmp, df$V),
+               nrmse(T.tmp, df$TW),
+               nrmse(D.tmp, df$Y)))
+    }
+
   # Define Constraints
-  c4 = function(x) {
+  constraints = function(x) {
     c1 = (x[1] * x[3] * x[5])
     c2 = (x[2] + x[4] + x[6])
     
@@ -139,96 +258,47 @@ calc_nsga = function(df, allowance = .05, r, type = "nrmse") {
     ))
   }
   
-  cont = function(par) {
-    c1 <- c2 <- c1_e <- c2_e <- c3 <- NULL
-    data.frame(
-      id = 1:nrow(par),
-      r = par[, 6] / par[, 4],
-      c1 = par[, 1] * par[, 3] * par[, 5],
-      c2 = par[, 2] + par[, 4] + par[, 6]
-    ) %>%
-      mutate(
-        c1_e = abs(1 - c1),
-        c2_e = abs(1 - c2),
-        c3 = c1_e + c2_e,
-        rank = rank(c3)
-      )
+  mm = min_max(df, scale)
+  
+  o2 = list()
+  
+  for(i in seq_along(times)){
+    o2[[i]] = run_it(
+           fitness, 
+           constraints, 
+           i,
+           cprob, 
+           mprob,  
+           gen, 
+           pop,
+           lower.bounds = mm$low, 
+           upper.bounds = mm$high)
   }
   
-  errors = function(vals) {
-    error <- NULL
-    vals %>% data.frame() %>%
-      mutate(id = 1:nrow(vals), error = rowSums(vals)) %>%
-      mutate(rank = rank(error))
-  }
-  
-  
-  run_it = function(fitness, c4, seed, cprob, mprob) {
-    set.seed(seed)
-    error <-  floor_error <- rank.y <-  NULL
-    nsga = nsga2(
-      fitness,
-      idim = 6,
-      odim = 3,
-      lower.bounds  = c(0, 0, 0, 0, 0, 0),
-      upper.bounds  = c(3.5, 1, 642, 1, 20, 1),
-      generations   = 200,
-      popsize       = 32,
-      cprob = cprob,
-      mprob = mprob,
-      constraints   = c4,
-      cdim = 4
-    )
-    
-    vals = nsga$value[nsga$pareto.optimal, ]
-    
-    if(is.null(nrow(vals))){
-      vals = matrix(vals, byrow = 1, nrow = 1)
-    }
-    vals = vals[!duplicated(vals), ]
-    par  = nsga$par[nsga$pareto.optimal, ]
-    
-    if(is.null(nrow(par))){
-      par = matrix(par, byrow = 1, nrow = 1)
-    }
-    par  = par[!duplicated(par), ]
-    
-    
-    
-    if (!is.null(dim(vals))) {
-      err  = left_join(errors(vals), cont(par), by = "id") %>%
-        mutate(floor_error = floor(error)) %>%
-        filter(floor_error == min(floor_error)) %>%
-        slice_min(rank.y, n = 1)
-      
-      min = par[err[1, "id"],]
-      
-    } else {
-      min = vals
-    }
-    min
-  }
-  
-  m = c(.1, .2, .3)
-  c = c(.5, .75, 1)
-  
-  g = expand.grid(m, c)
-  
-  o2 = rbind(run_it(fitness, c4, 1, g$Var2[1], g$Var1[1]),
-             run_it(fitness, c4, 2, g$Var2[2], g$Var1[2]),
-             run_it(fitness, c4, 3, g$Var2[3], g$Var1[3]),
-             run_it(fitness, c4, 4, g$Var2[4], g$Var1[4]),
-             run_it(fitness, c4, 5, g$Var2[5], g$Var1[5]),
-             run_it(fitness, c4, 6, g$Var2[6], g$Var1[6]),
-             run_it(fitness, c4, 7, g$Var2[7], g$Var1[7]),
-             run_it(fitness, c4, 8, cprob = g$Var2[8], mprob = g$Var1[8]),
-             run_it(fitness, c4, 9, cprob = g$Var2[9], mprob = g$Var1[9]))
+  o2 = do.call('rbind', o2)
+  #   # https://ai.stackexchange.com/questions/12019/how-to-find-optimal-mutation-probability-and-crossover-probability
+  #   o2 = rbind(# high crossover, low mutation
+  #              run_it(fitness, c4, 1, .8, .05, lower.bounds = mm$low, upper.bounds = mm$high),
+  #              run_it(fitness, c4, 4, .8, .05, lower.bounds = mm$low, upper.bounds = mm$high),
+  #              run_it(fitness, c4, 7, .8, .05, lower.bounds = mm$low, upper.bounds = mm$high),
+  #              
+  #              # high-ish crossover, low-ish mutation
+  #              run_it(fitness, c4, 2, .6, .2, lower.bounds = mm$low, upper.bounds = mm$high),
+  #              run_it(fitness, c4, 5, .6, .2, lower.bounds = mm$low, upper.bounds = mm$high),
+  #              run_it(fitness, c4, 8, .6, .2, lower.bounds = mm$low, upper.bounds = mm$high),
+  #              
+  #              # moderate crossover, moderate mutation
+  #              run_it(fitness, c4, 3, .4, .4, lower.bounds = mm$low, upper.bounds = mm$high),
+  #              run_it(fitness, c4, 6, .4, .4, lower.bounds = mm$low, upper.bounds = mm$high),
+  #              run_it(fitness, c4, 9, .4, .4, lower.bounds = mm$low, upper.bounds = mm$high)
+  #   )
+  # })
   
   err = apply(o2, 1, fitness) %>% 
     apply(2, sum)
 
   min = o2[which.min(err), ]
-  
+
   vp = (min[1] * df$Q ^ min[2])
   tp = (min[3] * df$Q ^ min[4])
   dp = (min[5] * df$Q ^ min[6])
@@ -258,6 +328,7 @@ calc_nsga = function(df, allowance = .05, r, type = "nrmse") {
     method = "nsga2",
     stringsAsFactors = FALSE
   )
+  
   r$V[3, ]  = data.frame(
     type = "V",
     exp = min[2] ,

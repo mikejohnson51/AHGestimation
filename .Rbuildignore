@@ -11,3 +11,6 @@ extra
 ^pkgdown$
 usgs-field-data
 paper
+codecov.yml
+data-raw
+.github

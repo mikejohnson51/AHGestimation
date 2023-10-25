@@ -45,17 +45,24 @@ best_optimal = function(best, check, verbose = TRUE) {
 #' @title Properly estimate FHG values
 #' @param df hydraulic data.frame
 #' @param allowance allowed deviation from continuity
+#' @param gen Number of generations to breed. 
+#' @param pop Size of population
+#' @inheritParams mco::nsga2
+#' @param times how many times (seeds) should nsga2 be run
+#' @param scale should a scale factor be applied to data pre NSGA-2 fitting
 #' @param verbose should messages be emitted?
 #' @return list
-#' @details
-#' If filter_data is TRUE. An best fit curve is fit to the raw data relationships and is used to predict
-#' A value for each Q. Data is only retained if the provided value is within +/- the `filter_threshold` (as a percent) of 
-#' the estimated value
 #' @family FHG
 #' @export
 
 fhg_estimate = function(df,
                         allowance = .05,
+                        gen = 192,
+                        pop = 200,
+                        cprob = .4,
+                        mprob = .4, 
+                        times = 1,
+                        scale = 1.5,
                         verbose = FALSE) {
   
   type <- NULL
@@ -84,6 +91,7 @@ fhg_estimate = function(df,
   r = list(fhg_y, fhg_tw, fhg_v)
   r = Filter(Negate(is.null), r)
   n = vector()
+  
   for(i in 1:length(r)){ n = append(n, r[[i]]$type[1])}
   names(r)  = n
   
@@ -137,9 +145,15 @@ fhg_estimate = function(df,
       }
       
       r = calc_nsga(
-        df,
-        allowance,
-        r
+        df = df,
+        allowance = allowance,
+        r = r,
+        scale = scale, 
+        gen = gen,
+        pop = pop,
+        cprob = cprob,
+        mprob = mprob, 
+        times = times
       )
       
       m = mismash(v = c("ols", "nls", "nsga2"),

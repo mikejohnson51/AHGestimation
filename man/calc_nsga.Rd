@@ -4,7 +4,17 @@
 \alias{calc_nsga}
 \title{Calculate GA FHG}
 \usage{
-calc_nsga(df, allowance = 0.05, r, type = "nrmse")
+calc_nsga(
+  df,
+  allowance = 0.05,
+  r,
+  scale = 2,
+  gen = 96,
+  pop = 500,
+  cprob = 0.8,
+  mprob = 0.05,
+  times = 1
+)
 }
 \arguments{
 \item{df}{hydraulic data.frame}
@@ -13,7 +23,17 @@ calc_nsga(df, allowance = 0.05, r, type = "nrmse")
 
 \item{r}{fit list}
 
-\item{type}{metric to evaluate}
+\item{scale}{should a scale factor be applied to data pre NSGA-2 fitting}
+
+\item{gen}{Number of generations to breed.}
+
+\item{pop}{Size of population}
+
+\item{cprob}{Crossover probability}
+
+\item{mprob}{Mutation probability}
+
+\item{times}{how many times (seeds) should nsga2 be run}
 }
 \value{
 data.frame

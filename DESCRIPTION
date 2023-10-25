@@ -1,7 +1,7 @@
 Package: FHGestimation
 Title: Compute robust, mass preserving Hydrualic Geometries
 Description: Compute FHG fits from river measurements.
-Version: 0.1
+Version: 0.2
 Authors@R: 
     c(person(given = "Mike", 
              family = "Johnson", 
