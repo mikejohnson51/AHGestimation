@@ -22,7 +22,7 @@ authors:
   affiliation: 1
 bibliography: paper.bib
 affiliations:
-- name: Lynker
+- name: Lynker, NWS/NOAA Office of Water Prediction Affiliate
   index: 1
 - name: UMass Amherst
   index: 2
@@ -60,9 +60,9 @@ and therefore:
 
 Large scale models simulating river flow are critical for forecasting water availability, drought, and flood inundation. These models must represent the size and shape of river channels in some generalized way. 
 
-While hydraulic geometry relationships have been extensively studied, they remain unquantified for the majority of stream reaches across the country. Consequently, large-scale models frequently use generalized approximations that impact the accuracy of streamflow estimates [@hess-26-6121-2022; @johnson2023comprehensive] and flood forecasting [@zheng2018river; @maidment2014national; @johnson2019integrated; @fim]. At NOAA, National Water Model characteristics are based on trapezoidal geometries (e.g. [@wrfhydro]) that are in part derived from hydraulic geometry relationships and drainage area assumptions (e.g. @blackburn2017development). 
+While hydraulic geometry relationships have been extensively studied, they remain unquantified for the majority of stream reaches across the country. Consequently, large-scale models frequently use incomplete approximations that impact the accuracy of streamflow estimates [@hess-26-6121-2022; @johnson2023comprehensive] and flood forecasting [@zheng2018river; @maidment2014national; @johnson2019integrated; @fim]. At NOAA, National Water Model characteristics are based on trapezoidal geometries (e.g. [@wrfhydro]) that are in part derived from hydraulic geometry relationships and drainage area assumptions found in [@bieger2015development; @bieger2016development; @blackburn2017development]. 
 
-Other efforts have aimed to calculate, and synthesize river channel data at a large scale in the United States (e.g. [@enzminger_thomas_l_2023_7868764; @afshari_shahab_2019_2558565]) however each of these relied on traditional Ordinary Least Squares Regression (OLS) fitting methods _and_ data preprocessing [@afshari2017statistical]. And while both efforts produced valuable data products, the software used is either not shared difficult to use.
+Other efforts have aimed to calculate, and synthesize river channel data at a large scale in the United States (e.g. [@enzminger_thomas_l_2023_7868764; @afshari_shahab_2019_2558565]) however each of these relied on traditional Ordinary Least Squares Regression (OLS) fitting methods _and_ data preprocessing [@afshari2017statistical]. And while both efforts produced valuable data products, the software is not shared.
 
 This open source package is designed to assist work flows that are challenged by the following characteristics of hydraulic data:
 
@@ -115,8 +115,8 @@ nwis
 nrow(nwis)
 #>  245
 
-# Keep only those observation made in the last 10 year, 
-# and that fall withing the .5 nls allowance
+# Keep only those observation made in the most recent 10 years, 
+# and that fall withing the .5 nls envelope
 (data = nwis  |>
   date_filter(10, keep_max = TRUE) |> 
   nls_filter(allowance = .5) )
@@ -124,7 +124,11 @@ nrow(nwis)
 # data reduced to 80 observations based on filters
 nrow(data)
 #>  80
-  
+```
+
+The reduces data can then be used to fit an AHG relation and compute a set of hydraulic parameters:
+
+``` r
 # Fit AHG relations
 ahg_fit = ahg_estimate(data)
 t(ahg_fit[1,])
@@ -150,13 +154,19 @@ shape = compute_hydraulic_params(ahg_fit[1,])
 
 #>        r         p        d        R        bd        fd        md
 #> 2.749318 0.6103574 5.427385 1.363727 0.1842508 0.5065641 0.3091851
+```
 
-# Use the max TW, max depth, and derived `r` to generate a cross section
-# x is the relative distance from the left bank
-# Y is the assocated depth
-# A is the area assoicated with depth Y
+Finally, the max width and depth, paired with the derived `r` coefficient can be used to generate a cross section:
 
-cs = cross_section(r = shape$r,  TW = max(data$TW), Ymax = max(data$Y))
+``` r
+# Use the max width, max depth, and derived `r` to generate a cross section
+# x: is the relative distance from the left bank
+# Y: is the associated depth
+# A: is the area associated with depth Y
+
+cs = cross_section(r = shape$r,  
+                   TW = max(data$TW), 
+                   Ymax = max(data$Y))
 
 #>  ind         x            Y            A
 #>    1  0.000000 3.5656665613 1.318953e+02
@@ -180,5 +190,7 @@ As a proof of concept, this approach was applied to the synthetic rating curves 
 The development of this package began in 2017 following the NWS/NOAA OWP Summer Institute and clear evidence channel shape may be a limiting factor in National Water Model performance. 
 
 The algorithm and implementation began as a graduate school project between friends at UC Santa Barbara and UMass Amherst and has since evolved to provide an open source utility for robust large scale data synthesis and evaluation. Funding from the National Science Foundation (Grants 1937099, 2033607) provided time to draft [@preprint] and apply an early version of this software to the Continental Flood Inundation Mapping synthetic rating curve dataset [@cfim]. Funding from the NWS/NOAA OWP supported the addition of data filtering and hydraulic geometry estimation, improved documentation, and code hardening. We are grateful to all involved.
+
+\newpage
 
 # References
