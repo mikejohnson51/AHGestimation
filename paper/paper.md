@@ -54,7 +54,7 @@ $$
 
 and therefore:
 
-\begin{eqnarray} b + f + m &=& \\ a·c·k &=&  \\ &=& 1 \end{eqnarray}
+\begin{eqnarray} b + f + m &=& \\ a * c * k &=&  \\ &=& 1 \end{eqnarray}
 
 ### Statement of need
 
