@@ -35,15 +35,15 @@ affiliations:
 In the field of hydrology it is common to express the behavior of a river channel at a given cross section using power law equations relating top width (TW), mean depth (Y), and velocity (V) to a given discharge (Q). Collectively these equations define the "at a station hydraulic geometry" (AHG) [@leopold1953hydraulic].
 
 $$
-TW = a*Q^b
+TW = a\times Q^b
 $$
 
 $$
-Y = c*Q^f
+Y = c\times Q^f
 $$
 
 $$
-V = k*Q^m
+V = k\times Q^m
 $$
 
 AHG relations apply to within-bank flows at a specific cross section and assume the channel characteristics do not significantly change with discharge. Under these assumptions, two continuity conditions determine mass conservation. When either of these is violated, the AHG's equations will cause mass imbalances in computations.
