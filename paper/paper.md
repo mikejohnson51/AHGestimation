@@ -1,27 +1,31 @@
 ---
 title: 'AHGestimation: an R package for hybrid estimation of hydraulic geometry'
 tags:
-  - hydrology
-  - AHG
-  - optimization
-  - hydraulics
+- hydrology
+- AHG
+- optimization
+- hydraulics
+date: "11 September 2023"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
 authors:
-  - name: J Michael Johnson
-    orcid: 0000-0002-5288-8350
-    affiliation: 1
-  - name: Shahab Afshari
-    orcid: 0000-0002-5166-6721
-    affiliation: 2
-  - name: Arash Modaresi Rad
-    orcid: 0000-0002-6030-7923
-    affiliation: 1
-affiliations:
- - name: Lynker
-   index: 1
- - name: UMass Amherst
-   index: 2
-date: 11 September 2023
+- name: J Michael Johnson
+  orcid: "0000-0002-5288-8350"
+  affiliation: 1
+- name: Shahab Afshari
+  orcid: "0000-0002-5166-6721"
+  affiliation: 2
+- name: Arash Modaresi Rad
+  orcid: "0000-0002-6030-7923"
+  affiliation: 1
 bibliography: paper.bib
+affiliations:
+- name: Lynker
+  index: 1
+- name: UMass Amherst
+  index: 2
 ---
 
 # Summary
@@ -42,7 +46,7 @@ $$
 V = k*Q^m
 $$
 
-A set of AHG relations applies to within-bank flows at a specific cross section and assumes the channel characteristics do not significantly change with discharge. Under these assumptions, two continuity conditions determine if mass is conserved in the system. When either of these is violated, the AHG's equations will cause mass imbalances in computations.
+AHG relations apply to within-bank flows at a specific cross section and assume the channel characteristics do not significantly change with discharge. Under these assumptions, two continuity conditions determine mass conservation. When either of these is violated, the AHG's equations will cause mass imbalances in computations.
 
 $$
 Q = TW·Y·V
@@ -50,17 +54,15 @@ $$
 
 and therefore:
 
-$$
-\begin{eqnarray} b + f + m &=& \\ a·c·k &=&  \\ &=& 1  \end{eqnarray}
-$$
+\begin{eqnarray} b + f + m &=& \\ a·c·k &=&  \\ &=& 1 \end{eqnarray}
 
 ### Statement of need
 
-Large scale models simulating river flow are critical for forecasting water availability, drought, and flood inundation. These models must represent the shape of river channels in some generalized way. 
+Large scale models simulating river flow are critical for forecasting water availability, drought, and flood inundation. These models must represent the size and shape of river channels in some generalized way. 
 
-While hydraulic geometry relationships have been extensively studied, they remain unquantified for the majority of stream reaches across the country. Consequently, large-scale  models frequently use simple approximations that impact the accuracy of streamflow estimates [@hess-26-6121-2022; @johnson2023comprehensive] and flood forecasting [@zheng2018river; @maidment2014national; @johnson2019integrated; @fim]. At NOAA, these relationships have been based on trapezoidal geometries (e.g. [@wrfhydro]) derived from drainage area assumptions (e.g. [@blackburn2017development]). 
+While hydraulic geometry relationships have been extensively studied, they remain unquantified for the majority of stream reaches across the country. Consequently, large-scale models frequently use generalized approximations that impact the accuracy of streamflow estimates [@hess-26-6121-2022; @johnson2023comprehensive] and flood forecasting [@zheng2018river; @maidment2014national; @johnson2019integrated; @fim]. At NOAA, National Water Model characteristics are based on trapezoidal geometries (e.g. [@wrfhydro]) that are in part derived from hydraulic geometry relationships and drainage area assumptions (e.g. @blackburn2017development). 
 
-Other efforts have aimed to calculate, and synthesize river channel data at a large scale in the United States (e.g. [@enzminger_thomas_l_2023_7868764; @afshari_shahab_2019_2558565]) however each of these relied on traditional OLS fitting methods AND data preprocessing [@afshari2017statistical]. And while both efforts produced valuable data products, the software used is not shared.
+Other efforts have aimed to calculate, and synthesize river channel data at a large scale in the United States (e.g. [@enzminger_thomas_l_2023_7868764; @afshari_shahab_2019_2558565]) however each of these relied on traditional Ordinary Least Squares Regression (OLS) fitting methods _and_ data preprocessing [@afshari2017statistical]. And while both efforts produced valuable data products, the software used is either not shared difficult to use.
 
 This open source package is designed to assist work flows that are challenged by the following characteristics of hydraulic data:
 
@@ -71,11 +73,11 @@ This open source package is designed to assist work flows that are challenged by
 
 ### Software
 
-Estimating AHG's has predominately occurred on a location-by-location basis with site specific knowledge guiding the data used and the validation of the outputs. As efforts seek to extend to coverage of hydrologic models and flood inundation mapping (FIM), the ability to estimate these relations from disparate and often noisy datasets is increasingly important.
+AHG estimates have predominately occurred on a location-by-location basis with site specific knowledge guiding the data used and the validation of the outputs. As interest in large scale model applications increases, the need to estimate these relations from disparate and often noisy datasets is increasingly important.
 
 `AHGestimation` is an R package [@r-project] providing three capabilities:
 
-1. Tools to estimate single and full system AHG relations using a robust estimation techniques that enforces flow continuity and minimizes total system error (`ahg_estimate`). This is accomplished by introducing a hybrid approach that supplements the traditional Ordinary Least Squares approach, with a  Nonlinear Least Square regression, Evolutionary algorithm (NSGA-2; [@mco]), and ensemble modeling approach.
+1. Tools to estimate single and full system AHG relations using a robust estimation techniques that enforces flow continuity and minimizes total system error (`ahg_estimate`). This is accomplished by introducing a hybrid approach that supplements the traditional OLS approach, with a  Nonlinear Least Square (NLS) regression, Evolutionary algorithm (NSGA-2; @mco), and ensemble modeling approach.
 
 2. Methods to filter outliers based on time (`date_filter`), mass conservation (`qva_filter`), and statistical detection (`mad_filter`, `nls_filter`).
 
@@ -83,7 +85,7 @@ Estimating AHG's has predominately occurred on a location-by-location basis with
 
 The package documentation includes several examples on the theory, design, and application of this tool set.
 
-The first stable version of `AHGestimation` was made available in 2019 and applied to an aggregated dataset of USGS manual field measurements. Since then, it has been actively developed to better understand and quantify these fundamental relationships in the face of noisy, large, and disparate data sources. Applications of the software have been used to (1) better deliver actionable flood forecasts from the NOAA National Water Model [@johnson2022knowledge] (2) help the NOAA Office of Water Prediction's efforts to develop a 3D hydrography to improve national hydrologic and flood prediction and to (3) bolster the co-agency National Hydrologic Geospatial Fabric [[@referencefabric; @blodgett2021mainstems; @blodgett2023generating]].
+The first stable version of `AHGestimation` was made available in 2019 and was applied to an aggregated dataset of USGS manual field measurements. Since then, it has been actively developed to better understand and quantify these fundamental relationships in the face of noisy, large, and disparate data sources. Applications of the software have been used to (1) demonstrate how improved flood forecasts could be delivered from the NWS/NOAA National Water Model [@johnson2022knowledge] (2)  help the NOAA/NWS Office of Water Prediction develop continental scale channel size and shape estimates to improve flood prediction and hydraulic routing and to (3) bolster the co-agency sponsored National Hydrologic Geospatial Fabric [@referencefabric; @blodgett2021mainstems; @blodgett2023generating].
 
 # Example of use
 
@@ -95,24 +97,35 @@ The first stable version of `AHGestimation` was made available in 2019 and appli
 remotes::install.packages("mikejohnson51/AHGestimation")
 ```
 
-This example shows how the package can be used to (1) remove data outliers based on time criteria and an NLS envelope (2) fit AHG parameters using our hybrid modeling approach and (3) estimate and plot the shape of the associated cross-section with an area-depth relation. The script to generate the plot can be found [here](image.R).
+This example shows how the package can be used to (1) remove data outliers based on time criteria and an NLS envelope (2) fit AHG parameters using a hybrid modeling approach and (3) estimate and plot the shape of the associated cross-section with an area-depth relation. The script to generate the plot can be found [here](image.R), and the `nwis` data object is exported with the package to provide sample data and contains the field measurements taken at [USGS site 01096500 on the Nashua River at East Pepperell in Massachusetts](https://waterdata.usgs.gov/nwis/measurements/?site_no=01096500&agency_cd=USGS). 
 
 ``` r 
+nwis
+
+#> siteID       date           Q         Y        V       TW
+#> 01096500 1984-11-14   9.7409954 0.5276645 0.652272 28.34640
+#> 01096500 1985-01-04  11.8930757 0.6263473 0.682752 27.73680
+#> 01096500 1985-05-06  10.8170356 0.5952226 0.563880 32.30880
+#> 01096500 1985-06-26   1.9453674 0.2400300 0.332232 24.38400
+#> 01096500 1986-01-09  11.3550556 0.5920154 0.606552 31.69920
+#> 01096500 1986-02-27  21.4358532 0.8574593 0.902208 27.73680
+#> 01096500 1986-05-22   6.9093107 0.4806462 0.454152 31.69920
+#> 01096500 1986-07-07   8.9198068 0.5457371 0.512064 32.00400
+
+nrow(nwis)
+#>  245
+
+# Keep only those observation made in the last 10 year, 
+# and that fall withing the .5 nls allowance
 (data = nwis  |>
   date_filter(10, keep_max = TRUE) |> 
   nls_filter(allowance = .5) )
+
+# data reduced to 80 observations based on filters
+nrow(data)
+#>  80
   
-#>  siteID       date           Q         Y        V       TW
-#>  01096500 1987-04-07 317.1486864 3.7651765 1.624584 51.81600
-#>  01096500 2009-06-10   4.9837651 0.3386667 0.445008 32.91840
-#>  01096500 2010-03-25 122.6119475 2.2812075 1.106424 48.46320
-#>  01096500 2010-04-06  67.1109274 1.4431347 1.039368 44.80560
-#>  01096500 2010-09-16   2.1464170 0.3609009 0.283464 21.03120
-#>  01096500 2011-03-10 124.0277899 2.2813252 1.094232 49.68240
-#>  01096500 2011-03-10 118.9307574 2.2488293 1.063752 49.98720
-#>  01096500 2011-06-01  15.0645626 0.6897725 0.850392 25.72512
-#>  01096500 2011-12-01  49.2713138 1.4478000 0.932688 36.57600
-  
+# Fit AHG relations
 ahg_fit = ahg_estimate(data)
 t(ahg_fit[1,])
 
@@ -132,10 +145,16 @@ t(ahg_fit[1,])
 #> Y_exp     "0.5087359" 
 #> condition "bestValid" 
 
+# Use the AHG relations to compute hydraulic parameters
 shape = compute_hydraulic_params(ahg_fit[1,])
 
 #>        r         p        d        R        bd        fd        md
 #> 2.749318 0.6103574 5.427385 1.363727 0.1842508 0.5065641 0.3091851
+
+# Use the max TW, max depth, and derived `r` to generate a cross section
+# x is the relative distance from the left bank
+# Y is the assocated depth
+# A is the area assoicated with depth Y
 
 cs = cross_section(r = shape$r,  TW = max(data$TW), Ymax = max(data$Y))
 
@@ -154,12 +173,12 @@ cs = cross_section(r = shape$r,  TW = max(data$TW), Ymax = max(data$Y))
 
 ![Faceted image with multiple views of the channel estimate.\label{fig:ahg-1}](paper-fig1.png)
 
-As a proof of concept, this approach was applied to the synthetic rating curves in FIM4 data set ([@fim]). The package allowed the size of their rating curve database to be reduced by 99.68% and maintained average accuracy within 0.4% nRMSE or the source data. Further, the reduction to a consistent AHG formulation allows them to be more interoperable with efforts like [@enzminger_thomas_l_2023_7868764], or [@afshari_shahab_2019_2558565] while also beginning to provide key training data for more advanced prediction methods that seek to estimate the shape on non-measured river segments.
+As a proof of concept, this approach was applied to the synthetic rating curves generated by NWS/NOAA OWP's inundation mapping software ([@fim]). The package allowed the size of their rating curve database to be reduced by 99.68% and maintained average accuracy within 0.4% nRMSE or the source data [@preprint]. Further, the reduction to a consistent AHG formulation allows them to be more interoperable with efforts like [@enzminger_thomas_l_2023_7868764], or [@afshari_shahab_2019_2558565] while also beginning to provide key training data for more advanced prediction methods that seek to estimate the shape on non-measured river segments.
 
 # Acknowledgements
 
-The development of this package began in 2017 following the NOAA OWP Summer Institute and clear evidence channel shape may be a limiting factor in National Water Model Performance. 
+The development of this package began in 2017 following the NWS/NOAA OWP Summer Institute and clear evidence channel shape may be a limiting factor in National Water Model performance. 
 
-The algorithm and implementation began as a graduate school project between friends at UC Santa Barbara and UMass Amherst and has since evolved to provide an open source utility for robust large scale data synthesis and evaluation. Funding from the National Science Foundation (Grants 1937099, 2033607) provided time to draft [@preprint] and apply an early version of this software to the Continental Flood Inundation Mapping synthetic rating curve dataset [@cfim]. Funding from the National Oceanic and Atmospheric Administration's Office of Water Prediction supported the addition of data filtering and hydraulic estimation, improved documentation, and code hardening. We are grateful to all involved.
+The algorithm and implementation began as a graduate school project between friends at UC Santa Barbara and UMass Amherst and has since evolved to provide an open source utility for robust large scale data synthesis and evaluation. Funding from the National Science Foundation (Grants 1937099, 2033607) provided time to draft [@preprint] and apply an early version of this software to the Continental Flood Inundation Mapping synthetic rating curve dataset [@cfim]. Funding from the NWS/NOAA OWP supported the addition of data filtering and hydraulic geometry estimation, improved documentation, and code hardening. We are grateful to all involved.
 
 # References
