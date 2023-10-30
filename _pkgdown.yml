@@ -1,7 +1,15 @@
 url: ~
+
 template:
   bootstrap: 5
   bootswatch: litera
+  
+home:
+  title: Computing robust, mass preserving hydraulic geometries and rating curves
+  
+development:
+  mode: auto
+  
 authors:
    NOAA OWP: 
      html: "<img src='man/figures/noaa-logo.png' width=72 alt='NOAA OWP'/>"
@@ -15,6 +23,7 @@ authors:
     roles: [cre]
    sidebar:
     roles: [cre, ctb, fnd]
+    
 articles:
 - title: AHG Estimation
   desc: Quick Start
@@ -24,6 +33,7 @@ articles:
   - optimize-nsga2
   - data-filtering
   - hydraulics
+  
 reference:
 - title: AHG estimation
 - subtitle: 

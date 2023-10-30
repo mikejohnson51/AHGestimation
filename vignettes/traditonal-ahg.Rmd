@@ -1,11 +1,17 @@
 ---
 title: "Traditional AHG fitting"
+description: |
+  "Traditional AHG fitting using OLS"
 author:
   - name: "Mike Johnson"
     url: https://github.com/mikejohnson51
     affiliation: Lynker, NOAA-Affilate
     affiliation_url: https://lynker.com
 output: distill::distill_article
+vignette: >
+  %\VignetteEngine{knitr::knitr}
+  %\VignetteIndexEntry{ols}
+  %\usepackage[UTF-8]{inputenc}
 ---
 
 ```{r, include = FALSE}
@@ -26,13 +32,13 @@ library(AHGestimation)
 The idea of hydraulic geometry was introduced by Leopold and Maddock (1953) and the concept of 'at-a-station hydraulic geometry' (AHG) provides three power laws that relate water-surface width (TW), average depth (Y), and average velocity (V) to the stream flow (Q) in a given river cross section:
 
 $$
-TW = a *Q^b
+TW = a  \cdot Q^b
 $$
 $$
-Y = c*Q^f
+Y = c \cdot Q^f
 $$
 $$
-V = k*Q^m
+V = k \cdot Q^m
 $$
 
 A  set of AHG relations applies to within-bank flows at a

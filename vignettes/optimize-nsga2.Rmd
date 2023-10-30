@@ -1,11 +1,17 @@
 ---
 title: "Fine Tuning NSGA-2"
+description: |
+  "Optimizing the NSGA-2 solver for AHG problems"
 author:
   - name: "Mike Johnson"
     url: https://github.com/mikejohnson51
     affiliation: Lynker, NOAA-Affilate
     affiliation_url: https://lynker.com
 output: distill::distill_article
+vignette: >
+  %\VignetteEngine{knitr::knitr}
+  %\VignetteIndexEntry{nsga2}
+  %\usepackage[UTF-8]{inputenc}
 ---
 
 ```{r, include = FALSE}

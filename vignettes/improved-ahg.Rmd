@@ -1,11 +1,17 @@
 ---
 title: "Improving AHG Estimates"
+description: |
+  "Hybrid AHG estimation techniques"
 author:
   - name: "Mike Johnson"
     url: https://github.com/mikejohnson51
     affiliation: Lynker, NOAA-Affilate
     affiliation_url: https://lynker.com
 output: distill::distill_article
+vignette: >
+  %\VignetteEngine{knitr::knitr}
+  %\VignetteIndexEntry{ahg}
+  %\usepackage[UTF-8]{inputenc}
 ---
 
 ```{r, include = FALSE}

@@ -1,5 +1,7 @@
 ---
 title: "Hydraulic Data Generation"
+description: |
+  "Hydraulic Shape estimation"
 author:
   - name: "Mike Johnson"
     url: https://github.com/mikejohnson51
@@ -10,6 +12,10 @@ author:
     affiliation: Lynker, NOAA-Affilate
     affiliation_url: https://lynker.com
 output: distill::distill_article
+vignette: >
+  %\VignetteEngine{knitr::knitr}
+  %\VignetteIndexEntry{hydraulics}
+  %\usepackage[UTF-8]{inputenc}
 ---
 
 ```{r, include = FALSE}
