@@ -1,6 +1,6 @@
 ## Test environments
 
-* GitHub Actions (ubuntu-latest): release
+* GitHub Actions (ubuntu-latest): release, devel, oldrel-1
 * GitHub Actions (windows-latest): release
 * GitHub Actions (macOS-latest): release
 

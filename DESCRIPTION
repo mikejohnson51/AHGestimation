@@ -19,26 +19,26 @@ BugReports: https://github.com/mikejohnson51/AHGestimation/issues
 URL: https://github.com/mikejohnson51/AHGestimation
 Depends: 
     R(>= 3.5.0)
-Imports:
-  dplyr,
-  DescTools,
-  mco,
-  stats
+Imports: 
+    DescTools,
+    dplyr,
+    mco,
+    stats
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.2.3
 Suggests: 
-    DT,
-    ggrepel,
-    knitr,
     distill,
-    kableExtra,
-    tidyr,
-    nhdplusTools, 
-    patchwork,
+    DT,
     ggplot2,
+    ggrepel,
+    kableExtra,
+    knitr,
+    nhdplusTools,
+    patchwork,
     rmarkdown,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    tidyr
 Config/testthat/edition: 3
 VignetteBuilder: knitr
