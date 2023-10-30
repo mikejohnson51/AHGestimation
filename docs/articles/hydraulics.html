@@ -100,15 +100,15 @@ for more)</p>
 <span>  <span class="fu"><a href="../reference/date_filter.html">date_filter</a></span><span class="op">(</span><span class="fl">10</span>, keep_max <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
 <span>  <span class="fu"><a href="../reference/nls_filter.html">nls_filter</a></span><span class="op">(</span>allowance <span class="op">=</span> <span class="fl">.5</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">glimpse</span><span class="op">(</span><span class="va">data</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Rows: 80</span></span>
-<span><span class="co">## Columns: 6</span></span>
-<span><span class="co">## $ siteID <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "01096500", "01096500", "01096500", "01096500", "01096500", "01…</span></span>
-<span><span class="co">## $ date   <span style="color: #949494; font-style: italic;">&lt;date&gt;</span> 1987-04-07, 2009-06-10, 2010-03-25, 2010-04-06, 2010-09-16, 20…</span></span>
-<span><span class="co">## $ Q      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 317.148686, 4.983765, 122.611948, 67.110927, 2.146417, 124.0277…</span></span>
-<span><span class="co">## $ Y      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 3.7651765, 0.3386667, 2.2812075, 1.4431347, 0.3609009, 2.281325…</span></span>
-<span><span class="co">## $ V      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 1.624584, 0.445008, 1.106424, 1.039368, 0.283464, 1.094232, 1.0…</span></span>
-<span><span class="co">## $ TW     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 51.81600, 32.91840, 48.46320, 44.80560, 21.03120, 49.68240, 49.…</span></span></code></pre>
+<span><span class="fu">glimpse</span><span class="op">(</span><span class="va">data</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Rows: 80</span></span>
+<span><span class="co">#&gt; Columns: 6</span></span>
+<span><span class="co">#&gt; $ siteID <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "01096500", "01096500", "01096500", "01096500", "01096500", "01…</span></span>
+<span><span class="co">#&gt; $ date   <span style="color: #949494; font-style: italic;">&lt;date&gt;</span> 1987-04-07, 2009-06-10, 2010-03-25, 2010-04-06, 2010-09-16, 20…</span></span>
+<span><span class="co">#&gt; $ Q      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 317.148686, 4.983765, 122.611948, 67.110927, 2.146417, 124.0277…</span></span>
+<span><span class="co">#&gt; $ Y      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 3.7651765, 0.3386667, 2.2812075, 1.4431347, 0.3609009, 2.281325…</span></span>
+<span><span class="co">#&gt; $ V      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 1.624584, 0.445008, 1.106424, 1.039368, 0.283464, 1.094232, 1.0…</span></span>
+<span><span class="co">#&gt; $ TW     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 51.81600, 32.91840, 48.46320, 44.80560, 21.03120, 49.68240, 49.…</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="compute-roughness">Compute Roughness<a class="anchor" aria-label="anchor" href="#compute-roughness"></a>
@@ -129,7 +129,7 @@ NHDPlusv2 by extracting the value for the gage we used by combining the
 median depth (Y) as an approximation for R, the median Velocity (V) from
 the field measurement record. Thus, we report roughness which
 approximates the historical median measured flow at each gage.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://doi-usgs.github.io/nhdplusTools/" class="external-link">nhdplusTools</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">q</span> <span class="op">=</span> <span class="fu"><a href="https://doi-usgs.github.io/nhdplusTools/reference/get_nldi_feature.html" class="external-link">get_nldi_feature</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"featureSource"</span> <span class="op">=</span> <span class="st">"nwissite"</span>, </span>
@@ -138,8 +138,8 @@ approximates the historical median measured flow at each gage.</p>
 <span><span class="va">att</span> <span class="op">=</span> <span class="fu"><a href="https://doi-usgs.github.io/nhdplusTools/reference/get_vaa.html" class="external-link">get_vaa</a></span><span class="op">(</span><span class="st">"slope"</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">comid</span> <span class="op">==</span> <span class="va">q</span><span class="op">$</span><span class="va">comid</span><span class="op">)</span></span>
 <span></span>
-<span><span class="op">(</span><span class="va">n</span> <span class="op">=</span> <span class="fu"><a href="../reference/compute_n.html">compute_n</a></span><span class="op">(</span><span class="va">data</span>, S <span class="op">=</span> <span class="va">att</span><span class="op">$</span><span class="va">slope</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] 0.1451996</span></span></code></pre>
+<span><span class="op">(</span><span class="va">n</span> <span class="op">=</span> <span class="fu"><a href="../reference/compute_n.html">compute_n</a></span><span class="op">(</span><span class="va">data</span>, S <span class="op">=</span> <span class="va">att</span><span class="op">$</span><span class="va">slope</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 0.1451996</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="compute-r-d-r-and-p">Compute r, d, R and p<a class="anchor" aria-label="anchor" href="#compute-r-d-r-and-p"></a>
@@ -159,7 +159,7 @@ computed as:</p>
 r = f/b
 \]</span></p>
 <div class="figure">
-<img src="../reference/figures/dingman-r.png" alt="Figure 1" width="412"><p class="caption">
+<img src="../reference/figures/dingman-r.png" alt="Figure 1" width="100%"><p class="caption">
 Figure 1
 </p>
 </div>
@@ -185,11 +185,11 @@ p = m/f
 open-channel hydraulics that has resisted simple solution**. In
 practice, coefficient κ and exponent p can be determined by regression
 of <code>ln(V)</code> on <code>ln(Y)</code></p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/compute_ahg.html">compute_ahg</a></span><span class="op">(</span>Q <span class="op">=</span> <span class="va">data</span><span class="op">$</span><span class="va">Y</span>,  P <span class="op">=</span> <span class="va">data</span><span class="op">$</span><span class="va">V</span>, type <span class="op">=</span> <span class="st">"kp"</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span>,<span class="op">]</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">rename</span><span class="op">(</span>k <span class="op">=</span> <span class="va">coef</span>, p <span class="op">=</span> <span class="va">exp</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##   type        p         k nrmse   pb method</span></span>
-<span><span class="co">## 1   kp 0.611539 0.7561858  9.06 0.67    nls</span></span></code></pre>
+<span>  <span class="fu">rename</span><span class="op">(</span>k <span class="op">=</span> <span class="va">coef</span>, p <span class="op">=</span> <span class="va">exp</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   type        p         k nrmse   pb method</span></span>
+<span><span class="co">#&gt; 1   kp 0.611539 0.7561858  9.06 0.67    nls</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="d-r">d, R<a class="anchor" aria-label="anchor" href="#d-r"></a>
@@ -205,19 +205,19 @@ d ≡ 1 + r + rp
 \]</span></p>
 <p>To estimate the suite of these parameters, we provide the
 <code>compute_hydraulic_params</code></p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fit</span> <span class="op">=</span> <span class="fu"><a href="../reference/ahg_estimate.html">ahg_estimate</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span>,<span class="op">]</span></span>
 <span><span class="va">fit</span> <span class="op">=</span> <span class="fu"><a href="../reference/compute_hydraulic_params.html">compute_hydraulic_params</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##            1</span></span>
-<span><span class="co">## r  2.7493181</span></span>
-<span><span class="co">## p  0.6103574</span></span>
-<span><span class="co">## d  5.4273846</span></span>
-<span><span class="co">## R  1.3637266</span></span>
-<span><span class="co">## bd 0.1842508</span></span>
-<span><span class="co">## fd 0.5065641</span></span>
-<span><span class="co">## md 0.3091851</span></span></code></pre>
+<span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
+<span><span class="co">#&gt;            1</span></span>
+<span><span class="co">#&gt; r  2.7493181</span></span>
+<span><span class="co">#&gt; p  0.6103574</span></span>
+<span><span class="co">#&gt; d  5.4273846</span></span>
+<span><span class="co">#&gt; R  1.3637266</span></span>
+<span><span class="co">#&gt; bd 0.1842508</span></span>
+<span><span class="co">#&gt; fd 0.5065641</span></span>
+<span><span class="co">#&gt; md 0.3091851</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level3">
@@ -239,21 +239,21 @@ V = BFW^{-(r*p)/d} * (BFD/ R)^{p / d} * κ^{(1+r)/d} * Q^{(-r*p)/d}
 <div class="section level3">
 <h3 id="generate-cross-sections">Generate Cross sections<a class="anchor" aria-label="anchor" href="#generate-cross-sections"></a>
 </h3>
-<p><img src="../reference/figures/dingman-bed.png" width="692"></p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<p><img src="../reference/figures/dingman-bed.png" width="100%"></p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cs</span> <span class="op">=</span> <span class="fu"><a href="../reference/cross_section.html">cross_section</a></span><span class="op">(</span>r <span class="op">=</span> <span class="va">fit</span><span class="op">$</span><span class="va">r</span>, </span>
 <span>                   TW <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">TW</span><span class="op">)</span>, </span>
 <span>                   Ymax <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">Y</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cs</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##   ind        x        Y         A</span></span>
-<span><span class="co">## 1   1 0.000000 3.565667 131.89525</span></span>
-<span><span class="co">## 2   2 1.040816 3.187122 113.01118</span></span>
-<span><span class="co">## 3   3 2.081633 2.835189  96.18829</span></span>
-<span><span class="co">## 4   4 3.122449 2.509030  81.27753</span></span>
-<span><span class="co">## 5   5 4.163265 2.207803  68.13466</span></span>
-<span><span class="co">## 6   6 5.204082 1.930653  56.62032</span></span></code></pre>
-<p><img src="hydraulics_files/figure-html/unnamed-chunk-9-1.png" width="700"></p>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cs</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   ind        x        Y         A</span></span>
+<span><span class="co">#&gt; 1   1 0.000000 3.565667 131.89525</span></span>
+<span><span class="co">#&gt; 2   2 1.040816 3.187122 113.01118</span></span>
+<span><span class="co">#&gt; 3   3 2.081633 2.835189  96.18829</span></span>
+<span><span class="co">#&gt; 4   4 3.122449 2.509030  81.27753</span></span>
+<span><span class="co">#&gt; 5   5 4.163265 2.207803  68.13466</span></span>
+<span><span class="co">#&gt; 6   6 5.204082 1.930653  56.62032</span></span></code></pre></div>
+<p><img src="hydraulics_files/figure-html/unnamed-chunk-9-1.png" width="100%"></p>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
@@ -264,7 +264,7 @@ V = BFW^{-(r*p)/d} * (BFD/ R)^{p / d} * κ^{(1+r)/d} * Q^{(-r*p)/d}
 
     <footer><div class="pkgdown-footer-left">
   <p></p>
-<p>Developed by Mike Johnson.</p>
+<p>Developed by Mike Johnson, Arash Modaresi Rad.</p>
 </div>
 
 <div class="pkgdown-footer-right">

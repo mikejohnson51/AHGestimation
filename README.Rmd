@@ -9,7 +9,8 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.path = "man/figures/README-",
-  out.width = "100%"
+  out.width = "100%",
+  dev = "jpeg"
 )
 
 library(dplyr)
@@ -27,8 +28,7 @@ library(patchwork)
 
 # AHGestimation
 
-> **_Citation:_** Johnson, J.M. (2022) AHGestimation: Tools for Estimating Physically-Based, Computationally Efficient Feature Based Hydraulic
-Geometry and Rating Curves.
+> **_Old Citation:_** Johnson, J.M. (2022) AHGestimation: An R package for Computing robust, mass preserving Hydraulic Geometries and Rating Curves.
 
 Using data from the USGS manual measurement (Johnson, 2018), we can illustrate the utilities in this package. Overall this package provides 4 capabilities:
 

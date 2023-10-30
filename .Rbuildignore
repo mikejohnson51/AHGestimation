@@ -2,15 +2,11 @@
 ^LICENSE\.md$
 ^.*\.Rproj$
 ^\.Rproj\.user$
-r2
-inst/extdata
-docs
-extra
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
-usgs-field-data
 paper
 codecov.yml
-data-raw
 .github
+^README\.Rmd$
+^cran-comments\.md$

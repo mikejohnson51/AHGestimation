@@ -6,17 +6,14 @@ author:
     affiliation: Lynker, NOAA-Affilate
     affiliation_url: https://lynker.com
 output: distill::distill_article
-vignette: >
-  %\VignetteIndexEntry{nsga2}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  out.width = "100%"
+  out.width = "100%",
+  dev = "jpeg"
 )
 
 library(ggplot2)
@@ -107,7 +104,7 @@ pop   = c(100, 200, 300, 500, 700, 1000)
 ```
 
 ```{r, echo = FALSE, eval = TRUE}
-tt = readRDS("../data-raw/pop-gen-experiment.rds") %>% 
+tt = readRDS(system.file("extdata/pop-gen-experiment.rds", package = "AHGestimation")) %>% 
   group_by(gen, pop) %>% 
   summarise(s = sum(rank),
             na = sum(is.na(error)),
@@ -177,7 +174,7 @@ Here, we tested the 15 combinations (3 probabilities, 5 gen/pop combinations) fo
 Below plot (A) shows the mean error of each combination across the 25 locations against the mean time to converge. Plot (B) shows the mean variance in each grouping against the mean time to converge.
 
 ```{r, echo = FALSE}
-x = readRDS("../data-raw/prob-experiment.rds")
+x = readRDS(system.file("extdata/prob-experiment.rds", package = "AHGestimation"))
 
 tt = x %>% 
   group_by(spawn) %>% 
@@ -214,6 +211,7 @@ ggplot(data = tt) +
 DT::datatable(arrange(select(filter(tt, col1 != "gray" & col2 != "gray"), label = spawn,pop = mp, gen = mg, mprob = mm, cprob = mc, total_error = me, mean_variation = ve,  time = mt), time))  %>%
   DT::formatRound(columns=c('time', 'total_error', 'mean_variation'), digits=2) 
 ```
+
 ### Winner
 
 The winner was the moderate crossover and mutation probability matrix with a small population size and large generation count: 
@@ -231,7 +229,7 @@ Overall, 96% of the tests fell within 2.5% of the best solutions error. In total
 This give us confidence that the solution space defined is adequate for solving this problem in a general way.
 
 ```{r, echo = FALSE}
-s = readRDS('../data-raw/seed-test-200.rds')
+s = readRDS(system.file("extdata/seed-test-200.rds", package = "AHGestimation"))
 
 s$color = ifelse(between(s$error, min(s$error), 1.025*min(s$error)), "red", "grey")
 

@@ -1,5 +1,5 @@
 ---
-title: 'AHGestimation: an R package for hybrid estimation of hydraulic geometry'
+title: 'AHGestimation: An R package for computing robust, mass preserving hydraulic geometries and rating curves'
 tags:
 - hydrology
 - AHG
