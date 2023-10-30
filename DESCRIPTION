@@ -14,7 +14,7 @@ Authors@R:
              comment = c(ORCID = "0000-0002-6030-7923")),
       person(given = "NOAA OWP",  role = "fnd"),
       person(given = "NSF",  role = "fnd"))
-Maintainer: Mike Johnson <mikecp11@gmail.com>
+Maintainer: Mike Johnson <jjohnson@lynker.com>
 BugReports: https://github.com/mikejohnson51/AHGestimation/issues
 URL: https://github.com/mikejohnson51/AHGestimation
 Depends: 
