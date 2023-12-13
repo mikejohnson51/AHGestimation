@@ -71,7 +71,7 @@ ahg_estimate = function(df,
   
   if(!any(grepl("TW|V|Y", names(df)))){ stop("At least one of TW, V, or Y must be present in df") }
 
-  df = select(df, any_of(c("date", "TW", "V", "Y", "Q")))
+  df = as.data.frame(select(df, any_of(c("date", "TW", "V", "Y", "Q"))))
   df = df[df > 0,]
   df = df[is.finite(rowSums(select(df, -any_of('date')))), ]
   df = df[complete.cases(df), ]
