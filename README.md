@@ -2,6 +2,7 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 <!-- badges: start -->
 
+[![status](https://joss.theoj.org/papers/f7a4ff717b4430f053da9c34563e705b/status.svg)](https://joss.theoj.org/papers/f7a4ff717b4430f053da9c34563e705b)
 [![R CMD
 Check](https://github.com/mikejohnson51/AHGestimation/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/mikejohnson51/AHGestimation/actions/workflows/R-CMD-check.yaml)
 [![License:
@@ -14,9 +15,9 @@ Active](https://www.repostatus.org/badges/latest/active.svg)](https://www.repost
 
 # AHGestimation
 
-> ***Citation:*** Johnson, J.M. (2022) AHGestimation: Tools for
-> Estimating Physically-Based, Computationally Efficient Feature Based
-> Hydraulic Geometry and Rating Curves.
+> ***Old Citation:*** Johnson, J.M. (2022) AHGestimation: An R package
+> for Computing robust, mass preserving Hydraulic Geometries and Rating
+> Curves.
 
 Using data from the USGS manual measurement (Johnson, 2018), we can
 illustrate the utilities in this package. Overall this package provides
@@ -34,7 +35,7 @@ library(AHGestimation)
 data = AHGestimation::nwis
 ```
 
-<img src="man/figures/README-unnamed-chunk-3-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-3-1.jpeg" width="100%" />
 
 ## Single Relationship fits
 
@@ -48,7 +49,7 @@ using OLS and NLS models:
 #> 2    Y 0.4797009 0.2004177  8.58 -6.19    ols
 ```
 
-<img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-5-1.jpeg" width="100%" />
 
 Overall the the NLS model provides a better fit (albeit small) when
 measured both by nRMSE and pBais.
@@ -82,7 +83,7 @@ continuity at a prescribed allowance:
 Overall an combination of the OLS and NLS fit are able to provide a
 error minimizing solution:
 
-<img src="man/figures/README-unnamed-chunk-7-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-7-1.jpeg" width="100%" />
 
 In the above example we see that NLS was able to provide better fits the
 OLS but neither NLS or OLS was able to provide physically valid
@@ -129,7 +130,7 @@ When the data is effectively filtered we see NLS can provide an error
 minimizing, valid solution for the system that is quite different then
 the full data fit:
 
-<img src="man/figures/README-unnamed-chunk-9-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-9-1.jpeg" width="100%" />
 
 ## Hydraulic Estimation
 
@@ -160,7 +161,7 @@ glimpse(cs)
 #> $ A   <dbl> 1.318953e+02, 1.130112e+02, 9.618829e+01, 8.127753e+01, 6.813466e+…
 ```
 
-<img src="man/figures/README-unnamed-chunk-11-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-11-1.jpeg" width="100%" />
 
 # History
 
