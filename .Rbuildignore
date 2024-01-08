@@ -5,8 +5,8 @@
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
-paper
+^paper$
 codecov.yml
 .github
-^README\.Rmd$
 ^cran-comments\.md$
+^data-raw$

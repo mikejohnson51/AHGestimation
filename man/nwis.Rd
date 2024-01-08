@@ -10,10 +10,10 @@ A data frame with 245 rows and 6 columns:
 \describe{
   \item{siteID}{NWIS ID}
   \item{date}{date of measurement}
-  \item{Q}{Steamflow}
-  \item{Y}{Depth}
-  \item{V}{Velocity}
-  \item{TW}{Top width}
+  \item{Q_cms}{Steamflow (cubic meters per second)}
+  \item{Y_m}{Depth (meters)}
+  \item{V_ms}{Velocity (meters per second)}
+  \item{TW_m}{Top width (meters)}
 }
 }
 \usage{
