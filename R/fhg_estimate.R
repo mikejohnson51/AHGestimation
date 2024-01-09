@@ -43,13 +43,14 @@ best_optimal = function(best, check, verbose = TRUE) {
 }
 
 #' @title Properly estimate AHG values
-#' @param df hydraulic data.frame
+#' @param df hydraulic data.frame with columns named (Q, V, TW, Y). Q and at least one other are required.
 #' @param allowance allowed deviation from continuity
 #' @param gen Number of generations to breed. 
 #' @param pop Size of population
 #' @inheritParams mco::nsga2
 #' @param times how many times (seeds) should nsga2 be run
 #' @param scale should a scale factor be applied to data pre NSGA-2 fitting
+#' @param full_fitting should all fits be returned?
 #' @param verbose should messages be emitted?
 #' @return list
 #' @family AHG
@@ -63,6 +64,7 @@ ahg_estimate = function(df,
                         mprob = .4, 
                         times = 1,
                         scale = 1.5,
+                        full_fitting = FALSE,
                         verbose = FALSE) {
   
   type <- NULL
@@ -169,12 +171,17 @@ ahg_estimate = function(df,
     }
     
   } else if (length(r) == 2) {
-    m = mismash(v = c("ols", "nls"), df$V, df$TW, df$Y, df$Q, r, allowance)
+    m = mismash(v = c("ols", "nls"), V = df$V, TW = df$TW, Y = df$Y, Q = df$Q, r, allowance)
   } else {
     return(arrange(bind_rows(r), type, nrmse))
 }
   
-  return(m$summary)
+  if(full_fitting){
+    return(m)
+  } else {
+    return(m$summary)
+  }
+  
 
 }
 

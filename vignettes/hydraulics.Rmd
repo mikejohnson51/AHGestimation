@@ -43,6 +43,7 @@ Staring with the same data in other examples, we can retain the last 10 year of 
 
 ```{r}
 data = nwis %>% 
+  select(date, Q = Q_cms, Y = Y_m, TW = TW_m, V = V_ms) %>% 
   date_filter(10, keep_max = TRUE) %>% 
   nls_filter(allowance = .5)
 

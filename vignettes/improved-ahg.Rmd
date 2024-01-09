@@ -30,7 +30,8 @@ library(mco)
 
 ```{r setup}
 library(AHGestimation)
-data = nwis
+data = nwis %>% 
+  select(date, Q = Q_cms, Y = Y_m, TW = TW_m, V = V_ms)
 ```
 
 ## Increasing AHG skill:

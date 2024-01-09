@@ -19,7 +19,7 @@ mismash = function(v, V, TW, Y, Q, r, allowance){
     x = g[ind,]
     
     if(!is.null(V)){
-    g$V_error[ind] = tryCatch({
+    g$V_nrmse[ind] = tryCatch({
       (x$V_coef*Q^x$V_exp) %>% rmse(V) /mean(V)},
       error = function(e){
         NA
@@ -27,7 +27,7 @@ mismash = function(v, V, TW, Y, Q, r, allowance){
     }
       
     if(!is.null(TW)){
-    g$TW_error[ind] = tryCatch({
+    g$TW_nrmse[ind] = tryCatch({
       (x$TW_coef*Q^x$TW_exp) %>% rmse(TW) /mean(TW)},
       error = function(e){
         NA
@@ -35,7 +35,7 @@ mismash = function(v, V, TW, Y, Q, r, allowance){
     }
     
     if(!is.null(Y)){
-    g$Y_error[ind] = tryCatch({
+    g$Y_nrmse[ind] = tryCatch({
       (x$Y_coef*Q^x$Y_exp) %>% rmse(Y) /mean(T)},
       error = function(e){
         NA
@@ -58,15 +58,13 @@ mismash = function(v, V, TW, Y, Q, r, allowance){
   
   g = expand.grid(l, stringsAsFactors = F) %>% 
     setNames(paste0(names, "_method")) %>% 
-    mutate(c1 = NA, c2 = NA, viable = NA, tot_error = NA) 
+    mutate(c1 = NA, c2 = NA, viable = NA, tot_nrmse = NA) 
   
   g = bind_cols(g, 
-                setNames(data.frame(matrix(NA, ncol = 3*num, nrow =nrow(g))), c(paste0(names, "_error"), 
+                setNames(data.frame(matrix(NA, ncol = 3*num, nrow =nrow(g))), c(paste0(names, "_nrmse"), 
                                                                                 paste0(names, "_coef"), 
                                                                                 paste0(names, "_exp"))))
 
-  
-  
   types = c("TW", "Y", "V")
   
   for(t in 1:3){
@@ -90,16 +88,16 @@ mismash = function(v, V, TW, Y, Q, r, allowance){
       g$viable =  (between(g$c1, 1-allowance, 1+allowance) +  between(g$c2, 1-allowance, 1+allowance)) == 2
     }
     
-    g$tot_error = rowSums(g[, grepl("error", names(g))], na.rm = TRUE)
+    g$tot_nrmse = rowSums(g[, grepl("nrmse", names(g))], na.rm = TRUE)
 
   
   if(num == 3){
     combo = g %>% 
       filter(viable == TRUE) %>% 
-      arrange(tot_error) %>% 
+      arrange(tot_nrmse) %>% 
       slice(1) %>% 
       mutate(condition = "bestValid")
-    # 
+     
     # combo =  g %>% 
     #   filter(apply(g,1,function(r){length(unique(r[1:3]))}) != 1) %>% 
     #   #filter(viable) %>% 
@@ -124,18 +122,21 @@ mismash = function(v, V, TW, Y, Q, r, allowance){
       ga = NULL
   }
  
-    return(list(g = g %>% 
-                  arrange(!viable, tot_error), 
+    return(list(full_fits = arrange(g, !viable, tot_nrmse), 
                 summary = bind_rows(combo, ols, nls, ga) %>%  
-                  dplyr::select(-c1, -c2) %>% 
-                  arrange(!viable, tot_error)))
+                  arrange(!viable, tot_nrmse)))
     
   } else {
-    list(g = g %>% 
-          arrange(tot_error), 
-        summary = g %>%  
-          dplyr::select(-c1, -c2, -viable) %>% 
-          arrange(tot_error) %>% 
-          slice(1))
+    
+    ind = grep("_method", names(g))
+    
+    g = g[g[, ind[1]] == g[, ind[2]], ]
+    
+    list(full_fits = arrange(g, tot_nrmse) %>% 
+           dplyr::select(-c1, -c2, -viable), 
+         summary = g %>%  
+            dplyr::select(-c1, -c2, -viable) %>% 
+            arrange(tot_nrmse) %>% 
+            slice(1))
   }
 }

@@ -65,7 +65,8 @@ AHG relations are historically fit using OLS on the logarithmic transformation o
 ## Example: 
 
 ```{r}
-data = nwis
+data = nwis %>% 
+  select(date, Q = Q_cms, Y = Y_m, TW = TW_m, V = V_ms)
 
 fit = lm(log(data$Y) ~ log(data$Q))
   

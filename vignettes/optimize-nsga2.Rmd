@@ -54,6 +54,9 @@ Our method for setting these bounds is as follows:
 3. This limits the exponent at coefficients to the range of {(1/scale) * nls; scale * nls}
 
 ```{r, echo = FALSE}
+nwis = nwis %>% 
+  select(date, Q = Q_cms, Y = Y_m, TW = TW_m, V = V_ms)
+
 mm = AHGestimation:::min_max(nwis, 1.5)
 
 ggplot(data = nwis ) + 

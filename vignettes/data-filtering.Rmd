@@ -28,34 +28,37 @@ library(patchwork)
 library(dplyr)
 ```
 
-# nwis Filtering Functions
+# Data Filtering Functions
 
-Often the nwis that comes from long records of steam observation are noisy. Noise can come from changes in the river itself, changes in measurement methods, or even measurement locations.
+Often the data that comes from long records of steam observation are noisy. Noise can come from changes in the river itself, changes in measurement methods, or even measurement locations.
 
-While the FHG algorithm implemented in this package can deal with this noise through the hybrid the `OLS --> NLS --> NSGA2 --> combo` fitting method, it is also possible, and even advisable, to filter the nwis prior to fitting.
+While the FHG algorithm implemented in this package can deal with this noise through the hybrid the `OLS --> NLS --> NSGA2 --> combo` fitting method, it is also possible, and even advisable, to filter the data prior to fitting.
 
-Here we will illustrate the packaged methods. An assumption of _all_ filtering methods is that if it reduces the nwisset to less then 10 observations, a warning is emited and the input nwis is returned.
+Here we will illustrate the packaged methods. An assumption of _all_ filtering methods is that if it reduces the dataset to less then 10 observations, a warning is emited and the input data is returned.
 
 ## 1. Median Absolute Deviation (mad)
 
-An iterative outlier detection procedure can be run iteritivly on the residuals of linear regressions for each relationship following the procedure described in the [HyG nwisset](https://zenodo.org/record/7868764). Values of log-transformed TW, V, and Y residuals falling outside a specified median absolute deviation (MAD) are excluded with each pass until no outliers are left.
+An iterative outlier detection procedure can be run iteritivly on the residuals of linear regressions for each relationship following the procedure described in the [HyG dataset](https://zenodo.org/record/7868764). Values of log-transformed TW, V, and Y residuals falling outside a specified median absolute deviation (MAD) are excluded with each pass until no outliers are left.
 
 This approach can be implemented using `mad_filter`:
 
 ```{r}
-mad_nwis = mad_filter(nwis, envelope = 3)
+data = nwis %>% 
+  select(date, Q = Q_cms, Y = Y_m, TW = TW_m, V = V_ms)
+
+mad_data = mad_filter(data, envelope = 3)
 ```
 
 ```{r, echo = FALSE, out.width="100%"}
 ggplot() + 
-  geom_point(data = nwis, aes(x = Q, y = Y), color = "black") + 
-  geom_point(data = mad_nwis, aes(x = Q, y = Y), color = "red") + 
+  geom_point(data = data, aes(x = Q, y = Y), color = "black") + 
+  geom_point(data = mad_data, aes(x = Q, y = Y), color = "red") + 
 ggplot() + 
-  geom_point(data = nwis, aes(x = Q, y = TW), color = "black") + 
-  geom_point(data = mad_nwis, aes(x = Q, y = TW), color = "red", alpha = .5) + 
+  geom_point(data = data, aes(x = Q, y = TW), color = "black") + 
+  geom_point(data = mad_data, aes(x = Q, y = TW), color = "red", alpha = .5) + 
 ggplot() + 
-  geom_point(data = nwis, aes(x = Q, y = V), color = "black") + 
-  geom_point(data = mad_nwis, aes(x = Q, y = V), color = "red", alpha = .5)
+  geom_point(data = data, aes(x = Q, y = V), color = "black") + 
+  geom_point(data = mad_data, aes(x = Q, y = V), color = "red", alpha = .5)
 
 ```
 
@@ -64,18 +67,18 @@ ggplot() +
 Rivers change with time. To minimize the effects of long-term channel evolution it can be advantageous to limit the records to the most recent years. This approach can be implemented using `date_filter`. Users can specify the number of years to keep (in reference to the most recent observation) and whether the maximum flow value should be kept regradless of when it was taken.
 
 ```{r}
-date_data = date_filter(nwis, years = 5, keep_max = TRUE)
+date_data = date_filter(data, years = 5, keep_max = TRUE)
 ```
 
 ```{r, echo = FALSE, out.width="100%"}
 ggplot() + 
-  geom_point(data = nwis, aes(x = Q, y = Y), color = "black") + 
+  geom_point(data = data, aes(x = Q, y = Y), color = "black") + 
   geom_point(data = date_data, aes(x = Q, y = Y), color = "red") + 
 ggplot() + 
-  geom_point(data = nwis, aes(x = Q, y = TW), color = "black") + 
+  geom_point(data = data, aes(x = Q, y = TW), color = "black") + 
   geom_point(data = date_data, aes(x = Q, y = TW), color = "red", alpha = .5) + 
 ggplot() + 
-  geom_point(data = nwis, aes(x = Q, y = V), color = "black") + 
+  geom_point(data = data, aes(x = Q, y = V), color = "black") + 
   geom_point(data = date_data, aes(x = Q, y = V), color = "red", alpha = .5)
 
 ```
@@ -85,19 +88,19 @@ ggplot() +
 One of the basic assumptions of the AHG relation is that Q = vA where v is velocity, A is cross sectional area, and Q is stream flow. The `qva_filter` can be used to remove measurements that grossly violate this assumption. Within the code, A is assumed to be the product of Y and TW and an allowance can be specific that determines the amount of allows deviation from equality. The default allowance is .05.
  
 ```{r}
-qva_nwis = qva_filter(nwis, allowance = .05)
+qva_data = qva_filter(data, allowance = .05)
 ```
 
 ```{r, echo = FALSE, out.width="100%"}
 ggplot() + 
-  geom_point(data = nwis, aes(x = Q, y = Y), color = "black") + 
-  geom_point(data = qva_nwis, aes(x = Q, y = Y), color = "red") + 
+  geom_point(data = data, aes(x = Q, y = Y), color = "black") + 
+  geom_point(data = qva_data, aes(x = Q, y = Y), color = "red") + 
 ggplot() + 
-  geom_point(data = nwis, aes(x = Q, y = TW), color = "black") + 
-  geom_point(data = qva_nwis, aes(x = Q, y = TW), color = "red", alpha = .5) + 
+  geom_point(data = data, aes(x = Q, y = TW), color = "black") + 
+  geom_point(data = qva_data, aes(x = Q, y = TW), color = "red", alpha = .5) + 
 ggplot() + 
-  geom_point(data = nwis, aes(x = Q, y = V), color = "black") + 
-  geom_point(data = qva_nwis, aes(x = Q, y = V), color = "red", alpha = .5)
+  geom_point(data = data, aes(x = Q, y = V), color = "black") + 
+  geom_point(data = qva_data, aes(x = Q, y = V), color = "red", alpha = .5)
 
 ```
 
@@ -106,45 +109,45 @@ ggplot() +
 Through out the development of this package it became evident that the NLS approach, when using OLS estimates as seeds, provided the best relation by relation fit. This approach fits the NLS equations for each provided relationship. This fit is used to predict [V,TW,Y] for all given Q's.  If the actual value is outside the specified allowance (default = +/- 50%) it is removed.
 
 ```{r}
-nls_nwis = nls_filter(nwis, allowance = .5)
+nls_data = nls_filter(data, allowance = .5)
 ```
 
 ```{r, echo = FALSE, out.width="100%"}
 ggplot() + 
-  geom_point(data = nwis, aes(x = Q, y = Y), color = "black") + 
-  geom_point(data = nls_nwis, aes(x = Q, y = Y), color = "red") + 
+  geom_point(data = data, aes(x = Q, y = Y), color = "black") + 
+  geom_point(data = nls_data, aes(x = Q, y = Y), color = "red") + 
 ggplot() + 
-  geom_point(data = nwis, aes(x = Q, y = TW), color = "black") + 
-  geom_point(data = nls_nwis, aes(x = Q, y = TW), color = "red", alpha = .5) + 
+  geom_point(data = data, aes(x = Q, y = TW), color = "black") + 
+  geom_point(data = nls_data, aes(x = Q, y = TW), color = "red", alpha = .5) + 
 ggplot() + 
-  geom_point(data = nwis, aes(x = Q, y = V), color = "black") + 
-  geom_point(data = nls_nwis, aes(x = Q, y = V), color = "red", alpha = .5)
+  geom_point(data = data, aes(x = Q, y = V), color = "black") + 
+  geom_point(data = nls_data, aes(x = Q, y = V), color = "red", alpha = .5)
 
 ```
 
 # Chaining Commands
 
-Multiple filtering approaches can be chained together to isolate a representative nwisset from the complete archive. For example, we could reduce the complete nwisset to a 10 year record that respects the Q=vA assumption and has no nwis outside of 3 MAD in any relation:
+Multiple filtering approaches can be chained together to isolate a representative dataset from the complete archive. For example, we could reduce the complete dataset to a 10 year record that respects the Q=vA assumption and has no data outside of 3 MAD in any relation:
 
 ```{r}
-xf = nwis %>% 
+xf = data %>% 
   # Keep the most recent 10 year
   date_filter(year = 10, keep_max = TRUE) %>% 
-  # Keep nwis within 3 Median absolute deviations (log residuals)
+  # Keep data within 3 Median absolute deviations (log residuals)
   mad_filter() %>% 
-  # Keep nwis that respects the Q = vA criteria w/in allowance
+  # Keep data that respects the Q = vA criteria w/in allowance
   qva_filter()
 ```
 
 ```{r, echo = FALSE, out.width="100%"}
 ggplot() + 
-  geom_point(data = nwis, aes(x = Q, y = Y), color = "black") + 
+  geom_point(data = data, aes(x = Q, y = Y), color = "black") + 
   geom_point(data = xf, aes(x = Q, y = Y), color = "red") + 
 ggplot() + 
-  geom_point(data = nwis, aes(x = Q, y = TW), color = "black") + 
+  geom_point(data = data, aes(x = Q, y = TW), color = "black") + 
   geom_point(data = xf, aes(x = Q, y = TW), color = "red") + 
 ggplot() + 
-  geom_point(data = nwis, aes(x = Q, y = V), color = "black") + 
+  geom_point(data = data, aes(x = Q, y = V), color = "black") + 
   geom_point(data = xf, aes(x = Q, y = V), color = "red")
 
 ```
@@ -152,18 +155,18 @@ ggplot() +
 # Example(s)
 
 ```{r}
-# Best attempt to mimic the HyG nwisset
-hf_df = nwis %>% 
+# Best attempt to mimic the HyG dataset
+hf_df = data %>% 
   date_filter(5, keep_max = TRUE) %>% 
   qva_filter(allowance = .05) %>% 
   mad_filter(envelope = 3) 
 
 # NLS basec filtering
-nls_df = nwis %>% 
+nls_df = data %>% 
   date_filter(10, keep_max = TRUE) %>% 
   nls_filter(allowance = .5)
   
-x1 = ahg_estimate(df = nwis)
+x1 = ahg_estimate(df = data)
 x2 = ahg_estimate(df = hf_df)
 x3 = ahg_estimate(df = nls_df)
 ```
@@ -171,8 +174,8 @@ x3 = ahg_estimate(df = nls_df)
 ```{r, echo = FALSE, out.width="100%"}
 
 ggplot() + 
-  geom_point(aes(x = nwis$Q, y = nwis$Y, color = "FHG"), alpha = .3) + 
-  geom_line(aes(x = nwis$Q, y = (x1$Y_coef[1] * nwis$Q ^ (x1$Y_exp[1])), color = "FHG")) +
+  geom_point(aes(x = data$Q, y = data$Y, color = "FHG"), alpha = .3) + 
+  geom_line(aes(x = data$Q, y = (x1$Y_coef[1] * data$Q ^ (x1$Y_exp[1])), color = "FHG")) +
   geom_point(aes(x = hf_df$Q, y = hf_df$Y, color = "HY"), alpha = .3) + 
   geom_line(aes(x  = hf_df$Q, y = (x2$Y_coef[1] * hf_df$Q ^ (x2$Y_exp[1])), color = "HY")) +
   geom_point(aes(x = nls_df$Q, y = nls_df$Y, color = "NLS"), alpha = .3) + 
@@ -182,8 +185,8 @@ ggplot() +
   scale_color_manual(values = c("NLS" = "blue", "HY" = "red", "FHG" = "black")) + 
   
 ggplot() + 
-  geom_point(aes(x = nwis$Q, y = nwis$V, color = "FHG"), alpha = .3) + 
-  geom_line(aes(x = nwis$Q, y = (x1$V_coef[1] * nwis$Q ^ (x1$V_exp[1])), color = "FHG")) +
+  geom_point(aes(x = data$Q, y = data$V, color = "FHG"), alpha = .3) + 
+  geom_line(aes(x = data$Q, y = (x1$V_coef[1] * data$Q ^ (x1$V_exp[1])), color = "FHG")) +
   geom_point(aes(x = hf_df$Q, y = hf_df$V, color = "HY"), alpha = .3) + 
   geom_line(aes(x  = hf_df$Q, y = (x2$V_coef[1] * hf_df$Q ^ (x2$V_exp[1])), color = "HY")) +
   geom_point(aes(x = nls_df$Q, y = nls_df$V, color = "NLS"), alpha = .3) + 
@@ -193,8 +196,8 @@ ggplot() +
   scale_color_manual(values = c("NLS" = "blue", "HY" = "red", "FHG" = "black")) + 
   
 ggplot() + 
-  geom_point(aes(x = nwis$Q, y = nwis$TW, color = "FHG"), alpha = .3) + 
-  geom_line(aes(x = nwis$Q, y = (x1$TW_coef[1] * nwis$Q ^ (x1$TW_exp[1])), color = "FHG")) +
+  geom_point(aes(x = data$Q, y = data$TW, color = "FHG"), alpha = .3) + 
+  geom_line(aes(x = data$Q, y = (x1$TW_coef[1] * data$Q ^ (x1$TW_exp[1])), color = "FHG")) +
   geom_point(aes(x = hf_df$Q, y = hf_df$TW, color = "HV"), alpha = .3) + 
   geom_line(aes(x  = hf_df$Q, y = (x2$TW_coef[1] * hf_df$Q ^ (x2$TW_exp[1])), color = "HY")) +
   geom_point(aes(x = nls_df$Q, y = nls_df$TW, color = "NLS"), alpha = .3) + 
@@ -211,6 +214,6 @@ ggplot() +
 The relationship between all supplied log transformed variables are computed.  If the p-value of any of these is less then the supplied p-value an error message is emitted and it can be assumed that no statistical relationship exists between Q-{TW,V,Y}.
 
 ```{r}
-s = significance_check(nwis)
+s = significance_check(data)
 ```
 

@@ -1,5 +1,6 @@
 ---
 output: github_document
+bibliography: [paper/paper.bib]
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -10,7 +11,9 @@ knitr::opts_chunk$set(
   comment = "#>",
   fig.path = "man/figures/README-",
   out.width = "100%",
-  dev = "jpeg"
+  dev = "jpeg",
+  warning = FALSE,
+  message = FALSE
 )
 
 library(dplyr)
@@ -27,142 +30,208 @@ library(patchwork)
 [![Dependencies](https://img.shields.io/badge/dependencies-4/42-green?style=flat)](#)
 <!-- badges: end -->
 
+## Installation
+
+```{r, eval = FALSE}
+# install.packages("remotes")
+remotes::install_packages("mikejohnson51/AHGestimation")
+```
+
+# Introduction
+
+The behavior of a river system at a location can be represented as the relationship between discharge (Q), mean depth (Y), mean velocity (V), and mean top width (TW). If you have these measurements over a long period of time, a relationship between how much water (Q) is in the channel and the corresponding Y, V, and TW can be established. The idea of 'at-a-station hydraulic geometry' (AHG) suggests three power laws can adequelty describe these relations [@leopold1953hydraulic]:
+
+$$
+TW = a  \cdot Q^b
+$$
+$$
+Y = c \cdot Q^f
+$$
+
+$$
+V = k \cdot Q^m
+$$
+
+Each **single relationships** describes a component of the channel behavior (see section [Fitting single relationships]). For example, the Q-Y relation is similar to the **traditional rating curve** that relates stage to discharge where stage is given as a height of water (H) above a datum (Ho). 
+
+$$
+Q = c \cdot (H - H_o)^f
+$$
+
+Traditionally, each relationship has been fit independent of one another using ordinary least square regression (OLS) on the log transformed time series of the respective components.
+
+Some research has moved beyond pure OLS fitting with a (typically) singular focus on the rating curve relation. For example the Texas Water Resources Institute suggests a non linear least squares regression (NLS) ([here](https://txwri.github.io/r-manual/stage-discharge.html)), and Bayesian hierarchical modeling have been shown in other cases to be beneficial ([@hrafnkelsson2022generalization], R implementation [here](https://CRAN.R-project.org/package=bdrc))
+
+When trying to fit a **hydraulic system** - or - all three equations - there are additional considerations . Notably continuity dictates that no water is gained or lost such that:
+
+$$
+Q = TW·Y·V
+$$
+
+and:
+
+$$
+(b + f + m) =  (a·c·k) = 1 
+$$
+
+**Critically, neither OLS or NLS solvers can ensure this characteristic of the solution.** (see [Fitting hydraulic systems]). Instead, this can be achieved by either 
+
+(1) Preprocessing data based on thresholds (see @enzminger_thomas_l_2023_7868764 and @afshari2017statistical) (see AHGestimation functions in [here](https://mikejohnson51.github.io/AHGestimation/articles/data-filtering.html)), or 
+(2) as we suggest in this package, using a evolutionary solver - along with OLS and NLS fits - to optimally solve relationships in accordance with each other (see detailed description [here](https://mikejohnson51.github.io/AHGestimation/articles/improved-ahg.html)).
+
+The aim of this package is to provide increased AHG fitting flexibility, that ensures mass conservation in hydraulic systems, and optimal curve fitting for single relations. 
+
 # AHGestimation
 
-> **_Old Citation:_** Johnson, J.M. (2022) AHGestimation: An R package for Computing robust, mass preserving Hydraulic Geometries and Rating Curves.
+Using USGS field measurements at the gage located on [Nashua River at East Pepperell, MA](https://waterdata.usgs.gov/nwis/measurements/?site_no=01096500&agency_cd=USGS) we can illustrate 4 capabilities this package offers:
 
-Using data from the USGS manual measurement (Johnson, 2018), we can illustrate the utilities in this package. Overall this package provides 4 capabilities:
+1. Fitting single relations with OLS and NLS ([Fitting single relationships])
+2. Estimating hydraulic system with a mass conserving ensemble fitting method ([Fitting hydraulic systems])
+3. Data preprocessing (removing outliers based on defined criteria) ([Data Filtering])
+4. Deriving cross section shapes and traits from the AHG fits ([Hydraulic Shape Estimation]).
 
-1. Single Relation fits
-2. Full hydraulic system fits
-3. Data preprocessing
-4. Derivation of cross sections and additional hydraulic traits 
-
-## Base data
+The example data is included in the package, and its development can be seen [here](https://github.com/mikejohnson51/AHGestimation/blob/master/data-raw/nwis.R).
 
 ```{r}
 library(AHGestimation)
-data = AHGestimation::nwis
+glimpse(nwis)
 ```
 
 ```{r, echo = F}
-ggplot(data = data ) + 
-  geom_point(aes(x = Q, y = Y)) + 
+ggplot(data = nwis ) + 
+  geom_point(aes(x = Q_cms, y = Y_m)) + 
   theme_light()  + 
-  labs(title = 'Q-Y Relationship') +
-ggplot(data = data ) + 
-  geom_point(aes(x = Q, y = TW)) + 
+  labs(title = 'Q-Y Relationship', x = "Q (cms)", y = "Y (m)") +
+ggplot(data = nwis ) + 
+  geom_point(aes(x = Q_cms, y = TW_m)) + 
   theme_light() + 
-  labs(title = 'Q-TW Relationship') + 
-ggplot(data = data ) + 
-  geom_point(aes(x = Q, y = V)) + 
+  labs(title = 'Q-TW Relationship', x = "Q (cms)", y = "TW (m)") + 
+ggplot(data = nwis ) + 
+  geom_point(aes(x = Q_cms, y = V_ms)) + 
   theme_light()  + 
-  labs(title = 'Q-V Relationship')
+  labs(title = 'Q-V Relationship', x = "Q (cms)", y = "V (m/s)")
 ```
 
-## Single Relationship fits
+## Fitting single relationships
 
-Here we use the `AHGestimation` package to fit the Q-Y relationship using OLS and NLS models:
+The `AHGestimation::ahg_estimate(...)` function can be used to fit single relationships using both NLS and OLS solutions. Below we fit the Q-Y relation by passing a `data.frame` with the column names `Q` and `Y`. More columns could be included in the input, but only those with `Q`, `Y`, `V`, and/or `TW` are used.
 
 ```{r}
-(sf = ahg_estimate(df = select(data, Q, Y), allowance = .05))
+(sf = nwis %>%
+   #input column names must be Q,Y,V and/or TW
+   select(date, Q = Q_cms, Y = Y_m) %>% 
+   ahg_estimate())
 ```
+The returned object rank sorts the solutions based on the nrmse of the simulated Y values compared to the input data. For convenience, the pBias is also reported. Below, we can see the variation in the NLS (blue) and OLS (red) solutions.
 
 ```{r, echo = FALSE}
 ggplot() + 
-  geom_point(data = data, aes(x = Q, y = Y), col = "black") + 
-  geom_line(data = data, aes(x = Q, y = sf$coef[1] * Q ^ (sf$exp[1]), col = "NLS")) +
-  geom_line(data = data, aes(x = Q, y = sf$coef[2] * Q ^ (sf$exp[2]), col = "OLS")) +
+  geom_point(data = nwis, aes(x = Q_cms, y = Y_m), col = "black") + 
+  geom_line(data = nwis, aes(x = Q_cms, y = sf$coef[1] * Q_cms ^ (sf$exp[1]), col = "NLS")) +
+  geom_line(data = nwis, aes(x = Q_cms, y = sf$coef[2] * Q_cms ^ (sf$exp[2]), col = "OLS")) +
   theme_light()  +
   theme(legend.position = "bottom") +
-  labs(title = 'Q-Y Relationship', color = "Fit") + 
+  labs(title = 'Q-Y Relationship', color = "Fit", y = "Q (cms)", x = "Y (m)") + 
   scale_color_manual(values = c( "NLS" = "blue", "OLS" = "red"))
 ```
 
-Overall the the NLS model provides a better fit (albeit small) when measured both by nRMSE and pBais.
-
-## Full Hydraulic fits
-
-When we have data regarding three hydraulic states (V,TW,Y) we can ensure that the solutions found are physically valid (meets the continuity constraint Q = Y x V x TW).
-
-In this mode the OLS and NLS models are fit, and if continuity is not met, then a Evolutionary Approach is implemented. Doing so produces three unique fits for three variables (27 total combinations). These are crossed to identify the best performing relationships that meet continuity at a prescribed allowance:
+When 2 relationships (e.g. Q-Y and Q-V) are passed to `ahg_estimate(...)` the default behavior is to return a single solution based on the minimum nrmse. Since only 2 of the 3 hydraulic traits are passed, mass conservation cannot be checked here.
 
 ```{r}
-(x = ahg_estimate(data, allowance = .05))
+(nwis %>%
+   #input column names must be Q,Y,V and/or TW
+   select(Q = Q_cms, Y = Y_m, V = V_ms) %>% 
+   ahg_estimate())
 ```
-Overall an combination of the OLS and NLS fit are able to provide a error minimizing solution:
+
+If you would like all fits (OLS and NLS), the `full_fitting` parameter can be set to `TRUE`.
+
+```{r}
+(nwis %>%
+   #input column names must be Q,Y,V and/or TW
+   select(Q = Q_cms, Y = Y_m, V = V_ms) %>% 
+   ahg_estimate(full_fitting = TRUE))
+```
+
+## Fitting hydraulic systems
+
+When we have data for all three hydraulic relationships we can ensure the solutions found meet continuity/conserve mass.
+
+In this mode the OLS and NLS models are fit first, and if continuity is not met in best solution (e.g. lowest nmse), then an Evolutionary Approach (nsga2; @mco) is implemented.
+
+Doing so produces three unique fits for each relationship (27 total combinations). These are crossed to identify the best performing solution that meets continuity at a prescribed allowance. The allowance specifies the amount that each continuity expression can deviate from 1. More on this can be found at the vignette [here](https://mikejohnson51.github.io/AHGestimation/articles/improved-ahg.html)
+
+As before, the results are rank ordered by minimum nrmse and viability (viable = does the solution meet continuity within the prescribed allowance?)
+
+```{r}
+(x = nwis %>% 
+   select(Q = Q_cms, Y = Y_m, V = V_ms, TW = TW_m) %>% 
+   ahg_estimate(allowance = .05))
+```
+
+Overall an combination of the NLS and nsga2 provides an error minimizing, viable solution:
 
 ```{r, echo = F}
 ggplot() + 
-  geom_point(data = data, aes(x = Q, y = Y), col = "black") + 
-  geom_line(data = data, aes(x = Q, y = x$Y_coef[1] * Q ^ (x$Y_exp[1]), col = "bestValid")) +
+  geom_point(data = nwis, aes(x = Q_cms, y = Y_m), col = "black") + 
+  geom_line(data = nwis, aes(x = Q_cms, y = x$Y_coef[1] * Q_cms ^ (x$Y_exp[1]), col = "bestValid")) +
   theme_light()  + 
-  labs(title = 'Q-Y Relationship', color = "Fit") + 
-ggplot(data = data ) + 
-  geom_point(data = data, aes(x = Q, y = Y), col = "black") + 
-  geom_line(data = data, aes(x = Q, y = x$Y_coef[1] * Q ^ (x$Y_exp[1]), col = "bestValid")) +
+  labs(title = 'Q-Y Relationship', color = "Fit", x = "Q (cms)", y = "Y (m)") + 
+ggplot(data = nwis ) + 
+  geom_point(data = nwis, aes(x = Q_cms, y = Y_m), col = "black") + 
+  geom_line(data = nwis, aes(x = Q_cms, y = x$Y_coef[1] * Q_cms ^ (x$Y_exp[1]), col = "bestValid")) +
   theme_light() + 
-  labs(title = 'Q-TW Relationship', color = "Fit") + 
-ggplot(data = data ) + 
-  geom_point(data = data, aes(x = Q, y = V), col = "black") + 
-  geom_line(data = data, aes(x = Q, y = x$V_coef[1] * Q ^ (x$V_exp[1]), col = "bestValid")) +
+  labs(title = 'Q-TW Relationship', color = "Fit", x = "Q (cms)", y = "TW (m)") + 
+ggplot(data = nwis ) + 
+  geom_point(data = nwis, aes(x = Q_cms, y = V_ms), col = "black") + 
+  geom_line(data = nwis, aes(x = Q_cms, y = x$V_coef[1] * Q_cms ^ (x$V_exp[1]), col = "bestValid")) +
   theme_light()  + 
-  labs(title = 'Q-V Relationship', color = "Fit") + 
+  labs(title = 'Q-V Relationship', color = "Fit", x = "Q (cms)", y = "V (m/s)") + 
   plot_layout(guides = "collect") & 
   theme(legend.position = 'bottom')
 ```
 
-In the above example we see that NLS was able to provide better fits the OLS but neither  NLS or OLS was able to provide physically valid solutions (viable). While the nsga2 approach was able to provide a physically valid solution, its error was almost 10% higher then the OLS/NLS methods.
-
-However a combined approach of a NLS, OLS, and nsga2 was able to provide a physically valid result with only 0.03% more error the seen in the best performing NLS method.
-
-** This was all done using raw, unrefined data! **
-
 ## Data Filtering
 
-Due to the volatility of river systems and deviations in measurement techniques and accuracy hydraulic data is often very noisy. While the `ahg_estimation` tool is intended to reduce this noise and produce a mass-conserving hydraulic fit, it is also possible to filter the data prior to fitting. The range of data filtering options provided are documented in the data-filtering vignette and an example is provided below:
+Due to the volatility of river systems, hydraulic data is often very noisy. While the `ahg_estimate` tool is intended to reduce this noise and produce a mass-conserving hydraulic fit, it is also possible to filter the data prior to fitting. The range of data filtering options provided are documented in the [data-filtering vignette](https://mikejohnson51.github.io/AHGestimation/articles/data-filtering.html) and an example is provided below:
 
 ```{r}
-(xf = data %>% 
+filtered_data = nwis %>% 
+  select(date, Q = Q_cms, Y = Y_m, V = V_ms, TW = TW_m) %>% 
   # Keep the most recent 10 year
   date_filter(year = 10, keep_max = TRUE) %>% 
   # Keep data within 3 Median absolute deviations (log residuals)
   mad_filter() %>% 
   # Keep data that respects the Q = vA criteria w/in allowance
-  qva_filter() %>% 
-  ahg_estimate())
+  qva_filter()
+ 
+(ahg_fit = ahg_estimate(filtered_data))
 ```
 
-When the data is effectively filtered we see NLS can provide an error minimizing, valid solution for the system that is quite different then the full data fit:
+When the data is effectively filtered we see NLS can provide an error minimizing, valid solution for the system that is quite different then the full data fit. Further, the nsga2 algortithm did not need to be invoked:
 
 ```{r, echo = F}
-
-hf_data = data %>% 
-  date_filter(year = 10, keep_max = TRUE) %>% 
-  mad_filter() %>% 
-  qva_filter()
-
 ggplot() +  
-  geom_point(data = data, aes(x = Q, y = Y, col = "Full")) + 
-  geom_line(data = data, aes(x = Q, y = x$Y_coef[1] * Q ^ (x$Y_exp[1]), col = "Full")) +
-  geom_point(data = hf_data, aes(x = Q, y = Y, col = "Filter")) + 
-  geom_line(data = hf_data, aes(x = Q, y = xf$Y_coef[1] * Q ^ (xf$Y_exp[1]), col = "Filter")) +
+  geom_point(data = nwis, aes(x = Q_cms, y = Y_m, col = "Full")) + 
+  geom_line(data = nwis, aes(x = Q_cms, y = x$Y_coef[1] * Q_cms ^ (x$Y_exp[1]), col = "Full")) +
+  geom_point(data = filtered_data, aes(x = Q, y = Y, col = "Filter")) + 
+  geom_line(data = filtered_data, aes(x = Q, y = ahg_fit$Y_coef[1] * Q ^ (ahg_fit$Y_exp[1]), col = "Filter")) +
   theme_light()  + 
   labs(title = 'Q-Y Relationship') + 
   scale_color_manual(values = c("Filter" = "red", "Full" = "black")) + 
-ggplot(data = data ) + 
-  geom_point(data = data, aes(x = Q, y = Y, col = "Full")) + 
-  geom_line(data = data, aes(x = Q, y = x$Y_coef[1] * Q ^ (x$Y_exp[1]), col = "Full")) +
-  geom_point(data = hf_data, aes(x = Q, y = Y, col = "Filter")) + 
-  geom_line(data = hf_data, aes(x = Q, y = xf$Y_coef[1] * Q ^ (xf$Y_exp[1]), col = "Filter")) +
+ggplot(data = nwis ) + 
+  geom_point(data = nwis, aes(x = Q_cms, y = TW_m, col = "Full")) + 
+  geom_line(data = nwis, aes(x = Q_cms, y = x$TW_coef[1] * Q_cms ^ (x$TW_exp[1]), col = "Full")) +
+  geom_point(data = filtered_data, aes(x = Q, y = TW, col = "Filter")) + 
+  geom_line(data = filtered_data, aes(x = Q, y = ahg_fit$TW_coef[1] * Q ^ (ahg_fit$TW_exp[1]), col = "Filter")) +
   theme_light() + 
   labs(title = 'Q-TW Relationship') + 
   scale_color_manual(values = c("Filter" = "red", "Full" = "black")) + 
-ggplot(data = data ) + 
-  geom_point(data = data, aes(x = Q, y = V, col = "Full")) + 
-  geom_line(data = data, aes(x = Q, y = x$V_coef[1] * Q ^ (x$V_exp[1]), col = "Full")) +
-  geom_point(data = hf_data, aes(x = Q, y = V, col = "Filter")) + 
-  geom_line(data = hf_data, aes(x = Q, y = xf$V_coef[1] * Q ^ (xf$V_exp[1]), col = "Filter")) +
+ggplot(data = nwis) + 
+  geom_point(data = nwis, aes(x = Q_cms, y = V_ms, col = "Full")) + 
+  geom_line(data = nwis, aes(x = Q_cms, y = x$V_coef[1] * Q_cms ^ (x$V_exp[1]), col = "Full")) +
+  geom_point(data = filtered_data, aes(x = Q, y = V, col = "Filter")) + 
+  geom_line(data = filtered_data, aes(x = Q, y = ahg_fit$V_coef[1] * Q ^ (ahg_fit$V_exp[1]), col = "Filter")) +
   theme_light()  + 
   labs(title = 'Q-V Relationship') + 
   scale_color_manual(values = c("Filter" = "red", "Full" = "black")) + 
@@ -170,22 +239,25 @@ ggplot(data = data ) +
   theme(legend.position = 'bottom')
 ```
 
-## Hydraulic Estimation
+## Hydraulic Shape Estimation
 
-Lastly, a range of functions have been added to extend the AHG parameters into cross section hydraulics and geometry:
+Lastly, a range of functions have been added to extend the AHG parameters into cross section hydraulics and geometry. These come primarily from [@dingman2018field] and are described in detail [here](https://mikejohnson51.github.io/AHGestimation/articles/hydraulics.html)
 
 ```{r}
-filter_data = data %>% 
-  date_filter(10, keep_max = TRUE) %>% 
-  nls_filter(allowance = .5) 
+# Compute hydraulic parameters
+(hydraulic_params = compute_hydraulic_params(ahg_fit))
 
-ahg_fit = ahg_estimate(filter_data)[1,]
+# Estimate roughness
+# Slope is taken from the NHD reach associated with our gage
+compute_n(filtered_data, S = 0.01463675)
+```
 
-(shape = compute_hydraulic_params(ahg_fit))
+Of particular note, the `r` value describes the theoretical shape of the channel ranging from a triangle (r = 1) to a rectangle (r = ∞). When paired with a TW and Depth (here assuming max of the record) a generalized cross section can be derived. The returned data.frame provide a point index (from left bank looking upstream) the associated relative x and absolute Y position, and the cross sectional area for that Y.
 
-cs = cross_section(r = shape$r,  
-                   TW = max(filter_data$TW), 
-                   Ymax = max(filter_data$Y))
+```{r}
+cs = cross_section(r = hydraulic_params$r,  
+                   TW   = max(filtered_data$TW), 
+                   Ymax = max(filtered_data$Y))
 
 glimpse(cs)
 ```
@@ -210,4 +282,8 @@ ggplot(data = cs) +
 
 # History 
 
-The development of this package began as a graduate school project between friends at UC Santa Barbara and UMass Amherst following the 2017 NOAA OWP Summer Institute and clear evidence channel shape may be a limiting factor in National Water Model Performance. It has since evolved to provide an open source utility for robust large scale data synthesis and evaluation. Funding from the National Science Foundation (Grants 1937099, 2033607) provided time to draft the [preprint here](https://www.preprints.org/manuscript/202212.0390/v1) and apply an early version of this software to the [Continental Flood Inundation Mapping (CFIM)](https://cfim.ornl.gov/data/) synthetic rating curve dataset. Funding from the National Oceanic and Atmospheric Administration's Office of Water Prediction supported the addition of data filtering and hydraulic estimation, improved documentation, and code hardening. We are grateful to all involved.
+The development of this package began as a graduate school project between friends at UC Santa Barbara and UMass Amherst following the 2017 NOAA OWP Summer Institute and clear evidence channel shape may be a limiting factor in National Water Model Performance. It has since evolved to provide an open source utility for robust large scale data synthesis and evaluation. Funding from the National Science Foundation (Grants 1937099, 2033607) provided time to draft @preprint and apply an early version of this software to the [Continental Flood Inundation Mapping (CFIM) synthetic rating curve dataset [@cfim]. Funding from the National Oceanic and Atmospheric Administration's Office of Water Prediction supported the addition of data filtering and hydraulic estimation, improved documentation, and code improvement We are grateful to all involved.
+
+# References
+
+
