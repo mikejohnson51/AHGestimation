@@ -1,10 +1,10 @@
-data = AHGestimation::nwis
-
 library(dplyr)
+
+data <-  select(AHGestimation::nwis, date, Q = Q_cms, Y = Y_m, TW = TW_m, V = V_ms)
 
 test_that("One Series", {
   
-  x =  select(data, Q, Y) %>% 
+  x <-  select(data, Q, Y) %>% 
      ahg_estimate()
   
   expect_true(length(x) == 6)
@@ -15,7 +15,7 @@ test_that("One Series", {
 
 test_that("Two Series", {
   
-  x = select(data, Q, Y, V = V) %>% 
+  x <- select(data, Q, Y, V = V) %>% 
     ahg_estimate()
   
   expect_true(length(x) == 9)
@@ -26,17 +26,17 @@ test_that("Two Series", {
 
 test_that("Three Series", {
   
-  x =  df = select(data, Q, Y, V, TW) %>% 
+  x <-  select(data, Q, Y, V, TW) %>% 
     ahg_estimate()
   
-  expect_true(length(x) == 15)
+  expect_true(ncol(x) == 17)
   expect_true(nrow(x) == 4)
-  expect_true(which.min(filter(x, viable)$tot_error) == 1)
+  expect_true(which.min(filter(x, viable)$tot_nrmse) == 1)
   
-  y = select(data, Q, Y, V, TW) %>% 
+  y <- select(data, Q, Y, V, TW) %>% 
     ahg_estimate(verbose = TRUE)
   
-  expect_true(length(y) == 15)
+  expect_true(ncol(y) == 17)
   expect_true(nrow(y) == 4)
 })
 
@@ -46,8 +46,11 @@ test_that("Date Filter", {
   
   expect_true(nrow(date_filter(select(data, date, Q), year = 10)) < nrow(data))
   
-  expect_true(nrow(date_filter(select(data, date, Q), year = 2)) < nrow(date_filter(select(data, date, Q), year = 10)))
-  expect_true(nrow(date_filter(select(data, date, Q), year = 1)) < nrow(date_filter(select(data, date, Q), year = 1, keep_max = TRUE)))
+  expect_true(nrow(date_filter(select(data, date, Q), year = 2)) < 
+              nrow(date_filter(select(data, date, Q), year = 10)))
+  expect_true(nrow(date_filter(select(data, date, Q), year = 1)) <
+              nrow(date_filter(select(data, date, Q), year = 1, 
+                               keep_max = TRUE)))
   
   expect_equal(ncol(date_filter(select(data, date, Q), year = 10)), 2)
   
@@ -92,18 +95,18 @@ test_that("sig", {
 
 test_that("hydraulics", {
  
-  x =  select(data, Q, Y, V, TW) %>% 
+  x <- select(data, Q, Y, V, TW) %>% 
     ahg_estimate()
   
-  h = compute_hydraulic_params(x)
+  h <- compute_hydraulic_params(x)
   
   expect_equal(nrow(h), 4)
   expect_equal(ncol(h), 7)
-  expect_equal(round(h$r[1], 2), 5.01)
+  expect_equal(round(h$r[1], 2), 4.77)
   
   expect_equal(round(compute_n(data),2), .14)
   
-  cs = cross_section(h$r[1])
+  cs <- cross_section(h$r[1])
   
   expect_equal(nrow(cs), 30)
   expect_equal(ncol(cs), 4)
