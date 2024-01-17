@@ -98,7 +98,7 @@ applications applications (e.g. see Heldmeyer 2019)</p>
 10 year of data and apply an NLS filter (see section of data filtering
 for more)</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">data</span> <span class="op">=</span> <span class="va">nwis</span> <span class="op">%&gt;%</span> </span>
+<code class="sourceCode R"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="va">nwis</span> <span class="op">%&gt;%</span> </span>
 <span>  <span class="fu">select</span><span class="op">(</span><span class="va">date</span>, Q <span class="op">=</span> <span class="va">Q_cms</span>, Y <span class="op">=</span> <span class="va">Y_m</span>, TW <span class="op">=</span> <span class="va">TW_m</span>, V <span class="op">=</span> <span class="va">V_ms</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
 <span>  <span class="fu"><a href="../reference/date_filter.html">date_filter</a></span><span class="op">(</span><span class="fl">10</span>, keep_max <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
 <span>  <span class="fu"><a href="../reference/nls_filter.html">nls_filter</a></span><span class="op">(</span>allowance <span class="op">=</span> <span class="fl">.5</span><span class="op">)</span></span>
@@ -134,13 +134,13 @@ approximates the historical median measured flow at each gage.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://doi-usgs.github.io/nhdplusTools/" class="external-link">nhdplusTools</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">q</span> <span class="op">=</span> <span class="fu"><a href="https://doi-usgs.github.io/nhdplusTools/reference/get_nldi_feature.html" class="external-link">get_nldi_feature</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"featureSource"</span> <span class="op">=</span> <span class="st">"nwissite"</span>, </span>
+<span><span class="va">q</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://doi-usgs.github.io/nhdplusTools/reference/get_nldi_feature.html" class="external-link">get_nldi_feature</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"featureSource"</span> <span class="op">=</span> <span class="st">"nwissite"</span>, </span>
 <span>                          featureID <span class="op">=</span> <span class="st">"USGS-01096500"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">att</span> <span class="op">=</span> <span class="fu"><a href="https://doi-usgs.github.io/nhdplusTools/reference/get_vaa.html" class="external-link">get_vaa</a></span><span class="op">(</span><span class="st">"slope"</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
+<span><span class="va">att</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://doi-usgs.github.io/nhdplusTools/reference/get_vaa.html" class="external-link">get_vaa</a></span><span class="op">(</span><span class="st">"slope"</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">comid</span> <span class="op">==</span> <span class="va">q</span><span class="op">$</span><span class="va">comid</span><span class="op">)</span></span>
 <span></span>
-<span><span class="op">(</span><span class="va">n</span> <span class="op">=</span> <span class="fu"><a href="../reference/compute_n.html">compute_n</a></span><span class="op">(</span><span class="va">data</span>, S <span class="op">=</span> <span class="va">att</span><span class="op">$</span><span class="va">slope</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">(</span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/compute_n.html">compute_n</a></span><span class="op">(</span><span class="va">data</span>, S <span class="op">=</span> <span class="va">att</span><span class="op">$</span><span class="va">slope</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 0.1377112</span></span></code></pre></div>
 </div>
 <div class="section level3">
@@ -182,11 +182,11 @@ Lopez et al. (2007), Ferguson (2007), Ferguson (2010)].</p>
 <p><span class="math display">\[
 p = m/f
 \]</span></p>
-<p>** The general determination of κ and p from channel characteristics
-(especially slope and boundary roughness) is a central problem in
-open-channel hydraulics that has resisted simple solution**. In
-practice, coefficient κ and exponent p can be determined by regression
-of <code>ln(V)</code> on <code>ln(Y)</code></p>
+<p><strong>The general determination of κ and p from channel
+characteristics (especially slope and boundary roughness) is a central
+problem in open-channel hydraulics that has resisted simple
+solution</strong>. In practice, coefficient κ and exponent p can be
+determined by regression of <code>ln(V)</code> on <code>ln(Y)</code></p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/compute_ahg.html">compute_ahg</a></span><span class="op">(</span>Q <span class="op">=</span> <span class="va">data</span><span class="op">$</span><span class="va">Y</span>,  P <span class="op">=</span> <span class="va">data</span><span class="op">$</span><span class="va">V</span>, type <span class="op">=</span> <span class="st">"kp"</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span>,<span class="op">]</span> <span class="op">%&gt;%</span> </span>
 <span>  <span class="fu">rename</span><span class="op">(</span>k <span class="op">=</span> <span class="va">coef</span>, p <span class="op">=</span> <span class="va">exp</span><span class="op">)</span></span>
@@ -208,8 +208,8 @@ d ≡ 1 + r + rp
 <p>To estimate the suite of these parameters, we provide the
 <code>compute_hydraulic_params</code></p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">fit</span> <span class="op">=</span> <span class="fu"><a href="../reference/ahg_estimate.html">ahg_estimate</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span>,<span class="op">]</span></span>
-<span><span class="va">fit</span> <span class="op">=</span> <span class="fu"><a href="../reference/compute_hydraulic_params.html">compute_hydraulic_params</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ahg_estimate.html">ahg_estimate</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span>,<span class="op">]</span></span>
+<span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/compute_hydraulic_params.html">compute_hydraulic_params</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
 <span><span class="co">#&gt;            1</span></span>
@@ -243,7 +243,7 @@ V = BFW^{-(r*p)/d} * (BFD/ R)^{p / d} * κ^{(1+r)/d} * Q^{(-r*p)/d}
 </h3>
 <p><img src="../reference/figures/dingman-bed.png" width="100%"></p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">cs</span> <span class="op">=</span> <span class="fu"><a href="../reference/cross_section.html">cross_section</a></span><span class="op">(</span>r <span class="op">=</span> <span class="va">fit</span><span class="op">$</span><span class="va">r</span>, </span>
+<code class="sourceCode R"><span><span class="va">cs</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cross_section.html">cross_section</a></span><span class="op">(</span>r <span class="op">=</span> <span class="va">fit</span><span class="op">$</span><span class="va">r</span>, </span>
 <span>                   TW <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">TW</span><span class="op">)</span>, </span>
 <span>                   Ymax <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">Y</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>

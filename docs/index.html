@@ -71,7 +71,7 @@
 <div class="section level1">
 <div class="page-header"><h1 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h1></div>
-<p>The behavior of a river system at a location can be represented as the relationship between discharge (Q), mean depth (Y), mean velocity (V), and mean top width (TW). If you have these measurements over a long period of time, a relationship between how much water (Q) is in the channel and the corresponding Y, V, and TW can be established. The idea of ‘at-a-station hydraulic geometry’ (AHG) suggests three power laws can adequelty describe these relations (Leopold and Maddock 1953):</p>
+<p>The behavior of a river system at a location can be represented as the relationship between discharge (Q), mean depth (Y), mean velocity (V), and mean top width (TW). If you have these measurements over a long period of time, a relationship between how much water (Q) is in the channel and the corresponding Y, V, and TW can be established. The idea of ‘at-a-station hydraulic geometry’ (AHG) suggests three power laws can adequatly describe these relations (Leopold and Maddock 1953):</p>
 <p><span class="math display"><em>T</em><em>W</em> = <em>a</em> ⋅ <em>Q</em><sup><em>b</em></sup></span> <span class="math display"><em>Y</em> = <em>c</em> ⋅ <em>Q</em><sup><em>f</em></sup></span></p>
 <p><span class="math display"><em>V</em> = <em>k</em> ⋅ <em>Q</em><sup><em>m</em></sup></span></p>
 <p>Each <strong>single relationships</strong> describes a component of the channel behavior (see section <a href="#fitting-single-relationships">Fitting single relationships</a>). For example, the Q-Y relation is similar to the <strong>traditional rating curve</strong> that relates stage to discharge where stage is given as a height of water (H) above a datum (Ho).</p>
@@ -133,7 +133,7 @@
 <span>   <span class="fu">select</span><span class="op">(</span>Q <span class="op">=</span> <span class="va">Q_cms</span>, Y <span class="op">=</span> <span class="va">Y_m</span>, V <span class="op">=</span> <span class="va">V_ms</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
 <span>   <span class="fu"><a href="reference/ahg_estimate.html">ahg_estimate</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   V_method Y_method tot_nrmse   V_nrmse   Y_nrmse   V_coef    Y_coef     V_exp</span></span>
-<span><span class="co">#&gt; 1      nls      nls 0.6299145 0.2312688 0.3986457 0.289889 0.1867125 0.3246968</span></span>
+<span><span class="co">#&gt; 1      nls      nls 0.6787807 0.2312688 0.4475119 0.289889 0.1867125 0.3246968</span></span>
 <span><span class="co">#&gt;       Y_exp</span></span>
 <span><span class="co">#&gt; 1 0.5190562</span></span></code></pre></div>
 <p>If you would like all fits (OLS and NLS), the <code>full_fitting</code> parameter can be set to <code>TRUE</code>.</p>
@@ -144,19 +144,15 @@
 <span>   <span class="fu"><a href="reference/ahg_estimate.html">ahg_estimate</a></span><span class="op">(</span>full_fitting <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $full_fits</span></span>
 <span><span class="co">#&gt;   V_method Y_method tot_nrmse   V_nrmse   Y_nrmse    V_coef    Y_coef     V_exp</span></span>
-<span><span class="co">#&gt; 1      nls      nls 0.6299145 0.2312688 0.3986457 0.2898890 0.1867125 0.3246968</span></span>
-<span><span class="co">#&gt; 2      nls      ols 0.6404046 0.2312688 0.4091358 0.2898890 0.2018376 0.3246968</span></span>
-<span><span class="co">#&gt; 3      ols      nls 0.6520704 0.2534246 0.3986457 0.2178592 0.1867125 0.4056932</span></span>
-<span><span class="co">#&gt; 4      ols      ols 0.6625604 0.2534246 0.4091358 0.2178592 0.2018376 0.4056932</span></span>
+<span><span class="co">#&gt; 1      nls      nls 0.6787807 0.2312688 0.4475119 0.2898890 0.1867125 0.3246968</span></span>
+<span><span class="co">#&gt; 2      ols      ols 0.7127124 0.2534246 0.4592878 0.2178592 0.2018376 0.4056932</span></span>
 <span><span class="co">#&gt;       Y_exp</span></span>
 <span><span class="co">#&gt; 1 0.5190562</span></span>
 <span><span class="co">#&gt; 2 0.4794202</span></span>
-<span><span class="co">#&gt; 3 0.5190562</span></span>
-<span><span class="co">#&gt; 4 0.4794202</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $summary</span></span>
 <span><span class="co">#&gt;   V_method Y_method tot_nrmse   V_nrmse   Y_nrmse   V_coef    Y_coef     V_exp</span></span>
-<span><span class="co">#&gt; 1      nls      nls 0.6299145 0.2312688 0.3986457 0.289889 0.1867125 0.3246968</span></span>
+<span><span class="co">#&gt; 1      nls      nls 0.6787807 0.2312688 0.4475119 0.289889 0.1867125 0.3246968</span></span>
 <span><span class="co">#&gt;       Y_exp</span></span>
 <span><span class="co">#&gt; 1 0.5190562</span></span></code></pre></div>
 </div>
@@ -172,15 +168,15 @@
 <span>   <span class="fu">select</span><span class="op">(</span>Q <span class="op">=</span> <span class="va">Q_cms</span>, Y <span class="op">=</span> <span class="va">Y_m</span>, V <span class="op">=</span> <span class="va">V_ms</span>, TW <span class="op">=</span> <span class="va">TW_m</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
 <span>   <span class="fu"><a href="reference/ahg_estimate.html">ahg_estimate</a></span><span class="op">(</span>allowance <span class="op">=</span> <span class="fl">.05</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   V_method TW_method Y_method    c1    c2 viable tot_nrmse   V_nrmse  TW_nrmse</span></span>
-<span><span class="co">#&gt; 1      nls       nls    nsga2 1.048 0.997   TRUE 0.7987163 0.2312688 0.1665577</span></span>
-<span><span class="co">#&gt; 2    nsga2     nsga2    nsga2 1.042 0.997   TRUE 0.7988745 0.2314216 0.1665631</span></span>
-<span><span class="co">#&gt; 3      ols       ols      ols 0.994 1.000   TRUE 0.8297486 0.2534246 0.1671882</span></span>
-<span><span class="co">#&gt; 4      nls       nls      nls 1.234 0.960  FALSE 0.7964722 0.2312688 0.1665577</span></span>
+<span><span class="co">#&gt; 1      nls       nls    nsga2 1.048 0.997   TRUE 0.8478575 0.2312688 0.1665577</span></span>
+<span><span class="co">#&gt; 2    nsga2     nsga2    nsga2 1.042 0.997   TRUE 0.8480158 0.2314216 0.1665631</span></span>
+<span><span class="co">#&gt; 3      ols       ols      ols 0.994 1.000   TRUE 0.8799006 0.2534246 0.1671882</span></span>
+<span><span class="co">#&gt; 4      nls       nls      nls 1.234 0.960  FALSE 0.8453383 0.2312688 0.1665577</span></span>
 <span><span class="co">#&gt;     Y_nrmse    V_coef  TW_coef    Y_coef     V_exp    TW_exp     Y_exp</span></span>
-<span><span class="co">#&gt; 1 0.4008899 0.2898890 22.79344 0.1586042 0.3246968 0.1166774 0.5560598</span></span>
-<span><span class="co">#&gt; 2 0.4008899 0.2874600 22.86035 0.1586042 0.3248796 0.1160671 0.5560598</span></span>
-<span><span class="co">#&gt; 3 0.4091358 0.2178592 22.61538 0.2018376 0.4056932 0.1145234 0.4794202</span></span>
-<span><span class="co">#&gt; 4 0.3986457 0.2898890 22.79344 0.1867125 0.3246968 0.1166774 0.5190562</span></span>
+<span><span class="co">#&gt; 1 0.4500311 0.2898890 22.79344 0.1586042 0.3246968 0.1166774 0.5560598</span></span>
+<span><span class="co">#&gt; 2 0.4500311 0.2874600 22.86035 0.1586042 0.3248796 0.1160671 0.5560598</span></span>
+<span><span class="co">#&gt; 3 0.4592878 0.2178592 22.61538 0.2018376 0.4056932 0.1145234 0.4794202</span></span>
+<span><span class="co">#&gt; 4 0.4475119 0.2898890 22.79344 0.1867125 0.3246968 0.1166774 0.5190562</span></span>
 <span><span class="co">#&gt;   condition</span></span>
 <span><span class="co">#&gt; 1 bestValid</span></span>
 <span><span class="co">#&gt; 2     nsga2</span></span>
@@ -205,18 +201,18 @@
 <span> </span>
 <span><span class="op">(</span><span class="va">ahg_fit</span> <span class="op">=</span> <span class="fu"><a href="reference/ahg_estimate.html">ahg_estimate</a></span><span class="op">(</span><span class="va">filtered_data</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   V_method TW_method Y_method    c1 c2 viable tot_nrmse   V_nrmse  TW_nrmse</span></span>
-<span><span class="co">#&gt; 1      nls       nls      nls 1.012  1   TRUE 0.3311364 0.1434527 0.1022593</span></span>
-<span><span class="co">#&gt; 2      nls       nls      nls 1.012  1   TRUE 0.3311364 0.1434527 0.1022593</span></span>
-<span><span class="co">#&gt; 3      ols       ols      ols 0.998  1   TRUE 0.4254564 0.1908811 0.1039403</span></span>
+<span><span class="co">#&gt; 1      nls       nls      nls 1.012  1   TRUE 0.3443460 0.1434527 0.1022593</span></span>
+<span><span class="co">#&gt; 2      nls       nls      nls 1.012  1   TRUE 0.3443460 0.1434527 0.1022593</span></span>
+<span><span class="co">#&gt; 3      ols       ols      ols 0.998  1   TRUE 0.4456573 0.1908811 0.1039403</span></span>
 <span><span class="co">#&gt;      Y_nrmse    V_coef  TW_coef    Y_coef     V_exp    TW_exp     Y_exp</span></span>
-<span><span class="co">#&gt; 1 0.08542437 0.2812859 18.50099 0.1945125 0.3181974 0.1717161 0.5099640</span></span>
-<span><span class="co">#&gt; 2 0.08542437 0.2812859 18.50099 0.1945125 0.3181974 0.1717161 0.5099640</span></span>
-<span><span class="co">#&gt; 3 0.13063500 0.2099045 19.19159 0.2478285 0.4124677 0.1567236 0.4312825</span></span>
+<span><span class="co">#&gt; 1 0.09863406 0.2812859 18.50099 0.1945125 0.3181974 0.1717161 0.5099640</span></span>
+<span><span class="co">#&gt; 2 0.09863406 0.2812859 18.50099 0.1945125 0.3181974 0.1717161 0.5099640</span></span>
+<span><span class="co">#&gt; 3 0.15083589 0.2099045 19.19159 0.2478285 0.4124677 0.1567236 0.4312825</span></span>
 <span><span class="co">#&gt;   condition</span></span>
 <span><span class="co">#&gt; 1 bestValid</span></span>
 <span><span class="co">#&gt; 2       nls</span></span>
 <span><span class="co">#&gt; 3       ols</span></span></code></pre></div>
-<p>When the data is effectively filtered we see NLS can provide an error minimizing, valid solution for the system that is quite different then the full data fit. Further, the nsga2 algortithm did not need to be invoked:</p>
+<p>When the data is effectively filtered we see NLS can provide an error minimizing, valid solution for the system that is quite different then the full data fit. Further, the nsga2 algorithm did not need to be invoked:</p>
 <p><img src="reference/figures/README-unnamed-chunk-12-1.jpeg" width="100%"></p>
 </div>
 <div class="section level2">
@@ -255,6 +251,25 @@
 <h1 id="history">History<a class="anchor" aria-label="anchor" href="#history"></a>
 </h1>
 <p>The development of this package began as a graduate school project between friends at UC Santa Barbara and UMass Amherst following the 2017 NOAA OWP Summer Institute and clear evidence channel shape may be a limiting factor in National Water Model Performance. It has since evolved to provide an open source utility for robust large scale data synthesis and evaluation. Funding from the National Science Foundation (Grants 1937099, 2033607) provided time to draft Johnson (2022) and apply an early version of this software to the [Continental Flood Inundation Mapping (CFIM) synthetic rating curve dataset (Liu and Maidment 2020). Funding from the National Oceanic and Atmospheric Administration’s Office of Water Prediction supported the addition of data filtering and hydraulic estimation, improved documentation, and code improvement We are grateful to all involved.</p>
+</div>
+<div class="section level1">
+<h1 id="contributing">Contributing<a class="anchor" aria-label="anchor" href="#contributing"></a>
+</h1>
+<p>First, thanks for considering a contribution! We hope to make this package a community created resource!</p>
+<ul>
+<li>Please attempt to describe what you want to do prior to contributing by submitting an issue.</li>
+<li>Please follow the typical github fork - pull-request workflow.</li>
+<li>Contributions should be tested with <code>testthat</code> by running <code><a href="https://devtools.r-lib.org/reference/test.html" class="external-link">devtools::test()</a></code>.</li>
+<li>Code style should attempt to follow the <a href="https://style.tidyverse.org/" class="external-link">tidyverse style guide</a>.</li>
+<li>Make sure you use <code>roxygen</code> and run <code><a href="https://devtools.r-lib.org/reference/check.html" class="external-link">devtools::check()</a></code> before contributing.</li>
+</ul>
+<p>Other notes:</p>
+<ul>
+<li>Consider running <code><a href="https://rdrr.io/pkg/goodpractice/man/gp.html" class="external-link">goodpractice::gp()</a></code> on the package before contributing.</li>
+<li>Consider running <code><a href="https://devtools.r-lib.org/reference/spell_check.html" class="external-link">devtools::spell_check()</a></code> and <code><a href="https://devtools.r-lib.org/reference/document.html" class="external-link">devtools::document()</a></code> if you wrote documentation.</li>
+<li>Consider running <code><a href="https://devtools.r-lib.org/reference/build_rmd.html" class="external-link">devtools::build_readme()</a></code> if you made any changes.</li>
+<li>This package uses pkgdown. Running <code><a href="https://pkgdown.r-lib.org/reference/build_site.html" class="external-link">pkgdown::build_site()</a></code> will refresh it.</li>
+</ul>
 </div>
 <div class="section level1">
 <h1 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>

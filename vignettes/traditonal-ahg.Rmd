@@ -65,19 +65,19 @@ AHG relations are historically fit using OLS on the logarithmic transformation o
 ## Example: 
 
 ```{r}
-data = nwis %>% 
-  select(date, Q = Q_cms, Y = Y_m, TW = TW_m, V = V_ms)
+data <- select(nwis, date, Q = Q_cms, Y = Y_m, TW = TW_m, V = V_ms)
 
-fit = lm(log(data$Y) ~ log(data$Q))
+fit <- lm(log(data$Y) ~ log(data$Q))
   
-(coef = exp(fit$coefficients[1]))
+(coef <- exp(fit$coefficients[1]))
 
-(exp  = fit$coefficients[2])
+(exp  <- fit$coefficients[2])
 ```
 
 ```{r, echo = FALSE}
 
-data$Yp = coef * (data$Q ^ exp)
+data$Yp <- coef * (data$Q ^ exp)
+
 ggplot(data) + 
   geom_point(aes(x = Q, y = Y)) + 
   geom_line(aes(x = Q, y = Yp), color = "red") + 
@@ -89,15 +89,15 @@ ggplot(data) +
 ### Full Fits
 
 ```{r}
-ols = function(X, Y, name = NA){
-  fit = lm(log(Y) ~ log(X))
+ols <- function(X, Y, name = NA){
+  fit <- lm(log(Y) ~ log(X))
   data.frame(coef = exp(fit$coefficients[1]),
              exp  = fit$coefficients[2],
              name = name,
              row.names = NULL)
 }
 
-(x = bind_rows(
+(x <- bind_rows(
         ols(data$Q, data$Y, "Y"),
         ols(data$Q, data$TW, "TW"),
         ols(data$Q, data$V, "V")))
@@ -113,12 +113,12 @@ prod(x$coef)
 ### System Error
 
 ```{r}
-data = data %>% 
+data <- data %>% 
   mutate(Yp  = x$coef[1] * (Q ^ x$exp[1]),
          TWp = x$coef[2] * (Q ^ x$exp[2]),
          Vp  = x$coef[3] * (Q ^ x$exp[3]))
          
-err = data.frame(
+err <- data.frame(
   Ye  = nrmse(data$Y, data$Yp),
   TWe = nrmse(data$TW, data$TWp),
   Ve  = nrmse(data$V, data$Vp)
@@ -127,7 +127,7 @@ err = data.frame(
 ```
 
 ```{r, echo = FALSE}
-err = err %>% 
+err <- err %>% 
   tidyr::pivot_longer(-type)
 
 

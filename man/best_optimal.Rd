@@ -24,6 +24,7 @@ Other AHG:
 \code{\link{ahg_estimate}()},
 \code{\link{calc_nsga}()},
 \code{\link{compute_ahg}()},
+\code{\link{min_max}()},
 \code{\link{mismash}()}
 }
 \concept{AHG}

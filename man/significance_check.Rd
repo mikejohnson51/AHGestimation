@@ -15,8 +15,9 @@ significance_check(df, pvalue = 0.05)
 data.frame
 }
 \description{
-The relationship between all supplied log transformed variables are computed. 
-If the p-value of any of these is less then the supplied p-value an error message is emitted.
+The relationship between all supplied log transformed 
+variables are computed. If the p-value of any of these is less then the 
+supplied p-value an error message is emitted.
 }
 \seealso{
 Other filters: 

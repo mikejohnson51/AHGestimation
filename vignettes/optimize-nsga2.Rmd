@@ -19,7 +19,9 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   out.width = "100%",
-  dev = "jpeg"
+  dev = "jpeg",
+  warning = FALSE,
+  message = FALSE
 )
 
 library(ggplot2)
@@ -54,32 +56,42 @@ Our method for setting these bounds is as follows:
 3. This limits the exponent at coefficients to the range of {(1/scale) * nls; scale * nls}
 
 ```{r, echo = FALSE}
-nwis = nwis %>% 
-  select(date, Q = Q_cms, Y = Y_m, TW = TW_m, V = V_ms)
+nwis <- select(nwis, date, Q = Q_cms, Y = Y_m, TW = TW_m, V = V_ms)
 
-mm = AHGestimation:::min_max(nwis, 1.5)
+mm <- min_max(nwis, 1.5)
 
 ggplot(data = nwis ) + 
   geom_point(aes(x = Q, y = V)) + 
-  geom_line(aes(x = nwis$Q, y = mm$low[1] * nwis$Q ^ mm$low[2], col = "low")) +
-  geom_line(aes(x = nwis$Q, y = mm$base[1] * nwis$Q ^ mm$base[2], col = "NLS")) +
-  geom_line(aes(x = nwis$Q, y = mm$high[1] * nwis$Q ^ mm$high[2], col = "high")) +
+  geom_line(aes(x = Q, y = mm$low[1] * Q ^ mm$low[2], 
+                col = "low")) +
+  geom_line(aes(x = Q, y = mm$base[1] * Q ^ mm$base[2], 
+                col = "NLS")) +
+  geom_line(aes(x = Q, y = mm$high[1] * Q ^ mm$high[2], 
+                col = "high")) +
   theme_light()  + 
   labs(title = 'Q-V Relationship') +
 ggplot(data = nwis ) + 
   geom_point(aes(x = Q, y = TW)) + 
-  geom_line(aes(x = nwis$Q, y = mm$low[3] * nwis$Q ^ mm$low[4], col = "low")) +
-  geom_line(aes(x = nwis$Q, y = mm$base[3] * nwis$Q ^ mm$base[4], col = "NLS")) +
-  geom_line(aes(x = nwis$Q, y = mm$high[3] * nwis$Q ^ mm$high[4], col = "high")) +
+  geom_line(aes(x = Q, y = mm$low[3] * Q ^ mm$low[4], 
+                col = "low")) +
+  geom_line(aes(x = Q, y = mm$base[3] * Q ^ mm$base[4], 
+                col = "NLS")) +
+  geom_line(aes(x = Q, y = mm$high[3] * Q ^ mm$high[4], 
+                col = "high")) +
   theme_light() + 
   labs(title = 'Q-TW Relationship') + 
 ggplot(data = nwis ) + 
-    geom_point(aes(x = Q, y = V)) + 
-  geom_line(aes(x = nwis$Q, y = mm$low[5] * nwis$Q ^ mm$low[6], col = "low")) +
-  geom_line(aes(x = nwis$Q, y = mm$base[5] * nwis$Q ^ mm$base[6], col = "NLS")) +
-  geom_line(aes(x = nwis$Q, y = mm$high[5] * nwis$Q ^ mm$high[6], col = "high")) +
+  geom_point(aes(x = Q, y = V)) + 
+  geom_line(aes(x = Q, y = mm$low[5] * Q ^ mm$low[6], 
+                col = "low")) +
+  geom_line(aes(x = Q, y = mm$base[5] * Q ^ mm$base[6], 
+                col = "NLS")) +
+  geom_line(aes(x = Q, y = mm$high[5] * Q ^ mm$high[6], 
+                col = "high")) +
   theme_light()  + 
-  labs(title = 'Q-Y Relationship') + plot_layout(guides = "collect") & theme(legend.position = 'bottom')
+  labs(title = 'Q-Y Relationship') + 
+  plot_layout(guides = "collect") & 
+  theme(legend.position = 'bottom')
 ```
 
 The default for scale is 1.5, and if left to NULL the respective parameters limits will be set to the maximums (+10%) found in Asfari 2018.
@@ -105,15 +117,16 @@ To do this, we build out a text matrix of `generation` and `population` sizes, a
 The plot and table below show how solutions balance the % gain from the "best" solution against time to solve. The effective Pareto front of solutions is colored and labeled and all are equally valid solutions depending on the desired goal (maximum speed, minimal error, some balance)
 
 ```{r, eval = FALSE}
-seed  = 1
-mprob = c(.2)
-cprob = c(.7)
-gen   = c(16, 24, 32, 48, 96, 144, 192)
-pop   = c(100, 200, 300, 500, 700, 1000)
+seed  <- 1
+mprob <- c(.2)
+cprob <- c(.7)
+gen   <- c(16, 24, 32, 48, 96, 144, 192)
+pop   <- c(100, 200, 300, 500, 700, 1000)
 ```
 
 ```{r, echo = FALSE, eval = TRUE}
-tt = readRDS(system.file("extdata/pop-gen-experiment.rds", package = "AHGestimation")) %>% 
+tt <- readRDS(system.file("extdata/pop-gen-experiment.rds", 
+                          package = "AHGestimation")) %>% 
   group_by(gen, pop) %>% 
   summarise(s = sum(rank),
             na = sum(is.na(error)),
@@ -151,7 +164,8 @@ ggplot(tt) +
                             box.padding   = 0.35,  
                             point.padding = 0.5, 
                             segment.color = 'grey50') +
-  labs(y = 'Percent Gain in Total Error Compared to Best', x = "Time to Solve (seconds)",
+  labs(y = 'Percent Gain in Total Error Compared to Best', 
+       x = "Time to Solve (seconds)",
        title = "Covergence vs. Error",
        subtitle = "Colored Pareto Front") + 
   theme_light()
@@ -183,9 +197,10 @@ Here, we tested the 15 combinations (3 probabilities, 5 gen/pop combinations) fo
 Below plot (A) shows the mean error of each combination across the 25 locations against the mean time to converge. Plot (B) shows the mean variance in each grouping against the mean time to converge.
 
 ```{r, echo = FALSE}
-x = readRDS(system.file("extdata/prob-experiment.rds", package = "AHGestimation"))
+x <- readRDS(system.file("extdata/prob-experiment.rds", 
+                         package = "AHGestimation"))
 
-tt = x %>% 
+tt <- x %>% 
   group_by(spawn) %>% 
   summarise(me = mean(error, na.rm = TRUE),
          ve = var(error, na.rm = T),
@@ -197,8 +212,8 @@ tt = x %>%
   ungroup() %>% 
   arrange(mt) 
 
-tt$col1 = ifelse(tt$spawn %in% c(10,15,5,12,7,2,4,11), "red", "gray")
-tt$col2 = ifelse(tt$spawn %in% c(10,15,5,12,2,11), "blue", "gray")
+tt$col1 <- ifelse(tt$spawn %in% c(10,15,5,12,7,2,4,11), "red", "gray")
+tt$col2 <- ifelse(tt$spawn %in% c(10,15,5,12,2,11), "blue", "gray")
 
 ggplot(data = tt) + 
   geom_point(aes(x = mt, y = me), col = tt$col1, size = 3 ) + 
@@ -217,7 +232,16 @@ ggplot(data = tt) +
     labs(x = "Mean Time", y = "Mean Total Variation") +
   theme_light()
 
-DT::datatable(arrange(select(filter(tt, col1 != "gray" & col2 != "gray"), label = spawn,pop = mp, gen = mg, mprob = mm, cprob = mc, total_error = me, mean_variation = ve,  time = mt), time))  %>%
+DT::datatable(arrange(select(filter(tt, col1 != "gray" & col2 != "gray"), 
+                             label = spawn,
+                             pop = mp, 
+                             gen = mg, 
+                             mprob = mm, 
+                             cprob = mc, 
+                             total_error = me, 
+                             mean_variation = ve,  
+                             time = mt), 
+                      time))  %>%
   DT::formatRound(columns=c('time', 'total_error', 'mean_variation'), digits=2) 
 ```
 
@@ -238,13 +262,17 @@ Overall, 96% of the tests fell within 2.5% of the best solutions error. In total
 This give us confidence that the solution space defined is adequate for solving this problem in a general way.
 
 ```{r, echo = FALSE}
-s = readRDS(system.file("extdata/seed-test-200.rds", package = "AHGestimation"))
+s <- readRDS(system.file("extdata/seed-test-200.rds", 
+                         package = "AHGestimation"))
 
-s$color = ifelse(between(s$error, min(s$error), 1.025*min(s$error)), "red", "grey")
+s$color <- ifelse(between(s$error, min(s$error), 1.025*min(s$error)), 
+                  "red", 
+                  "grey")
 
 ggplot(data = s) + 
   geom_point(aes(x = s, y = error), col = s$color, size = 3 ) +
-  geom_point(data = slice_min(s, error),aes(x = s, y = error), col = "blue", size = 3 ) +
+  geom_point(data = slice_min(s, error),aes(x = s, y = error), 
+             col = "blue", size = 3 ) +
   theme_light() + 
   labs(title = "Imapct of seed on Overall Error",
        x = "seed") + 
@@ -260,9 +288,9 @@ ggplot(data = s) +
 
 Certainly, this in not a end all be all solution and different objectives might want different solutions. In this case the following options are exposed in `ahg_estimate`:
 
-- **times** represents the number of times the solution should be run with different seeds (`1:n()`) and is exposed in `ahg_estimate`
+- **times**: represents the number of times the solution should be run with different seeds (`1:n()`) and is exposed in `ahg_estimate`
 
-- **gen**
-- **pop**
-- **cprob**
-- **mprob**
+- **gen**: Number of generations to breed.
+- **pop**: Size of population
+- **cprob**: Crossover probability
+- **mprob**: Mutation probability

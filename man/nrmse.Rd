@@ -15,7 +15,8 @@ nrmse(sim, obs)
 numeric
 }
 \description{
-Normalized root mean square error (NRMSE) between sim and obs, with treatment of missing values
+Normalized root mean square error (NRMSE) between sim and obs, 
+with treatment of missing values
 }
 \seealso{
 Other evaluation: 

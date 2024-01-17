@@ -60,6 +60,7 @@
 <span>  mprob <span class="op">=</span> <span class="fl">0.4</span>,</span>
 <span>  times <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  scale <span class="op">=</span> <span class="fl">1.5</span>,</span>
+<span>  full_fitting <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -67,7 +68,8 @@
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>df</dt>
-<dd><p>hydraulic data.frame</p></dd>
+<dd><p>hydraulic data.frame with columns named (Q, V, TW, Y). 
+Q and at least one other are required.</p></dd>
 
 
 <dt>allowance</dt>
@@ -98,6 +100,10 @@
 <dd><p>should a scale factor be applied to data pre NSGA-2 fitting</p></dd>
 
 
+<dt>full_fitting</dt>
+<dd><p>should all fits be returned?</p></dd>
+
+
 <dt>verbose</dt>
 <dd><p>should messages be emitted?</p></dd>
 
@@ -114,6 +120,7 @@
 <code><a href="best_optimal.html">best_optimal</a>()</code>,
 <code><a href="calc_nsga.html">calc_nsga</a>()</code>,
 <code><a href="compute_ahg.html">compute_ahg</a>()</code>,
+<code><a href="min_max.html">min_max</a>()</code>,
 <code><a href="mismash.html">mismash</a>()</code></p></div>
     </div>
 

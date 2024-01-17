@@ -11,14 +11,16 @@ date_filter(df, years, keep_max = FALSE)
 
 \item{years}{the number of allowed history}
 
-\item{keep_max}{Should the largest flow record be kept, even if older then "years"}
+\item{keep_max}{Should the largest flow record be kept, 
+even if older then "years"}
 }
 \value{
 data.frame
 }
 \description{
-Data is filtered when it is beyond a specified year threshold (e.g. 5 years old). The relative date is based on the newest 
-observation in the data set. Optionally, the maximum flow (Q) record can be retained.
+Data is filtered when it is beyond a specified year threshold 
+(e.g. 5 years old). The relative date is based on the newest observation 
+in the data set. Optionally, the maximum flow (Q) record can be retained.
 }
 \seealso{
 Other filters: 
