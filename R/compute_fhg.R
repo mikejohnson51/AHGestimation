@@ -7,21 +7,21 @@
 #' @family AHG
 #' @export
 
-compute_ahg = function(Q, P, type = "relation"){
+compute_ahg <- function(Q, P, type = "relation"){
   
   Qlog <- Ylog <- NULL
   
-  df = data.frame(Q,P) %>% 
+  df <- data.frame(Q,P) %>% 
     arrange(Q) %>% 
     mutate(Qlog = log(Q), Ylog = log(P)) %>% 
     filter(is.finite(Qlog), is.finite(Ylog))
   
-  fit = lm(df$Ylog ~ df$Qlog)
+  fit <- lm(df$Ylog ~ df$Qlog)
   
-  coef = exp(fit$coefficients[1])
-  exp  = fit$coefficients[2]
-  p2 = df$P
-  q = df$Q
+  coef <- exp(fit$coefficients[1])
+  exp  <- fit$coefficients[2]
+  p2 <- df$P
+  q <- df$Q
   model <-  suppressWarnings({
     nls(p2 ~ alpha * q ^ x,  start = list(alpha = coef, x = exp), trace = FALSE,
         control = nls.control(maxiter = 50,
@@ -29,17 +29,17 @@ compute_ahg = function(Q, P, type = "relation"){
                               warnOnly=TRUE))
   })
   
-  s = model %>% summary()
+  s <- summary(model)
   
-  coef2 = s$coefficients[1,1]
-  exp2  = s$coefficients[2,1]
+  coef2 <- s$coefficients[1,1]
+  exp2  <- s$coefficients[2,1]
   
-  OLS = coef  * df$Q ^ exp
-  NLS = coef2 * df$Q ^ exp2
+  OLS <- coef  * df$Q ^ exp
+  NLS <- coef2 * df$Q ^ exp2
   
-  res  = list()
+  res  <- list()
   
-  res = data.frame(
+  res <- data.frame(
     type = type,
     exp = exp,
     coef = coef,

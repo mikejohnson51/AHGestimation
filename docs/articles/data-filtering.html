@@ -104,10 +104,9 @@ median absolute deviation (MAD) are excluded with each pass until no
 outliers are left.</p>
 <p>This approach can be implemented using <code>mad_filter</code>:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">data</span> <span class="op">=</span> <span class="va">nwis</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">select</span><span class="op">(</span><span class="va">date</span>, Q <span class="op">=</span> <span class="va">Q_cms</span>, Y <span class="op">=</span> <span class="va">Y_m</span>, TW <span class="op">=</span> <span class="va">TW_m</span>, V <span class="op">=</span> <span class="va">V_ms</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu">select</span><span class="op">(</span><span class="va">nwis</span>, <span class="va">date</span>, Q <span class="op">=</span> <span class="va">Q_cms</span>, Y <span class="op">=</span> <span class="va">Y_m</span>, TW <span class="op">=</span> <span class="va">TW_m</span>, V <span class="op">=</span> <span class="va">V_ms</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">mad_data</span> <span class="op">=</span> <span class="fu"><a href="../reference/mad_filter.html">mad_filter</a></span><span class="op">(</span><span class="va">data</span>, envelope <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">mad_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/mad_filter.html">mad_filter</a></span><span class="op">(</span><span class="va">data</span>, envelope <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></code></pre></div>
 <p><img src="data-filtering_files/figure-html/unnamed-chunk-3-1.png" width="100%"></p>
 </div>
 <div class="section level3">
@@ -120,7 +119,7 @@ Users can specify the number of years to keep (in reference to the most
 recent observation) and whether the maximum flow value should be kept
 regradless of when it was taken.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">date_data</span> <span class="op">=</span> <span class="fu"><a href="../reference/date_filter.html">date_filter</a></span><span class="op">(</span><span class="va">data</span>, years <span class="op">=</span> <span class="fl">5</span>, keep_max <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">date_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/date_filter.html">date_filter</a></span><span class="op">(</span><span class="va">data</span>, years <span class="op">=</span> <span class="fl">5</span>, keep_max <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="data-filtering_files/figure-html/unnamed-chunk-5-1.png" width="100%"></p>
 </div>
 <div class="section level3">
@@ -133,7 +132,7 @@ violate this assumption. Within the code, A is assumed to be the product
 of Y and TW and an allowance can be specific that determines the amount
 of allows deviation from equality. The default allowance is .05.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">qva_data</span> <span class="op">=</span> <span class="fu"><a href="../reference/qva_filter.html">qva_filter</a></span><span class="op">(</span><span class="va">data</span>, allowance <span class="op">=</span> <span class="fl">.05</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">qva_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/qva_filter.html">qva_filter</a></span><span class="op">(</span><span class="va">data</span>, allowance <span class="op">=</span> <span class="fl">.05</span><span class="op">)</span></span></code></pre></div>
 <p><img src="data-filtering_files/figure-html/unnamed-chunk-7-1.png" width="100%"></p>
 </div>
 <div class="section level3">
@@ -146,7 +145,7 @@ provided relationship. This fit is used to predict [V,TW,Y] for all
 given Q’s. If the actual value is outside the specified allowance
 (default = +/- 50%) it is removed.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">nls_data</span> <span class="op">=</span> <span class="fu"><a href="../reference/nls_filter.html">nls_filter</a></span><span class="op">(</span><span class="va">data</span>, allowance <span class="op">=</span> <span class="fl">.5</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">nls_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nls_filter.html">nls_filter</a></span><span class="op">(</span><span class="va">data</span>, allowance <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span></code></pre></div>
 <p><img src="data-filtering_files/figure-html/unnamed-chunk-9-1.png" width="100%"></p>
 </div>
 </div>
@@ -158,7 +157,7 @@ representative dataset from the complete archive. For example, we could
 reduce the complete dataset to a 10 year record that respects the Q=vA
 assumption and has no data outside of 3 MAD in any relation:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">xf</span> <span class="op">=</span> <span class="va">data</span> <span class="op">%&gt;%</span> </span>
+<code class="sourceCode R"><span><span class="va">xf</span> <span class="op">&lt;-</span> <span class="va">data</span> <span class="op">%&gt;%</span> </span>
 <span>  <span class="co"># Keep the most recent 10 year</span></span>
 <span>  <span class="fu"><a href="../reference/date_filter.html">date_filter</a></span><span class="op">(</span>year <span class="op">=</span> <span class="fl">10</span>, keep_max <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
 <span>  <span class="co"># Keep data within 3 Median absolute deviations (log residuals)</span></span>
@@ -172,19 +171,19 @@ assumption and has no data outside of 3 MAD in any relation:</p>
 </h2>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Best attempt to mimic the HyG dataset</span></span>
-<span><span class="va">hf_df</span> <span class="op">=</span> <span class="va">data</span> <span class="op">%&gt;%</span> </span>
+<span><span class="va">hf_df</span> <span class="op">&lt;-</span> <span class="va">data</span> <span class="op">%&gt;%</span> </span>
 <span>  <span class="fu"><a href="../reference/date_filter.html">date_filter</a></span><span class="op">(</span><span class="fl">5</span>, keep_max <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
 <span>  <span class="fu"><a href="../reference/qva_filter.html">qva_filter</a></span><span class="op">(</span>allowance <span class="op">=</span> <span class="fl">.05</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
 <span>  <span class="fu"><a href="../reference/mad_filter.html">mad_filter</a></span><span class="op">(</span>envelope <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> </span>
 <span></span>
-<span><span class="co"># NLS basec filtering</span></span>
-<span><span class="va">nls_df</span> <span class="op">=</span> <span class="va">data</span> <span class="op">%&gt;%</span> </span>
+<span><span class="co"># NLS based filtering</span></span>
+<span><span class="va">nls_df</span> <span class="op">&lt;-</span> <span class="va">data</span> <span class="op">%&gt;%</span> </span>
 <span>  <span class="fu"><a href="../reference/date_filter.html">date_filter</a></span><span class="op">(</span><span class="fl">10</span>, keep_max <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
 <span>  <span class="fu"><a href="../reference/nls_filter.html">nls_filter</a></span><span class="op">(</span>allowance <span class="op">=</span> <span class="fl">.5</span><span class="op">)</span></span>
 <span>  </span>
-<span><span class="va">x1</span> <span class="op">=</span> <span class="fu"><a href="../reference/ahg_estimate.html">ahg_estimate</a></span><span class="op">(</span>df <span class="op">=</span> <span class="va">data</span><span class="op">)</span></span>
-<span><span class="va">x2</span> <span class="op">=</span> <span class="fu"><a href="../reference/ahg_estimate.html">ahg_estimate</a></span><span class="op">(</span>df <span class="op">=</span> <span class="va">hf_df</span><span class="op">)</span></span>
-<span><span class="va">x3</span> <span class="op">=</span> <span class="fu"><a href="../reference/ahg_estimate.html">ahg_estimate</a></span><span class="op">(</span>df <span class="op">=</span> <span class="va">nls_df</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">x1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ahg_estimate.html">ahg_estimate</a></span><span class="op">(</span>df <span class="op">=</span> <span class="va">data</span><span class="op">)</span></span>
+<span><span class="va">x2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ahg_estimate.html">ahg_estimate</a></span><span class="op">(</span>df <span class="op">=</span> <span class="va">hf_df</span><span class="op">)</span></span>
+<span><span class="va">x3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ahg_estimate.html">ahg_estimate</a></span><span class="op">(</span>df <span class="op">=</span> <span class="va">nls_df</span><span class="op">)</span></span></code></pre></div>
 <p><img src="data-filtering_files/figure-html/unnamed-chunk-13-1.png" width="100%"></p>
 </div>
 <div class="section level2">
@@ -195,7 +194,7 @@ computed. If the p-value of any of these is less then the supplied
 p-value an error message is emitted and it can be assumed that no
 statistical relationship exists between Q-{TW,V,Y}.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">s</span> <span class="op">=</span> <span class="fu"><a href="../reference/significance_check.html">significance_check</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">s</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/significance_check.html">significance_check</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>

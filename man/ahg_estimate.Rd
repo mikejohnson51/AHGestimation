@@ -13,11 +13,13 @@ ahg_estimate(
   mprob = 0.4,
   times = 1,
   scale = 1.5,
+  full_fitting = FALSE,
   verbose = FALSE
 )
 }
 \arguments{
-\item{df}{hydraulic data.frame}
+\item{df}{hydraulic data.frame with columns named (Q, V, TW, Y). 
+Q and at least one other are required.}
 
 \item{allowance}{allowed deviation from continuity}
 
@@ -33,6 +35,8 @@ ahg_estimate(
 
 \item{scale}{should a scale factor be applied to data pre NSGA-2 fitting}
 
+\item{full_fitting}{should all fits be returned?}
+
 \item{verbose}{should messages be emitted?}
 }
 \value{
@@ -46,6 +50,7 @@ Other AHG:
 \code{\link{best_optimal}()},
 \code{\link{calc_nsga}()},
 \code{\link{compute_ahg}()},
+\code{\link{min_max}()},
 \code{\link{mismash}()}
 }
 \concept{AHG}

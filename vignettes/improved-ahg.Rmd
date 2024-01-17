@@ -19,7 +19,8 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   out.width = "100%",
-  dev = "jpeg"
+  dev = "jpeg", 
+  warning = FALSE
 )
 
 library(ggplot2)
@@ -30,8 +31,7 @@ library(mco)
 
 ```{r setup}
 library(AHGestimation)
-data = nwis %>% 
-  select(date, Q = Q_cms, Y = Y_m, TW = TW_m, V = V_ms)
+data <-  select(nwis, date, Q = Q_cms, Y = Y_m, TW = TW_m, V = V_ms)
 ```
 
 ## Increasing AHG skill:
@@ -48,15 +48,15 @@ Nonlinear Least Square (NLS) regression provides more flexible curve fitting thr
 ### OLS
 
 ```{r}
-ols = function(X, Y, name = NA){
-  fit = lm(log(Y) ~ log(X))
+ols <- function(X, Y, name = NA){
+  fit <- lm(log(Y) ~ log(X))
   data.frame(coef = exp(fit$coefficients[1]),
              exp  = fit$coefficients[2],
              name = name,
              row.names = NULL)
 }
 
-(ols_fit = bind_rows(
+(ols_fit <- bind_rows(
         ols(data$Q, data$Y, "Y"),
         ols(data$Q, data$TW, "TW"),
         ols(data$Q, data$V, "V"))%>% 
@@ -65,12 +65,12 @@ ols = function(X, Y, name = NA){
 sum(ols_fit$exp)
 prod(ols_fit$coef)
 
-olsP = data %>% 
+olsP <- data %>% 
   mutate(Yp  = ols_fit$coef[1] * (Q ^ ols_fit$exp[1]),
          TWp = ols_fit$coef[2] * (Q ^ ols_fit$exp[2]),
          Vp  = ols_fit$coef[3] * (Q ^ ols_fit$exp[3]))
          
-ols_e = data.frame(
+ols_e <- data.frame(
   Ye  = nrmse(olsP$Y, olsP$Yp),
   TWe = nrmse(olsP$TW, olsP$TWp),
   Ve  = nrmse(olsP$V, olsP$Vp)) %>% 
@@ -79,7 +79,8 @@ ols_e = data.frame(
 
 ```{r, echo = FALSE}
 ggplot() + 
-  geom_col(data = tidyr::pivot_longer(ols_e, -type), aes(x = name, y = value, fill = type),
+  geom_col(data = tidyr::pivot_longer(ols_e, -type), 
+           aes(x = name, y = value, fill = type),
            stat = "identity", position = position_dodge(), alpha = 0.75) + 
   theme_light() + labs(x = "Relationship", y = "nRMSE")
 ```
@@ -87,7 +88,7 @@ ggplot() +
 ### NLS
 
 ```{r}
-nls = function(X, Y, coef, exp, name = NA){
+nls <- function(X, Y, coef, exp, name = NA){
   s <-  summary(suppressWarnings({
     stats::nls(Y ~ alpha * X ^ x,
         start = list(alpha = coef, x = exp), 
@@ -101,22 +102,32 @@ nls = function(X, Y, coef, exp, name = NA){
              row.names = NULL)
 }
 
-(nls_fit = bind_rows(
-        nls(X = data$Q, Y = data$Y,  coef = ols_fit$coef[1], exp = ols_fit$exp[1], "Y"),
-        nls(X = data$Q, Y = data$TW, coef = ols_fit$coef[2], exp = ols_fit$exp[2], "TW"),
-        nls(X = data$Q, Y = data$V,  coef = ols_fit$coef[3], exp = ols_fit$exp[3], "V")) %>% 
+(nls_fit <- bind_rows(
+        nls(X = data$Q, 
+            Y = data$Y,  
+            coef = ols_fit$coef[1], 
+            exp = ols_fit$exp[1],
+            "Y"),
+        nls(X = data$Q, 
+            Y = data$TW, coef = ols_fit$coef[2], 
+            exp = ols_fit$exp[2], 
+            "TW"),
+        nls(X = data$Q, 
+            Y = data$V,  coef = ols_fit$coef[3], 
+            exp = ols_fit$exp[3], 
+            "V")) %>% 
     mutate(method = "nls"))
 
 sum(nls_fit$exp)
 prod(nls_fit$coef)
 
-nlsP = data %>% 
+nlsP <- data %>% 
   mutate(Yp  = nls_fit$coef[1] * (Q ^ nls_fit$exp[1]),
          TWp = nls_fit$coef[2] * (Q ^ nls_fit$exp[2]),
          Vp  = nls_fit$coef[3] * (Q ^ nls_fit$exp[3]),
          method = "nls")
          
-nls_e = data.frame(
+nls_e <- data.frame(
   Ye  = nrmse(nlsP$Y, nlsP$Yp),
   TWe = nrmse(nlsP$TW, nlsP$TWp),
   Ve  = nrmse(nlsP$V, nlsP$Vp)
@@ -125,10 +136,11 @@ nls_e = data.frame(
 ```
 
 ```{r, echo = FALSE}
-e = bind_rows(nls_e, ols_e)
+e <- bind_rows(nls_e, ols_e)
 
 ggplot() + 
-  geom_col(data = tidyr::pivot_longer(e, -type), aes(x = name, y = value, fill = type),
+  geom_col(data = tidyr::pivot_longer(e, -type), 
+           aes(x = name, y = value, fill = type),
            stat = "identity", position = position_dodge(), alpha = 0.75) + 
   theme_light() + labs(x = "Relationship", y = "nRMSE")
 ```
@@ -136,17 +148,17 @@ ggplot() +
 ## NSGA-II
 
 ```{r}
-allowance = 0.05
+allowance <- 0.05
 
 # x assumed to be ordered as: k, m, a, b, c, f
 objective_function <- function(x) {
-      v = nrmse(x[1]*data$Q^x[2], data$V) 
-      t = nrmse(x[3]*data$Q^x[4], data$TW) 
-      d = nrmse(x[5]*data$Q^x[6], data$Y) 
+      v <- nrmse(x[1]*data$Q^x[2], data$V) 
+      t <- nrmse(x[3]*data$Q^x[4], data$TW) 
+      d <- nrmse(x[5]*data$Q^x[6], data$Y) 
       return(c(v,t,d))
 }
 
-constraint = function(x) {
+constraint <- function(x) {
     return(c((1 + allowance) - (x[1] * x[3] * x[5]),
              (x[1] * x[3] * x[5]) - (1 - allowance),
              (1 + allowance) - (x[2] + x[4] + x[6]),
@@ -157,7 +169,7 @@ constraint = function(x) {
 ```{r}
 set.seed(10291991)
 
-res = nsga2(
+res <- nsga2(
       objective_function,
       constraints   = constraint,
       # 6 inputs, 3 outputs, 4 constraints
@@ -182,17 +194,19 @@ res = nsga2(
 ```
 
 ```{r}
-vals = res$value[res$pareto.optimal, ]
-vals = vals[!duplicated(vals), ]
+vals <- res$value[res$pareto.optimal, ]
+vals <- vals[!duplicated(vals), ]
 
-par  = res$par[res$pareto.optimal, ]
-par  = par[!duplicated(par), ]
+par  <- res$par[res$pareto.optimal, ]
+par  <- par[!duplicated(par), ]
 
-ahg = par[which.min(rowSums(vals)),]
+ahg <- par[which.min(rowSums(vals)),]
 
-nsga_fit = data.frame(coef = ahg[c(1,3,5)], exp = ahg[c(2,4,6)], name = c("V", "TW", "Y"), method = "nsga2")
+nsga_fit <- data.frame(coef = ahg[c(1,3,5)], exp = ahg[c(2,4,6)], 
+                       name = c("V", "TW", "Y"), 
+                       method = "nsga2")
 
-nsgs_e = data.frame(
+nsgs_e <- data.frame(
   Ve = nrmse((ahg[1] * data$Q ^ ahg[2]), data$V) ,
   TWe = nrmse((ahg[3] * data$Q ^ ahg[4]), data$TW), 
   Ye = nrmse((ahg[5] * data$Q ^ ahg[6]), data$Y),
@@ -202,10 +216,11 @@ nsgs_e = data.frame(
 
 
 ```{r, echo = FALSE}
-e = bind_rows(nls_e, ols_e, nsgs_e)
+e <- bind_rows(nls_e, ols_e, nsgs_e)
 
 ggplot() + 
-  geom_col(data = tidyr::pivot_longer(e, -type), aes(x = name, y = value, fill = type),
+  geom_col(data = tidyr::pivot_longer(e, -type), 
+           aes(x = name, y = value, fill = type),
            stat = "identity", position = position_dodge(), alpha = 0.75) + 
   theme_light() + labs(x = "Relationship", y = "nRMSE")
 ```
@@ -214,56 +229,62 @@ ggplot() +
 # Combination Approach
 
 ```{r}
-d = bind_rows(ols_fit, nls_fit, nsga_fit)
-r = split(d, f = d$name)  
+d <- bind_rows(ols_fit, nls_fit, nsga_fit)
+r <- split(d, f = d$name)  
 
-fit =  function(g, ind, V, TW, Y, Q, allowance = .05) {
-    x = g[ind,]
-    g$V_error[ind] =  nrmse(x$V_coef*(Q^x$V_exp), V)
-    g$TW_error[ind] = nrmse(x$TW_coef*(Q^x$TW_exp), TW)
-    g$Y_error[ind] =  nrmse(x$Y_coef*(Q^x$Y_exp), Y) 
-    c1 = round(g$V_coef[ind] * g$Y_coef[ind] * g$TW_coef[ind], 3)
-    c2 = round(g$V_exp[ind] + g$Y_exp[ind] + g$TW_exp[ind], 3)
-    g$viable[ind] =  (between(c1, 1-allowance, 1+allowance) +  between(c2, 1-allowance, 1+allowance)) == 2
-    g
+fit <-  function(g, ind, V, TW, Y, Q, allowance = .05) {
+    x <- g[ind,]
+    g$V_error[ind] <-  nrmse(x$V_coef*(Q^x$V_exp), V)
+    g$TW_error[ind] <- nrmse(x$TW_coef*(Q^x$TW_exp), TW)
+    g$Y_error[ind] <-  nrmse(x$Y_coef*(Q^x$Y_exp), Y) 
+    c1 <- round(g$V_coef[ind] * g$Y_coef[ind] * g$TW_coef[ind], 3)
+    c2 <- round(g$V_exp[ind] + g$Y_exp[ind] + g$TW_exp[ind], 3)
+    g$viable[ind] <-  (between(c1, 1-allowance, 1+allowance) +  
+                       between(c2, 1-allowance, 1+allowance)) == 2
+    return(g)
 }
     
-names = c("V", "TW", "Y")
+names <- c("V", "TW", "Y")
 
-g = rep(list(c("ols", "nls", "nsga2")), 3) %>% 
+g <- rep(list(c("ols", "nls", "nsga2")), 3) %>% 
     expand.grid() %>% 
     setNames(paste0(names, "_method")) %>% 
     mutate(viable = NA, tot_error = NA) %>% 
     bind_cols(setNames(data.frame(matrix(NA, ncol = 9, nrow =27)), 
-                          c(paste0(names, "_error"), paste0(names, "_coef"), paste0(names, "_exp"))))
+                          c(paste0(names, "_error"), 
+                            paste0(names, "_coef"), 
+                            paste0(names, "_exp"))))
 
   
 for(t in 1:3){
-    x = g[[paste0(names[t], "_method")]]
-    ind = match(x, r[[names[t]]]$method)
+    x <- g[[paste0(names[t], "_method")]]
+    ind <- match(x, r[[names[t]]]$method)
     
-    g[[paste0(names[t], '_exp')]] = r[[names[t]]]$exp[ind]
-    g[[paste0(names[t], '_coef')]] = r[[names[t]]]$coef[ind]
+    g[[paste0(names[t], '_exp')]] <- r[[names[t]]]$exp[ind]
+    g[[paste0(names[t], '_coef')]] <- r[[names[t]]]$coef[ind]
 }
 
-for(i in 1:nrow(g)){ g = fit(g, i, data$V, data$TW, data$Y, data$Q)}
+for(i in seq(nrow(g))){ g <- fit(g, i, data$V, data$TW, data$Y, data$Q)}
 
-g$tot_error = rowSums(g[, grepl("error", names(g))], na.rm = TRUE)
+g$tot_error <- rowSums(g[, grepl("error", names(g))], na.rm = TRUE)
 
-combo = filter(g, viable == TRUE) %>% 
+combo <- filter(g, viable == TRUE) %>% 
       slice_min(tot_error) %>% 
       mutate(condition = "bestValid")
     
-ols = filter(g, Y_method == "ols", TW_method == "ols", V_method == "ols") %>% 
+ols <- filter(g, Y_method == "ols", TW_method == "ols", V_method == "ols") %>% 
       mutate(condition = "ols")
     
-nls = filter(g, Y_method == "nls", TW_method == "nls", V_method == "nls") %>% 
+nls <- filter(g, Y_method == "nls", TW_method == "nls", V_method == "nls") %>% 
       mutate(condition = "nls")
   
-nsga = filter(g, Y_method == "nsga2", TW_method == "nsga2", V_method == "nsga2") %>% 
+nsga <- filter(g, 
+               Y_method == "nsga2", 
+               TW_method == "nsga2", 
+               V_method == "nsga2") %>% 
         mutate(condition = "nsga2")
 
-summary = bind_rows(combo, ols, nls, nsga) %>%  
+summary <- bind_rows(combo, ols, nls, nsga) %>%  
           arrange(!viable, tot_error)
 ```
 
@@ -284,7 +305,7 @@ knitr::include_graphics('../man/figures/ahg_workflow.png')
 And can be executed like this:
 
 ```{r, eval = FALSE}
-ahg = ahg_estimate(data)
+ahg <- ahg_estimate(data)
 ```
 
 **NOTE** Single relationships can also be fit like this:

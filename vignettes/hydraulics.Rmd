@@ -42,7 +42,7 @@ A primary application for AHG relations is hydraulic simulation and approximatio
 Staring with the same data in other examples, we can retain the last 10 year of data and apply an NLS filter (see section of data filtering for more)
 
 ```{r}
-data = nwis %>% 
+data <- nwis %>% 
   select(date, Q = Q_cms, Y = Y_m, TW = TW_m, V = V_ms) %>% 
   date_filter(10, keep_max = TRUE) %>% 
   nls_filter(allowance = .5)
@@ -67,13 +67,13 @@ Following the assumptions made in the [HyG Dataset](https://zenodo.org/record/78
 ```{r}
 library(nhdplusTools)
 
-q = get_nldi_feature(list("featureSource" = "nwissite", 
+q <- get_nldi_feature(list("featureSource" = "nwissite", 
                           featureID = "USGS-01096500"))
 
-att = get_vaa("slope") %>% 
+att <- get_vaa("slope") %>% 
   filter(comid == q$comid)
 
-(n = compute_n(data, S = att$slope))
+(n <- compute_n(data, S = att$slope))
 ```
 
 ## Compute r, d, R and p
@@ -104,7 +104,7 @@ $$
 p = m/f
 $$
 
-** The general determination of κ and p from channel characteristics (especially slope and boundary roughness) is a central problem in open-channel hydraulics that has resisted simple solution**. In practice, coefficient κ and  exponent p can be determined by regression of `ln(V)` on `ln(Y)`
+**The general determination of κ and p from channel characteristics (especially slope and boundary roughness) is a central problem in open-channel hydraulics that has resisted simple solution**. In practice, coefficient κ and  exponent p can be determined by regression of `ln(V)` on `ln(Y)`
 
 ```{r}
 compute_ahg(Q = data$Y,  P = data$V, type = "kp")[1,] %>% 
@@ -129,8 +129,8 @@ $$
 To estimate the suite of these parameters, we provide the `compute_hydraulic_params`
 
 ```{r}
-fit = ahg_estimate(data)[1,]
-fit = compute_hydraulic_params(fit)
+fit <- ahg_estimate(data)[1,]
+fit <- compute_hydraulic_params(fit)
 
 t(fit)
 ```
@@ -158,7 +158,7 @@ knitr::include_graphics('../man/figures/dingman-bed.png')
 ```
 
 ```{r}
-cs = cross_section(r = fit$r, 
+cs <- cross_section(r = fit$r, 
                    TW = max(data$TW), 
                    Ymax = max(data$Y))
 

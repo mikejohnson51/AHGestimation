@@ -46,6 +46,7 @@ Other AHG:
 \code{\link{ahg_estimate}()},
 \code{\link{best_optimal}()},
 \code{\link{compute_ahg}()},
+\code{\link{min_max}()},
 \code{\link{mismash}()}
 }
 \concept{AHG}

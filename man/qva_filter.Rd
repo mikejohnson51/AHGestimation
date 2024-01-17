@@ -9,14 +9,16 @@ qva_filter(df, allowance = 0.05)
 \arguments{
 \item{df}{a data.frame with a Q, Y, TW, V and field.}
 
-\item{allowance}{how much deviation from equality should be allowed (default = .05)}
+\item{allowance}{how much deviation from equality 
+should be allowed (default = .05)}
 }
 \value{
 data.frame
 }
 \description{
-The function tests if the measured Q is outside of the expected range based on the product 
-of measured velocity, top-width, and depth (e.g. Q≠vA)
+The function tests if the measured Q is outside of the expected 
+range based on the product of measured velocity, top-width, 
+and depth (e.g. Q≠vA)
 }
 \seealso{
 Other filters: 

@@ -15,7 +15,8 @@ pbias(sim, obs)
 numeric
 }
 \description{
-Percent Bias between sim and obs, with treatment of missing values.
+Percent Bias between sim and obs, 
+with treatment of missing values.
 }
 \seealso{
 Other evaluation: 

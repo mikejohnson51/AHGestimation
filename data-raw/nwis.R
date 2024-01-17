@@ -1,8 +1,17 @@
-library(dplyr); library(usethis)
+library(dplyr)
+library(usethis)
 
-nwis = read.table('https://waterdata.usgs.gov/nwis/measurements?site_no=01096500&agency_cd=USGS&format=rdb_expanded',
+nwis <- read.table(paste0('https://waterdata.usgs.gov/nwis/measurements?',
+                          'site_no=01096500',
+                          '&agency_cd=USGS',
+                          '&format=rdb_expanded'),
            sep="\t", header=TRUE)[-1,] %>% 
-  select(siteID = site_no, date = measurement_dt, Q = chan_discharge, TW = chan_width, A = chan_area, V = chan_velocity) %>% 
+  select(siteID = site_no, 
+         date = measurement_dt, 
+         Q = chan_discharge, 
+         TW = chan_width, 
+         A = chan_area, 
+         V = chan_velocity) %>% 
   mutate(date = as.Date(date), 
          Q_cms = as.numeric(Q)* 0.028316847000000252,
          TW_m = as.numeric(TW)* 0.3048,
