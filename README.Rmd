@@ -34,7 +34,7 @@ library(patchwork)
 
 ```{r, eval = FALSE}
 # install.packages("remotes")
-remotes::install_packages("mikejohnson51/AHGestimation")
+remotes::install_github("mikejohnson51/AHGestimation")
 ```
 
 # Introduction
@@ -208,13 +208,10 @@ filtered_data = nwis %>%
 (ahg_fit = ahg_estimate(filtered_data))
 ```
 
-<<<<<<< HEAD
-When the data is effectively filtered we see NLS can provide an error minimizing, valid solution for the system that is quite different then the full data fit. Further, the nsga2 algorithm did not need to be invoked:
-=======
 Ultimately we recommend selecting fits that conserve mass (viable = TRUE) and has the lowest error (any of tot_nrmse, V_nrmse, TW_nrmse, or Y_nrmse) depending on the use case.
 
-When the data is effectively filtered we see NLS can provide an error minimizing, valid solution for the system that is quite different then the full data fit. Further, the nsga2 algortithm did not need to be invoked:
->>>>>>> bdba0012f5abfe3776b9c285c42e729aa9863574
+When the data is effectively filtered we see NLS can provide an error minimizing, valid solution for the system that is quite different then the full data fit. Further, the nsga2 algorithm did not need to be invoked:
+
 
 ```{r, echo = F}
 ggplot() +  

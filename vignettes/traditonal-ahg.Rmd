@@ -60,7 +60,7 @@ In practice, the enforcement of continuity is determined by the quality of the d
 
 While the AHG power laws provide an elegant theory for representing a mass-constrained hydraulic system, the data available to determine these relations are rarely as clean. In most cases, hydraulic data is reported as a table(s) relating values of Q to values of one or more hydraulic variables. Thus, the relationships require the power law relationships to be fit,
 
-AHG relations are historically fit using OLS on the logarithmic transformation of the variables, where the exponential of the intercept provides the power law coefficient, and the slope of the linear model provides the exponent. Several studies have highlighted the potential problem of using this approach [38] given that when the log transformed values are back-transformed,the estimates are effectively medians, and not means of the estimates, resulting in a general low bias.
+AHG relations are historically fit using OLS on the logarithmic transformation of the variables, where the exponential of the intercept provides the power law coefficient, and the slope of the linear model provides the exponent. Several studies have highlighted the potential problem of using this approach given that when the log transformed values are back-transformed, the estimates are effectively medians, and not means of the estimates, resulting in a general low bias.
 
 ## Example: 
 

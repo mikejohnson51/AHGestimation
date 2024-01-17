@@ -17,7 +17,7 @@ Active](https://www.repostatus.org/badges/latest/active.svg)](https://www.repost
 
 ``` r
 # install.packages("remotes")
-remotes::install_packages("mikejohnson51/AHGestimation")
+remotes::install_github("mikejohnson51/AHGestimation")
 ```
 
 # Introduction
@@ -79,8 +79,9 @@ $$
 
 **Critically, neither OLS or NLS solvers can ensure this characteristic
 of the solution.** (see [Fitting hydraulic
-systems](#fitting-hydraulic-systems)). Instead, this can be achieved by
-either
+systems](#fitting-hydraulic-systems) and this
+(article)\[<https://mikejohnson51.github.io/AHGestimation/articles/traditonal-ahg.html>\]).
+Instead, this can be achieved by either
 
 1)  Preprocessing data based on thresholds (see Enzminger, Minear, and
     Livneh (2023) and Afshari et al. (2017)) (see AHGestimation
@@ -98,8 +99,8 @@ fitting for single relations.
 
 # AHGestimation
 
-Using USGS field measurements at the gage located on [Nashua River at
-East Pepperell,
+Using USGS field measurements at the gage (National Water Information
+System or NWIS site) located on [Nashua River at East Pepperell,
 MA](https://waterdata.usgs.gov/nwis/measurements/?site_no=01096500&agency_cd=USGS)
 we can illustrate 4 capabilities this package offers:
 
@@ -202,7 +203,9 @@ the solutions found meet continuity/conserve mass.
 
 In this mode the OLS and NLS models are fit first, and if continuity is
 not met in best solution (e.g. lowest nmse), then an Evolutionary
-Approach (nsga2; Mersmann (2020)) is implemented.
+Approach (nsga2; Mersmann (2020)) is implemented (see this
+(article)\[<https://mikejohnson51.github.io/AHGestimation/articles/optimize-nsga2.html>\]
+for more details).
 
 Doing so produces three unique fits for each relationship (27 total
 combinations). These are crossed to identify the best performing
@@ -275,6 +278,10 @@ filtered_data = nwis %>%
 #> 2       nls
 #> 3       ols
 ```
+
+Ultimately we recommend selecting fits that conserve mass (viable =
+TRUE) and has the lowest error (any of tot_nrmse, V_nrmse, TW_nrmse, or
+Y_nrmse) depending on the use case.
 
 When the data is effectively filtered we see NLS can provide an error
 minimizing, valid solution for the system that is quite different then

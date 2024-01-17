@@ -67,6 +67,9 @@ Following the assumptions made in the [HyG Dataset](https://zenodo.org/record/78
 ```{r}
 library(nhdplusTools)
 
+# Need to run for first use of get_vaa():
+# nhdplusTools::download_vaa()
+
 q <- get_nldi_feature(list("featureSource" = "nwissite", 
                           featureID = "USGS-01096500"))
 
@@ -159,8 +162,8 @@ knitr::include_graphics('../man/figures/dingman-bed.png')
 
 ```{r}
 cs <- cross_section(r = fit$r, 
-                   TW = max(data$TW), 
-                   Ymax = max(data$Y))
+                    TW = max(data$TW), 
+                    Ymax = max(data$Y))
 
 head(cs)
 ```

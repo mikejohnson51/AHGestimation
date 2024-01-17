@@ -32,11 +32,11 @@ library(dplyr)
 
 # Data Filtering Functions
 
-Often the data that comes from long records of steam observation are noisy. Noise can come from changes in the river itself, changes in measurement methods, or even measurement locations.
+Often the data that comes from long records of stream observation are noisy. Noise can come from changes in the river itself, changes in measurement methods, or even measurement locations.
 
 While the FHG algorithm implemented in this package can deal with this noise through the hybrid the `OLS --> NLS --> NSGA2 --> combo` fitting method, it is also possible, and even advisable, to filter the data prior to fitting.
 
-Here we will illustrate the packaged methods. An assumption of _all_ filtering methods is that if it reduces the dataset to less then 10 observations, a warning is emited and the input data is returned.
+Here we will illustrate the packaged methods. An assumption of _all_ filtering methods is that if it reduces the dataset to less then 10 observations, a warning is shown and the input data is returned.
 
 ## 1. Median Absolute Deviation (mad)
 
