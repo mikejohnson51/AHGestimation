@@ -39,7 +39,7 @@ remotes::install_packages("mikejohnson51/AHGestimation")
 
 # Introduction
 
-The behavior of a river system at a location can be represented as the relationship between discharge (Q), mean depth (Y), mean velocity (V), and mean top width (TW). If you have these measurements over a long period of time, a relationship between how much water (Q) is in the channel and the corresponding Y, V, and TW can be established. The idea of 'at-a-station hydraulic geometry' (AHG) suggests three power laws can adequelty describe these relations [@leopold1953hydraulic]:
+The behavior of a river system at a location can be represented as the relationship between discharge (Q), mean depth (Y), mean velocity (V), and mean top width (TW). If you have these measurements over a long period of time, a relationship between how much water (Q) is in the channel and the corresponding Y, V, and TW can be established. The idea of 'at-a-station hydraulic geometry' (AHG) suggests three power laws can adequatly describe these relations [@leopold1953hydraulic]:
 
 $$
 TW = a  \cdot Q^b
@@ -208,7 +208,7 @@ filtered_data = nwis %>%
 (ahg_fit = ahg_estimate(filtered_data))
 ```
 
-When the data is effectively filtered we see NLS can provide an error minimizing, valid solution for the system that is quite different then the full data fit. Further, the nsga2 algortithm did not need to be invoked:
+When the data is effectively filtered we see NLS can provide an error minimizing, valid solution for the system that is quite different then the full data fit. Further, the nsga2 algorithm did not need to be invoked:
 
 ```{r, echo = F}
 ggplot() +  
@@ -283,6 +283,23 @@ ggplot(data = cs) +
 # History 
 
 The development of this package began as a graduate school project between friends at UC Santa Barbara and UMass Amherst following the 2017 NOAA OWP Summer Institute and clear evidence channel shape may be a limiting factor in National Water Model Performance. It has since evolved to provide an open source utility for robust large scale data synthesis and evaluation. Funding from the National Science Foundation (Grants 1937099, 2033607) provided time to draft @preprint and apply an early version of this software to the [Continental Flood Inundation Mapping (CFIM) synthetic rating curve dataset [@cfim]. Funding from the National Oceanic and Atmospheric Administration's Office of Water Prediction supported the addition of data filtering and hydraulic estimation, improved documentation, and code improvement We are grateful to all involved.
+
+# Contributing
+
+First, thanks for considering a contribution! We hope to make this package a community created resource!
+
+- Please attempt to describe what you want to do prior to contributing by submitting an issue.
+- Please follow the typical github fork - pull-request workflow.
+- Contributions should be tested with `testthat` by running `devtools::test()`.
+- Code style should attempt to follow the [tidyverse style guide](https://style.tidyverse.org/).
+- Make sure you use `roxygen` and run `devtools::check()` before contributing.
+
+Other notes: 
+
+- Consider running `goodpractice::gp()` on the package before contributing. 
+- Consider running `devtools::spell_check()` and `devtools::document()` if you wrote documentation. 
+- Consider running `devtools::build_readme()` if you made any changes. 
+- This package uses pkgdown. Running `pkgdown::build_site()` will refresh it.
 
 # References
 

@@ -28,7 +28,7 @@ and mean top width (TW). If you have these measurements over a long
 period of time, a relationship between how much water (Q) is in the
 channel and the corresponding Y, V, and TW can be established. The idea
 of ‘at-a-station hydraulic geometry’ (AHG) suggests three power laws can
-adequelty describe these relations (Leopold and Maddock 1953):
+adequatly describe these relations (Leopold and Maddock 1953):
 
 $$
 TW = a  \cdot Q^b
@@ -167,7 +167,7 @@ passed, mass conservation cannot be checked here.
    select(Q = Q_cms, Y = Y_m, V = V_ms) %>% 
    ahg_estimate())
 #>   V_method Y_method tot_nrmse   V_nrmse   Y_nrmse   V_coef    Y_coef     V_exp
-#> 1      nls      nls 0.6299145 0.2312688 0.3986457 0.289889 0.1867125 0.3246968
+#> 1      nls      nls 0.6787807 0.2312688 0.4475119 0.289889 0.1867125 0.3246968
 #>       Y_exp
 #> 1 0.5190562
 ```
@@ -182,19 +182,15 @@ can be set to `TRUE`.
    ahg_estimate(full_fitting = TRUE))
 #> $full_fits
 #>   V_method Y_method tot_nrmse   V_nrmse   Y_nrmse    V_coef    Y_coef     V_exp
-#> 1      nls      nls 0.6299145 0.2312688 0.3986457 0.2898890 0.1867125 0.3246968
-#> 2      nls      ols 0.6404046 0.2312688 0.4091358 0.2898890 0.2018376 0.3246968
-#> 3      ols      nls 0.6520704 0.2534246 0.3986457 0.2178592 0.1867125 0.4056932
-#> 4      ols      ols 0.6625604 0.2534246 0.4091358 0.2178592 0.2018376 0.4056932
+#> 1      nls      nls 0.6787807 0.2312688 0.4475119 0.2898890 0.1867125 0.3246968
+#> 2      ols      ols 0.7127124 0.2534246 0.4592878 0.2178592 0.2018376 0.4056932
 #>       Y_exp
 #> 1 0.5190562
 #> 2 0.4794202
-#> 3 0.5190562
-#> 4 0.4794202
 #> 
 #> $summary
 #>   V_method Y_method tot_nrmse   V_nrmse   Y_nrmse   V_coef    Y_coef     V_exp
-#> 1      nls      nls 0.6299145 0.2312688 0.3986457 0.289889 0.1867125 0.3246968
+#> 1      nls      nls 0.6787807 0.2312688 0.4475119 0.289889 0.1867125 0.3246968
 #>       Y_exp
 #> 1 0.5190562
 ```
@@ -224,15 +220,15 @@ allowance?)
    select(Q = Q_cms, Y = Y_m, V = V_ms, TW = TW_m) %>% 
    ahg_estimate(allowance = .05))
 #>   V_method TW_method Y_method    c1    c2 viable tot_nrmse   V_nrmse  TW_nrmse
-#> 1      nls       nls    nsga2 1.048 0.997   TRUE 0.7987163 0.2312688 0.1665577
-#> 2    nsga2     nsga2    nsga2 1.042 0.997   TRUE 0.7988745 0.2314216 0.1665631
-#> 3      ols       ols      ols 0.994 1.000   TRUE 0.8297486 0.2534246 0.1671882
-#> 4      nls       nls      nls 1.234 0.960  FALSE 0.7964722 0.2312688 0.1665577
+#> 1      nls       nls    nsga2 1.048 0.997   TRUE 0.8478575 0.2312688 0.1665577
+#> 2    nsga2     nsga2    nsga2 1.042 0.997   TRUE 0.8480158 0.2314216 0.1665631
+#> 3      ols       ols      ols 0.994 1.000   TRUE 0.8799006 0.2534246 0.1671882
+#> 4      nls       nls      nls 1.234 0.960  FALSE 0.8453383 0.2312688 0.1665577
 #>     Y_nrmse    V_coef  TW_coef    Y_coef     V_exp    TW_exp     Y_exp
-#> 1 0.4008899 0.2898890 22.79344 0.1586042 0.3246968 0.1166774 0.5560598
-#> 2 0.4008899 0.2874600 22.86035 0.1586042 0.3248796 0.1160671 0.5560598
-#> 3 0.4091358 0.2178592 22.61538 0.2018376 0.4056932 0.1145234 0.4794202
-#> 4 0.3986457 0.2898890 22.79344 0.1867125 0.3246968 0.1166774 0.5190562
+#> 1 0.4500311 0.2898890 22.79344 0.1586042 0.3246968 0.1166774 0.5560598
+#> 2 0.4500311 0.2874600 22.86035 0.1586042 0.3248796 0.1160671 0.5560598
+#> 3 0.4592878 0.2178592 22.61538 0.2018376 0.4056932 0.1145234 0.4794202
+#> 4 0.4475119 0.2898890 22.79344 0.1867125 0.3246968 0.1166774 0.5190562
 #>   condition
 #> 1 bestValid
 #> 2     nsga2
@@ -267,13 +263,13 @@ filtered_data = nwis %>%
  
 (ahg_fit = ahg_estimate(filtered_data))
 #>   V_method TW_method Y_method    c1 c2 viable tot_nrmse   V_nrmse  TW_nrmse
-#> 1      nls       nls      nls 1.012  1   TRUE 0.3311364 0.1434527 0.1022593
-#> 2      nls       nls      nls 1.012  1   TRUE 0.3311364 0.1434527 0.1022593
-#> 3      ols       ols      ols 0.998  1   TRUE 0.4254564 0.1908811 0.1039403
+#> 1      nls       nls      nls 1.012  1   TRUE 0.3443460 0.1434527 0.1022593
+#> 2      nls       nls      nls 1.012  1   TRUE 0.3443460 0.1434527 0.1022593
+#> 3      ols       ols      ols 0.998  1   TRUE 0.4456573 0.1908811 0.1039403
 #>      Y_nrmse    V_coef  TW_coef    Y_coef     V_exp    TW_exp     Y_exp
-#> 1 0.08542437 0.2812859 18.50099 0.1945125 0.3181974 0.1717161 0.5099640
-#> 2 0.08542437 0.2812859 18.50099 0.1945125 0.3181974 0.1717161 0.5099640
-#> 3 0.13063500 0.2099045 19.19159 0.2478285 0.4124677 0.1567236 0.4312825
+#> 1 0.09863406 0.2812859 18.50099 0.1945125 0.3181974 0.1717161 0.5099640
+#> 2 0.09863406 0.2812859 18.50099 0.1945125 0.3181974 0.1717161 0.5099640
+#> 3 0.15083589 0.2099045 19.19159 0.2478285 0.4124677 0.1567236 0.4312825
 #>   condition
 #> 1 bestValid
 #> 2       nls
@@ -282,7 +278,7 @@ filtered_data = nwis %>%
 
 When the data is effectively filtered we see NLS can provide an error
 minimizing, valid solution for the system that is quite different then
-the full data fit. Further, the nsga2 algortithm did not need to be
+the full data fit. Further, the nsga2 algorithm did not need to be
 invoked:
 
 <img src="man/figures/README-unnamed-chunk-12-1.jpeg" width="100%" />
@@ -347,6 +343,31 @@ Maidment 2020). Funding from the National Oceanic and Atmospheric
 Administration’s Office of Water Prediction supported the addition of
 data filtering and hydraulic estimation, improved documentation, and
 code improvement We are grateful to all involved.
+
+# Contributing
+
+First, thanks for considering a contribution! We hope to make this
+package a community created resource!
+
+- Please attempt to describe what you want to do prior to contributing
+  by submitting an issue.
+- Please follow the typical github fork - pull-request workflow.
+- Contributions should be tested with `testthat` by running
+  `devtools::test()`.
+- Code style should attempt to follow the [tidyverse style
+  guide](https://style.tidyverse.org/).
+- Make sure you use `roxygen` and run `devtools::check()` before
+  contributing.
+
+Other notes:
+
+- Consider running `goodpractice::gp()` on the package before
+  contributing.
+- Consider running `devtools::spell_check()` and `devtools::document()`
+  if you wrote documentation.
+- Consider running `devtools::build_readme()` if you made any changes.
+- This package uses pkgdown. Running `pkgdown::build_site()` will
+  refresh it.
 
 # References
 
