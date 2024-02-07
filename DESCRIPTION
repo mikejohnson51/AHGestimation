@@ -36,7 +36,6 @@ Suggests:
     ggrepel,
     kableExtra,
     knitr,
-    nhdplusTools,
     patchwork,
     rmarkdown,
     testthat (>= 3.0.0),

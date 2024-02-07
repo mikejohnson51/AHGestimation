@@ -65,18 +65,8 @@ We can use the smoothed reach-scale longitudinal slopes from the NHDPlusv2 by ex
 Following the assumptions made in the [HyG Dataset](https://zenodo.org/record/7868764) we use the median depth (Y) as an approximation for R, the median Velocity (V) from the field measurement record. Thus, we report roughness which approximates the historical median measured flow at each gage.
 
 ```{r}
-library(nhdplusTools)
-
-# Need to run for first use of get_vaa():
-# nhdplusTools::download_vaa()
-
-q <- get_nldi_feature(list("featureSource" = "nwissite", 
-                          featureID = "USGS-01096500"))
-
-att <- get_vaa("slope") %>% 
-  filter(comid == q$comid)
-
-(n <- compute_n(data, S = att$slope))
+# channel slope extracted from NHDPlusV2 for corresponding location
+(n <- compute_n(data, S = 0.015))
 ```
 
 ## Compute r, d, R and p
