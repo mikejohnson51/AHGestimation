@@ -31,6 +31,7 @@ RoxygenNote: 7.2.3
 Suggests: 
     distill,
     DT,
+    scatterplot3d
     ggplot2,
     ggrepel,
     kableExtra,

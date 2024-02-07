@@ -185,12 +185,13 @@ res <- nsga2(
 ```
 
 ```{r, echo = FALSE}
-{
-  opar <-par(mfrow=c(1,2))
-  plot(res, xlab="y1", ylab="y2", main="Objective space")
-  plot(res$par, xlab="x1", ylab="x2", main="Parameter space")
-  par(opar)
-}
+scatterplot3d::scatterplot3d(res$value, 
+                             highlight.3d=TRUE,
+                             pch = 16, 
+                             xlab = "nRMSE(V)", ylab = "nRMSE(TW)", zlab = "nRMSE(V=Y)", 
+                             mar=c(3,3,3,3),
+                             type="h",
+                             angle=55, scale.y=0.7, box = T)
 ```
 
 ```{r}
