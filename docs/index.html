@@ -71,7 +71,7 @@
 <div class="section level1">
 <div class="page-header"><h1 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h1></div>
-<p>The behavior of a river system at a location can be represented as the relationship between discharge (Q), mean depth (Y), mean velocity (V), and mean top width (TW). If you have these measurements over a long period of time, a relationship between how much water (Q) is in the channel and the corresponding Y, V, and TW can be established. The idea of ‘at-a-station hydraulic geometry’ (AHG) suggests three power laws can adequatly describe these relations (Leopold and Maddock 1953):</p>
+<p>The behavior of a river system at a location can be represented as the relationship between discharge (Q), mean depth (Y), mean velocity (V), and mean top width (TW). If you have these measurements over a long period of time, a relationship between how much water (Q) is in the channel and the corresponding Y, V, and TW can be established. The idea of ‘at-a-station hydraulic geometry’ (AHG) suggests three power laws can adequately describe these relations (Leopold and Maddock 1953):</p>
 <p><span class="math display"><em>T</em><em>W</em> = <em>a</em> ⋅ <em>Q</em><sup><em>b</em></sup></span> <span class="math display"><em>Y</em> = <em>c</em> ⋅ <em>Q</em><sup><em>f</em></sup></span></p>
 <p><span class="math display"><em>V</em> = <em>k</em> ⋅ <em>Q</em><sup><em>m</em></sup></span></p>
 <p>Each <strong>single relationships</strong> describes a component of the channel behavior (see section <a href="#fitting-single-relationships">Fitting single relationships</a>). For example, the Q-Y relation is similar to the <strong>traditional rating curve</strong> that relates stage to discharge where stage is given as a height of water (H) above a datum (Ho).</p>
@@ -82,7 +82,7 @@
 <p><span class="math display"><em>Q</em> = <em>T</em><em>W</em> · <em>Y</em> · <em>V</em></span></p>
 <p>and:</p>
 <p><span class="math display">(<em>b</em>+<em>f</em>+<em>m</em>) = (<em>a</em>·<em>c</em>·<em>k</em>) = 1</span></p>
-<p><strong>Critically, neither OLS or NLS solvers can ensure this characteristic of the solution.</strong> (see <a href="#fitting-hydraulic-systems">Fitting hydraulic systems</a> and this (article)[<a href="https://mikejohnson51.github.io/AHGestimation/articles/traditonal-ahg.html" class="external-link uri">https://mikejohnson51.github.io/AHGestimation/articles/traditonal-ahg.html</a>]). Instead, this can be achieved by either</p>
+<p><strong>Critically, neither OLS or NLS solvers can ensure this characteristic of the solution.</strong> (see <a href="#fitting-hydraulic-systems">Fitting hydraulic systems</a> and this <a href="https://mikejohnson51.github.io/AHGestimation/articles/traditonal-ahg.html" class="external-link">article</a>). Instead, this can be achieved by either</p>
 <ol style="list-style-type: decimal">
 <li>Preprocessing data based on thresholds (see Enzminger, Minear, and Livneh (2023) and Afshari et al. (2017)) (see AHGestimation functions in <a href="https://mikejohnson51.github.io/AHGestimation/articles/data-filtering.html" class="external-link">here</a>), or</li>
 <li>as we suggest in this package, using a evolutionary solver - along with OLS and NLS fits - to optimally solve relationships in accordance with each other (see detailed description <a href="https://mikejohnson51.github.io/AHGestimation/articles/improved-ahg.html" class="external-link">here</a>).</li>
@@ -160,7 +160,7 @@
 <h2 id="fitting-hydraulic-systems">Fitting hydraulic systems<a class="anchor" aria-label="anchor" href="#fitting-hydraulic-systems"></a>
 </h2>
 <p>When we have data for all three hydraulic relationships we can ensure the solutions found meet continuity/conserve mass.</p>
-<p>In this mode the OLS and NLS models are fit first, and if continuity is not met in best solution (e.g. lowest nmse), then an Evolutionary Approach (nsga2; Mersmann (2020)) is implemented (see this (article)[<a href="https://mikejohnson51.github.io/AHGestimation/articles/optimize-nsga2.html" class="external-link uri">https://mikejohnson51.github.io/AHGestimation/articles/optimize-nsga2.html</a>] for more details).</p>
+<p>In this mode the OLS and NLS models are fit first, and if continuity is not met in best solution (e.g. lowest nmse), then an Evolutionary Approach (nsga2; Mersmann (2020)) is implemented (see this <a href="https://mikejohnson51.github.io/AHGestimation/articles/optimize-nsga2.html" class="external-link">article</a> for more details).</p>
 <p>Doing so produces three unique fits for each relationship (27 total combinations). These are crossed to identify the best performing solution that meets continuity at a prescribed allowance. The allowance specifies the amount that each continuity expression can deviate from 1. More on this can be found at the vignette <a href="https://mikejohnson51.github.io/AHGestimation/articles/improved-ahg.html" class="external-link">here</a></p>
 <p>As before, the results are rank ordered by minimum nrmse and viability (viable = does the solution meet continuity within the prescribed allowance?)</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
@@ -212,7 +212,7 @@
 <span><span class="co">#&gt; 1 bestValid</span></span>
 <span><span class="co">#&gt; 2       nls</span></span>
 <span><span class="co">#&gt; 3       ols</span></span></code></pre></div>
-<p>Ultimately we recommend selecting fits that conserve mass (viable = TRUE) and has the lowest error (any of tot_nrmse, V_nrmse, TW_nrmse, or Y_nrmse) depending on the use case.</p>
+<p>Ultimately we recommend selecting fits that conserve mass (<code>viable = TRUE</code>) and has the lowest error (any of tot_nrmse, V_nrmse, TW_nrmse, or Y_nrmse) depending on the use case.</p>
 <p>When the data is effectively filtered we see NLS can provide an error minimizing, valid solution for the system that is quite different then the full data fit. Further, the nsga2 algorithm did not need to be invoked:</p>
 <p><img src="reference/figures/README-unnamed-chunk-12-1.jpeg" width="100%"></p>
 </div>

@@ -11,6 +11,7 @@ MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://choosealicens
 Active](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![codecov](https://codecov.io/github/mikejohnson51/AHGestimation/graph/badge.svg?token=YIY3BTM32H)](https://codecov.io/github/mikejohnson51/AHGestimation)
 [![Dependencies](https://img.shields.io/badge/dependencies-4/42-green?style=flat)](#)
+[![Website](https://github.com/mikejohnson51/AHGestimation/actions/workflows/pkgdown.yaml/badge.svg)](https://github.com/mikejohnson51/AHGestimation/actions/workflows/pkgdown.yaml)
 <!-- badges: end -->
 
 ## Installation
@@ -28,7 +29,7 @@ and mean top width (TW). If you have these measurements over a long
 period of time, a relationship between how much water (Q) is in the
 channel and the corresponding Y, V, and TW can be established. The idea
 of ‘at-a-station hydraulic geometry’ (AHG) suggests three power laws can
-adequatly describe these relations (Leopold and Maddock 1953):
+adequately describe these relations (Leopold and Maddock 1953):
 
 $$
 TW = a  \cdot Q^b
