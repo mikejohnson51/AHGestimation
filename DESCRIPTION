@@ -18,7 +18,7 @@ Maintainer: Mike Johnson <jjohnson@lynker.com>
 BugReports: https://github.com/mikejohnson51/AHGestimation/issues
 URL: https://github.com/mikejohnson51/AHGestimation
 Depends: 
-    R(>= 3.5.0)
+    R(>= 4.2.0)
 Imports: 
     DescTools,
     dplyr,
