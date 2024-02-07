@@ -80,7 +80,7 @@ $$
 **Critically, neither OLS or NLS solvers can ensure this characteristic
 of the solution.** (see [Fitting hydraulic
 systems](#fitting-hydraulic-systems) and this
-(article)\[<https://mikejohnson51.github.io/AHGestimation/articles/traditonal-ahg.html>\]).
+[article](https://mikejohnson51.github.io/AHGestimation/articles/traditonal-ahg.html)).
 Instead, this can be achieved by either
 
 1)  Preprocessing data based on thresholds (see Enzminger, Minear, and
@@ -204,7 +204,7 @@ the solutions found meet continuity/conserve mass.
 In this mode the OLS and NLS models are fit first, and if continuity is
 not met in best solution (e.g. lowest nmse), then an Evolutionary
 Approach (nsga2; Mersmann (2020)) is implemented (see this
-(article)\[<https://mikejohnson51.github.io/AHGestimation/articles/optimize-nsga2.html>\]
+[article](https://mikejohnson51.github.io/AHGestimation/articles/optimize-nsga2.html)
 for more details).
 
 Doing so produces three unique fits for each relationship (27 total
@@ -279,9 +279,9 @@ filtered_data = nwis %>%
 #> 3       ols
 ```
 
-Ultimately we recommend selecting fits that conserve mass (viable =
-TRUE) and has the lowest error (any of tot_nrmse, V_nrmse, TW_nrmse, or
-Y_nrmse) depending on the use case.
+Ultimately we recommend selecting fits that conserve mass
+(`viable = TRUE`) and has the lowest error (any of tot_nrmse, V_nrmse,
+TW_nrmse, or Y_nrmse) depending on the use case.
 
 When the data is effectively filtered we see NLS can provide an error
 minimizing, valid solution for the system that is quite different then
