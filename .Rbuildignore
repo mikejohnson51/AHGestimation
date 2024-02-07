@@ -10,3 +10,5 @@ codecov.yml
 .github
 ^cran-comments\.md$
 ^data-raw$
+^\.github$
+^_pkgdown\.yaml$
