@@ -119,12 +119,13 @@ nrow(nwis)
 # Keep only those observation made in the most recent 10 years, 
 # and that fall withing the .5 nls envelope
 (data = nwis  |>
+  dplyr::rename(Q = Q_cms, Y  = Y_m, V= V_ms, TW = TW_m) |>
   date_filter(10, keep_max = TRUE) |> 
-  nls_filter(allowance = .5) )
+  nls_filter(allowance = 0.5) )
 
 # data reduced to 80 observations based on filters
 nrow(data)
-#>  80
+#>  85
 ```
 
 The reduced clean data can then be used to fit an AHG relation and compute a set of hydraulic parameters:
@@ -134,27 +135,29 @@ The reduced clean data can then be used to fit an AHG relation and compute a set
 ahg_fit = ahg_estimate(data)
 t(ahg_fit[1,])
 
-#> V_method  "nls"       
-#> TW_method "nls"       
-#> Y_method  "nls"       
-#> viable    "TRUE"      
-#> tot_error "0.352759"  
-#> V_error   "0.1470922" 
-#> TW_error  "0.1161101" 
-#> Y_error   "0.08955664"
-#> V_coef    "0.2822548" 
-#> TW_coef   "18.17896"  
-#> Y_coef    "0.1945348" 
-#> V_exp     "0.3105107" 
-#> TW_exp    "0.1850407" 
-#> Y_exp     "0.5087359" 
-#> condition "bestValid" 
+#> V_method  "nls"      
+#> TW_method "nls"      
+#> Y_method  "nls"      
+#> c1        "1.006"    
+#> c2        "1.001"    
+#> viable    "TRUE"     
+#> tot_nrmse "0.3234122"
+#> V_nrmse   "0.1337535"
+#> TW_nrmse  "0.1009869"
+#> Y_nrmse   "0.0886718"
+#> V_coef    "0.2905399"
+#> TW_coef   "18.23401" 
+#> Y_coef    "0.1898499"
+#> V_exp     "0.3101059"
+#> TW_exp    "0.1756746"
+#> Y_exp     "0.5155772"
+#> condition "bestValid"
 
 # Use the AHG relations to compute hydraulic parameters
 shape = compute_hydraulic_params(ahg_fit[1,])
 
-#>        r         p        d        R        bd        fd        md
-#> 2.749318 0.6103574 5.427385 1.363727 0.1842508 0.5065641 0.3091851
+#> r    p    d    R    bd   fd   md
+#> 2.93 0.60 5.70 1.34 0.18 0.51 0.31
 ```
 
 Finally, the max width and depth, paired with the derived `r` coefficient can be used to generate a cross section:
@@ -170,16 +173,16 @@ cs = cross_section(r = shape$r,
                    Ymax = max(data$Y))
 
 #>  ind         x            Y            A
-#>    1  0.000000 3.5656665613 1.318953e+02
-#>    2  1.040816 3.1871221498 1.130112e+02
-#>    3  2.081633 2.8351885546 9.618829e+01
-#>    4  3.122449 2.5090304653 8.127753e+01
-#>    5  4.163265 2.2078034104 6.813466e+01
-#>    6  5.204082 1.9306532333 5.662032e+01
-#>    7  6.244898 1.6767155105 4.660008e+01
-#>    8  7.285714 1.4451149046 3.794447e+01
-#>    9  8.326531 1.2349644401 3.052910e+01
-#>   10  9.367347 1.0453646866 2.423471e+01
+#>    1  0.000000 3.5525892702 1.337069e+02
+#>    2  1.040816 3.1514749668 1.136999e+02
+#>    3  2.081633 2.7814289966 9.601412e+01
+#>    4  3.122449 2.4412395021 8.046464e+01
+#>    5  4.163265 2.1296911854 6.687407e+01
+#>    6  5.204082 1.8455651416 5.507242e+01
+#>    7  6.244898 1.5876386747 4.489715e+01
+#>    8  7.285714 1.3546850954 3.619324e+01
+#>    9  8.326531 1.1454734964 2.881313e+01
+#>   10  9.367347 0.9587685017 2.261685e+01
 ```
 
 ![Faceted image with multiple views of the channel estimate.\label{fig:ahg-1}](paper-fig1.png)
