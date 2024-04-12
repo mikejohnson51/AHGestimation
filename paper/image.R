@@ -4,7 +4,7 @@ library(patchwork)
 
 # Processing
 # 
-nwis = nwis |>
+nwis = AHGestimation::nwis |>
   dplyr::rename(Q = Q_cms, TW = TW_m, Y = Y_m, V = V_ms)
 
 filter_data = nwis |>
