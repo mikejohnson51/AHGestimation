@@ -51,9 +51,9 @@ Real-world data often fails to meet these conditions precisely, so an allowance 
 
 Hydrologic models that simulate streamflow are critical for forecasting water availability, drought, and flood inundation. A key aspect of these models is estimating the size and shape of channels, often achieved through hydraulic geometry relationships.
 
-While extensively studied at local scales, these relationships remain unquantified for the majority of stream reaches globally, including in the United States. As a result, large-scale models often rely on incomplete approximations, leading to less accurate streamflow estimates [@hess-26-6121-2022; @johnson2023comprehensive] and flood forecasting [@zheng2018river; @maidment2014national; @johnson2019integrated; @fim]. For instance, the National Oceanic and Atmospheric Administration National Water Model [@cosgrove2023] uses trapezoidal geometries [@wrfhydro] that are in part derived from hydraulic geometry relationships and drainage area assumptions found in @bieger2015development; @bieger2016development; @blackburn2017development. Although these approximations are recognized as overly simplistic, advancing them requires integrating diverse observation systems and refining them into parameterized, mass-conserving relationships.
+While extensively studied at local scales, these relationships remain unquantified for the majority of stream reaches globally, including in the United States. As a result, large-scale models often rely on incomplete approximations, leading to less accurate streamflow estimates [@hess-26-6121-2022; @johnson2023comprehensive; @fang2024] and flood forecasts [@zheng2018river; @maidment2014national; @johnson2019integrated; @fim]. For instance, the National Oceanic and Atmospheric Administration National Water Model [@cosgrove2023] uses trapezoidal geometries [@wrfhydro] that are in part derived from hydraulic geometry relationships and drainage area assumptions found in @bieger2015development; @bieger2016development; @blackburn2017development. Although these approximations are recognized as overly simplistic, advancing them requires integrating diverse observation systems and refining them into parameterized, mass-conserving relationships.
 
-Several efforts have aimed to address this challenge in the United States, primarily relying on traditional Ordinary Least Squares (OLS) fitting methods and data preprocessing [@enzminger_thomas_l_2023_7868764; @afshari_shahab_2019_2558565; @afshari2017statistical]. However, these efforts are limited by the lack of shared software and source data, hindering the evolution, and interoproabilty, of their products.
+Several efforts have aimed to address this challenge in the United States, primarily relying on traditional OLS fitting methods and data preprocessing [@enzminger_thomas_l_2023_7868764; @afshari_shahab_2019_2558565; @afshari2017statistical]. However, these efforts are limited by the lack of shared software and source data, hindering the evolution, and interoproabilty, of their products.
 
 ### Software
 
@@ -69,12 +69,12 @@ Towards this, `AHGestimation` is an R package [@r-project] providing three capab
 
 The package documentation includes several examples on the theory, design, and application of these tools.
 
-The first stable version of `AHGestimation` was made available in 2019 and was applied to an aggregated dataset of USGS manual field measurements. Since then, it has been actively developed to better understand and quantify these fundamental relationships in the face of noisy, large, and disparate data sources. Applications of the software have been used to (1) demonstrate how improved flood forecasts could be delivered from the NOAA/NWS National Water Model [@johnson2022knowledge] (2) help the NOAA/NWS Office of Water Prediction develop continental scale channel size and shape estimates to improve flood prediction and hydraulic routing and to (3) bolster the co-agency sponsored National Hydrologic Geospatial Fabric [@referencefabric; @blodgett2021mainstems; @blodgett2023generating].
+The first stable version of `AHGestimation` was made available in 2019 and was applied to an aggregated dataset of USGS manual field measurements. Since then, it has been actively developed to better understand and quantify these fundamental relationships in the face of noisy, large, and disparate data sources. Applications of the software have been used to (1) demonstrate how improved flood forecasts could be delivered from the NOAA/NWS National Water Model [@johnson2022knowledge], (2) help the NOAA/NWS Office of Water Prediction develop continental scale channel size and shape estimates to improve flood prediction and hydraulic routing, and (3) bolster the co-agency USGS/NOAA National Hydrologic Geospatial Fabric and Next Generation Water Resource Modeling Framework Hydrofabric efforts [@referencefabric; @blodgett2021mainstems; @blodgett2023generating; @nextgenhf].
 
 # Example of use
 
 `AHGestimation` is available on
-[GitHub](https://hub.com/mikejohnson51/AHGestimation) and can be installed as follows:
+[GitHub](https://github.com/mikejohnson51/AHGestimation) and can be installed as follows:
 
 ``` r
 #install.packages(remotes)
@@ -87,7 +87,7 @@ This example illustrates how the package can be utilized to:
 2. **Fit AHG Parameters**: AHG parameters are estimated using the hybrid modeling approach.
 3. **Estimate and Plot Cross-Section Shape**: The shape of the associated cross-section is estimated and plotted with an area-depth relation.
 
-The script to generate the plot can be found [here](image.R), and the `nwis` data object is exported with the package to provides field measurements taken at [USGS site 01096500 on the Nashua River at East Pepperell in Massachusetts](https://waterdata.usgs.gov/nwis/measurements/?site_no=01096500&agency_cd=USGS). 
+The script to generate the plot found in \autoref{fig:ahg-1} can be found [here](https://github.com/mikejohnson51/AHGestimation/blob/master/paper/image.R), and the `nwis` data object is exported with the package to provides field measurements taken at [USGS site 01096500 on the Nashua River at East Pepperell in Massachusetts](https://waterdata.usgs.gov/nwis/measurements/?site_no=01096500&agency_cd=USGS). 
 
 ``` r 
 nwis
