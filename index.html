@@ -84,7 +84,7 @@
 <p><span class="math display">(<em>b</em>+<em>f</em>+<em>m</em>) = (<em>a</em>·<em>c</em>·<em>k</em>) = 1</span></p>
 <p><strong>Critically, neither OLS or NLS solvers can ensure this characteristic of the solution.</strong> (see <a href="#fitting-hydraulic-systems">Fitting hydraulic systems</a> and this <a href="https://mikejohnson51.github.io/AHGestimation/articles/traditonal-ahg.html" class="external-link">article</a>). Instead, this can be achieved by either</p>
 <ol style="list-style-type: decimal">
-<li>Preprocessing data based on thresholds (see Enzminger, Minear, and Livneh (2023) and Afshari et al. (2017)) (see AHGestimation functions in <a href="https://mikejohnson51.github.io/AHGestimation/articles/data-filtering.html" class="external-link">here</a>), or</li>
+<li>Preprocessing data based on thresholds (see Enzminger (2023) and Afshari et al. (2017)) (see AHGestimation functions in <a href="https://mikejohnson51.github.io/AHGestimation/articles/data-filtering.html" class="external-link">here</a>), or</li>
 <li>as we suggest in this package, using a evolutionary solver - along with OLS and NLS fits - to optimally solve relationships in accordance with each other (see detailed description <a href="https://mikejohnson51.github.io/AHGestimation/articles/improved-ahg.html" class="external-link">here</a>).</li>
 </ol>
 <p>The aim of this package is to provide increased AHG fitting flexibility, that ensures mass conservation in hydraulic systems, and optimal curve fitting for single relations.</p>
@@ -251,7 +251,7 @@
 <div class="section level1">
 <h1 id="history">History<a class="anchor" aria-label="anchor" href="#history"></a>
 </h1>
-<p>The development of this package began as a graduate school project between friends at UC Santa Barbara and UMass Amherst following the 2017 NOAA OWP Summer Institute and clear evidence channel shape may be a limiting factor in National Water Model Performance. It has since evolved to provide an open source utility for robust large scale data synthesis and evaluation. Funding from the National Science Foundation (Grants 1937099, 2033607) provided time to draft Johnson (2022) and apply an early version of this software to the [Continental Flood Inundation Mapping (CFIM) synthetic rating curve dataset (Liu and Maidment 2020). Funding from the National Oceanic and Atmospheric Administration’s Office of Water Prediction supported the addition of data filtering and hydraulic estimation, improved documentation, and code improvement We are grateful to all involved.</p>
+<p>The development of this package began as a graduate school project between friends at UC Santa Barbara and UMass Amherst following the 2017 NOAA OWP Summer Institute and clear evidence channel shape may be a limiting factor in National Water Model Performance. It has since evolved to provide an open source utility for robust large scale data synthesis and evaluation. Funding from the National Science Foundation (Grants 1937099, 2033607) provided time to draft Johnson et al. (2022) and apply an early version of this software to the [Continental Flood Inundation Mapping (CFIM) synthetic rating curve dataset (Liu and Maidment 2020). Funding from the National Oceanic and Atmospheric Administration’s Office of Water Prediction supported the addition of data filtering and hydraulic estimation, improved documentation, and code improvement We are grateful to all involved.</p>
 </div>
 <div class="section level1">
 <h1 id="contributing">Contributing<a class="anchor" aria-label="anchor" href="#contributing"></a>
@@ -277,28 +277,28 @@
 </h1>
 <div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-afshari2017statistical" class="csl-entry">
-Afshari, Shahab, Balazs M Fekete, S Lawrence Dingman, Naresh Devineni, David M Bjerklie, and Reza M Khanbilvardi. 2017. “Statistical Filtering of River Survey and Streamflow Data for Improving at-a-Station Hydraulic Geometry Relations.” <em>Journal of Hydrology</em> 547: 443–54. <a href="https://doi.org/10.1016/j.jhydrol.2017.01.038" class="external-link uri">https://doi.org/10.1016/j.jhydrol.2017.01.038</a>.
+Afshari, Shahab, Balazs M Fekete, S Lawrence Dingman, Naresh Devineni, David M Bjerklie, and Reza M Khanbilvardi. 2017. “<span class="nocase">Statistical filtering of river survey and streamflow data for improving At-A-Station hydraulic geometry relations</span>.” <em>Journal of Hydrology</em> 547: 443–54. <a href="https://doi.org/10.1016/j.jhydrol.2017.01.038" class="external-link uri">https://doi.org/10.1016/j.jhydrol.2017.01.038</a>.
 </div>
 <div id="ref-dingman2018field" class="csl-entry">
-Dingman, S Lawrence, and Shahab Afshari. 2018. “Field Verification of Analytical at-a-Station Hydraulic-Geometry Relations.” <em>Journal of Hydrology</em> 564: 859–72. <a href="https://doi.org/10.1002/aaai.12035" class="external-link uri">https://doi.org/10.1002/aaai.12035</a>.
+Dingman, Lawerence S., and Shahab Afshari. 2018. “<span class="nocase">Field verification of analytical at-a-station hydraulic-geometry relations</span>.” <em>Journal of Hydrology</em> 564: 859–72. <a href="https://doi.org/10.1016/j.jhydrol.2018.07.020" class="external-link uri">https://doi.org/10.1016/j.jhydrol.2018.07.020</a>.
 </div>
 <div id="ref-enzminger_thomas_l_2023_7868764" class="csl-entry">
-Enzminger, Thomas L., J. Toby Minear, and Ben Livneh. 2023. “<span class="nocase">HyG: A hydraulic geometry dataset derived from historical stream gage measurements across the conterminous United States</span>.” Zenodo. <a href="https://doi.org/10.5281/zenodo.7868764" class="external-link uri">https://doi.org/10.5281/zenodo.7868764</a>.
+Enzminger, Minear, Thomas L. 2023. “<span class="nocase">HyG: A hydraulic geometry dataset derived from historical stream gage measurements across the conterminous United States</span>.” Zenodo. <a href="https://doi.org/10.5281/zenodo.7868764" class="external-link uri">https://doi.org/10.5281/zenodo.7868764</a>.
 </div>
 <div id="ref-hrafnkelsson2022generalization" class="csl-entry">
-Hrafnkelsson, Birgir, Helgi Sigurdarson, Sölvi Rögnvaldsson, Axel Örn Jansson, Rafael Danı́el Vias, and Sigurdur M Gardarsson. 2022. “Generalization of the Power-Law Rating Curve Using Hydrodynamic Theory and Bayesian Hierarchical Modeling.” <em>Environmetrics</em> 33 (2): e2711.
+Hrafnkelsson, Birgir, Helgi Sigurdarson, Sölvi Rögnvaldsson, Axel Örn Jansson, Rafael Danı́el Vias, and Sigurdur M Gardarsson. 2022. “<span class="nocase">Generalization of the power-law rating curve using hydrodynamic theory and Bayesian hierarchical modeling</span>.” <em>Environmetrics</em> 33 (2): e2711. <a href="https://doi.org/10.1002/env.2711" class="external-link uri">https://doi.org/10.1002/env.2711</a>.
 </div>
 <div id="ref-preprint" class="csl-entry">
-Johnson, J.; Clarke, J. M.; Coll. 2022. <em>Determining Feature Based Hydraulic Geometry and Rating Curves Using a Physically Based, Computationally Efficient Framework</em>. <em>Preprints</em>. <a href="https://doi.org/10.20944/preprints202212.0390.v1" class="external-link uri">https://doi.org/10.20944/preprints202212.0390.v1</a>.
+Johnson, JM, J. Coll, Afshari Clarke K. C., S S. Saksena, and L. Yeghiazarian. 2022. “<span class="nocase">Determining Feature Based Hydraulic Geometry and Rating Curves using a Physically Based, Computationally Efficient Framework</span>.” <em>Preprints</em>. <a href="https://doi.org/10.20944/preprints202212.0390.v1" class="external-link uri">https://doi.org/10.20944/preprints202212.0390.v1</a>.
 </div>
 <div id="ref-leopold1953hydraulic" class="csl-entry">
-Leopold, Luna Bergere, and Thomas Maddock. 1953. <em>The Hydraulic Geometry of Stream Channels and Some Physiographic Implications</em>. Vol. 252. US Government Printing Office. <a href="https://doi.org/10.3133/pp252" class="external-link uri">https://doi.org/10.3133/pp252</a>.
+Leopold, Luna Bergere, and Thomas Maddock. 1953. <em><span class="nocase">The hydraulic geometry of stream channels and some physiographic implications</span></em>. Vol. 252. US Government Printing Office. <a href="https://doi.org/10.3133/pp252" class="external-link uri">https://doi.org/10.3133/pp252</a>.
 </div>
 <div id="ref-cfim" class="csl-entry">
-Liu, Tarboton, Yan Y., and David R. Maidment. 2020. <em>Height Above Nearest Drainage (HAND) and Hydraulic Property Table for CONUS - Version 0.2.1. (20200601)</em>. <em>Oak Ridge Leadership Computing Facility.</em> <a href="https://cfim.ornl.gov/data/" class="external-link uri">https://cfim.ornl.gov/data/</a>.
+Liu, Tarboton, Yan Y., and David R. Maidment. 2020. <em><span class="nocase">Height Above Nearest Drainage (HAND) and Hydraulic Property Table for CONUS - Version 0.2.1. (20200601)</span></em>. <em>Oak Ridge Leadership Computing Facility.</em> <a href="https://cfim.ornl.gov/data/" class="external-link uri">https://cfim.ornl.gov/data/</a>.
 </div>
 <div id="ref-mco" class="csl-entry">
-Mersmann, Olaf. 2020. <em>Mco: Multiple Criteria Optimization Algorithms and Related Functions</em>. <a href="https://CRAN.R-project.org/package=mco" class="external-link uri">https://CRAN.R-project.org/package=mco</a>.
+Mersmann, Olaf. 2020. <em><span class="nocase">mco: Multiple Criteria Optimization Algorithms and Related Functions</span></em>. <a href="https://CRAN.R-project.org/package=mco" class="external-link uri">https://CRAN.R-project.org/package=mco</a>.
 </div>
 </div>
 </div>
