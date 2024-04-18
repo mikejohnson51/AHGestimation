@@ -2,7 +2,7 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 <!-- badges: start -->
 
-[![status](https://joss.theoj.org/papers/f7a4ff717b4430f053da9c34563e705b/status.svg)](https://joss.theoj.org/papers/f7a4ff717b4430f053da9c34563e705b)
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.06145/status.svg)](https://doi.org/10.21105/joss.06145)
 [![R CMD
 Check](https://github.com/mikejohnson51/AHGestimation/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/mikejohnson51/AHGestimation/actions/workflows/R-CMD-check.yaml)
 [![License:
@@ -84,9 +84,8 @@ systems](#fitting-hydraulic-systems) and this
 [article](https://mikejohnson51.github.io/AHGestimation/articles/traditonal-ahg.html)).
 Instead, this can be achieved by either
 
-1)  Preprocessing data based on thresholds (see Enzminger, Minear, and
-    Livneh (2023) and Afshari et al. (2017)) (see AHGestimation
-    functions in
+1)  Preprocessing data based on thresholds (see Enzminger (2023) and
+    Afshari et al. (2017)) (see AHGestimation functions in
     [here](https://mikejohnson51.github.io/AHGestimation/articles/data-filtering.html)),
     or
 2)  as we suggest in this package, using a evolutionary solver - along
@@ -344,8 +343,8 @@ NOAA OWP Summer Institute and clear evidence channel shape may be a
 limiting factor in National Water Model Performance. It has since
 evolved to provide an open source utility for robust large scale data
 synthesis and evaluation. Funding from the National Science Foundation
-(Grants 1937099, 2033607) provided time to draft Johnson (2022) and
-apply an early version of this software to the \[Continental Flood
+(Grants 1937099, 2033607) provided time to draft Johnson et al. (2022)
+and apply an early version of this software to the \[Continental Flood
 Inundation Mapping (CFIM) synthetic rating curve dataset (Liu and
 Maidment 2020). Funding from the National Oceanic and Atmospheric
 Administration’s Office of Water Prediction supported the addition of
@@ -384,27 +383,29 @@ Other notes:
 <div id="ref-afshari2017statistical" class="csl-entry">
 
 Afshari, Shahab, Balazs M Fekete, S Lawrence Dingman, Naresh Devineni,
-David M Bjerklie, and Reza M Khanbilvardi. 2017. “Statistical Filtering
-of River Survey and Streamflow Data for Improving at-a-Station Hydraulic
-Geometry Relations.” *Journal of Hydrology* 547: 443–54.
+David M Bjerklie, and Reza M Khanbilvardi. 2017.
+“<span class="nocase">Statistical filtering of river survey and
+streamflow data for improving At-A-Station hydraulic geometry
+relations</span>.” *Journal of Hydrology* 547: 443–54.
 <https://doi.org/10.1016/j.jhydrol.2017.01.038>.
 
 </div>
 
 <div id="ref-dingman2018field" class="csl-entry">
 
-Dingman, S Lawrence, and Shahab Afshari. 2018. “Field Verification of
-Analytical at-a-Station Hydraulic-Geometry Relations.” *Journal of
-Hydrology* 564: 859–72. <https://doi.org/10.1002/aaai.12035>.
+Dingman, Lawerence S., and Shahab Afshari. 2018.
+“<span class="nocase">Field verification of analytical at-a-station
+hydraulic-geometry relations</span>.” *Journal of Hydrology* 564:
+859–72. <https://doi.org/10.1016/j.jhydrol.2018.07.020>.
 
 </div>
 
 <div id="ref-enzminger_thomas_l_2023_7868764" class="csl-entry">
 
-Enzminger, Thomas L., J. Toby Minear, and Ben Livneh. 2023.
-“<span class="nocase">HyG: A hydraulic geometry dataset derived from
-historical stream gage measurements across the conterminous United
-States</span>.” Zenodo. <https://doi.org/10.5281/zenodo.7868764>.
+Enzminger, Minear, Thomas L. 2023. “<span class="nocase">HyG: A
+hydraulic geometry dataset derived from historical stream gage
+measurements across the conterminous United States</span>.” Zenodo.
+<https://doi.org/10.5281/zenodo.7868764>.
 
 </div>
 
@@ -412,41 +413,45 @@ States</span>.” Zenodo. <https://doi.org/10.5281/zenodo.7868764>.
 
 Hrafnkelsson, Birgir, Helgi Sigurdarson, Sölvi Rögnvaldsson, Axel Örn
 Jansson, Rafael Danı́el Vias, and Sigurdur M Gardarsson. 2022.
-“Generalization of the Power-Law Rating Curve Using Hydrodynamic Theory
-and Bayesian Hierarchical Modeling.” *Environmetrics* 33 (2): e2711.
+“<span class="nocase">Generalization of the power-law rating curve using
+hydrodynamic theory and Bayesian hierarchical modeling</span>.”
+*Environmetrics* 33 (2): e2711. <https://doi.org/10.1002/env.2711>.
 
 </div>
 
 <div id="ref-preprint" class="csl-entry">
 
-Johnson, J.; Clarke, J. M.; Coll. 2022. *Determining Feature Based
-Hydraulic Geometry and Rating Curves Using a Physically Based,
-Computationally Efficient Framework*. *Preprints*.
+Johnson, JM, J. Coll, Afshari Clarke K. C., S S. Saksena, and L.
+Yeghiazarian. 2022. “<span class="nocase">Determining Feature Based
+Hydraulic Geometry and Rating Curves using a Physically Based,
+Computationally Efficient Framework</span>.” *Preprints*.
 <https://doi.org/10.20944/preprints202212.0390.v1>.
 
 </div>
 
 <div id="ref-leopold1953hydraulic" class="csl-entry">
 
-Leopold, Luna Bergere, and Thomas Maddock. 1953. *The Hydraulic Geometry
-of Stream Channels and Some Physiographic Implications*. Vol. 252. US
-Government Printing Office. <https://doi.org/10.3133/pp252>.
+Leopold, Luna Bergere, and Thomas Maddock. 1953.
+*<span class="nocase">The hydraulic geometry of stream channels and some
+physiographic implications</span>*. Vol. 252. US Government Printing
+Office. <https://doi.org/10.3133/pp252>.
 
 </div>
 
 <div id="ref-cfim" class="csl-entry">
 
-Liu, Tarboton, Yan Y., and David R. Maidment. 2020. *Height Above
-Nearest Drainage (HAND) and Hydraulic Property Table for CONUS - Version
-0.2.1. (20200601)*. *Oak Ridge Leadership Computing Facility.*
-<https://cfim.ornl.gov/data/>.
+Liu, Tarboton, Yan Y., and David R. Maidment. 2020.
+*<span class="nocase">Height Above Nearest Drainage (HAND) and Hydraulic
+Property Table for CONUS - Version 0.2.1. (20200601)</span>*. *Oak Ridge
+Leadership Computing Facility.* <https://cfim.ornl.gov/data/>.
 
 </div>
 
 <div id="ref-mco" class="csl-entry">
 
-Mersmann, Olaf. 2020. *Mco: Multiple Criteria Optimization Algorithms
-and Related Functions*. <https://CRAN.R-project.org/package=mco>.
+Mersmann, Olaf. 2020. *<span class="nocase">mco: Multiple Criteria
+Optimization Algorithms and Related Functions</span>*.
+<https://CRAN.R-project.org/package=mco>.
 
 </div>
 
