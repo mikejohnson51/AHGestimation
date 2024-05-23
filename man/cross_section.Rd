@@ -4,7 +4,7 @@
 \alias{cross_section}
 \title{Approximate channel shape}
 \usage{
-cross_section(r, TW = 30, Ymax = 2)
+cross_section(r, TW = 30, Ymax = 2, n = 30)
 }
 \arguments{
 \item{r}{The corresponding Dingman's r coefficient}
@@ -12,6 +12,8 @@ cross_section(r, TW = 30, Ymax = 2)
 \item{TW}{width of the channel at bankfull}
 
 \item{Ymax}{maximum depth of the channel at bankfull}
+
+\item{n}{the number of points to construct in the XS}
 }
 \value{
 depth values every 1m along the cross section

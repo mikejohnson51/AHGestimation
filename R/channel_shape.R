@@ -55,14 +55,15 @@ compute_n <- function(df, S = .02){
 #' @param r The corresponding Dingman's r coefficient 
 #' @param TW width of the channel at bankfull 
 #' @param Ymax maximum depth of the channel at bankfull 
+#' @param n the number of points to construct in the XS
 #' @return depth values every 1m along the cross section  
 #' @family hydraulics 
 #' @export
 
-cross_section <- function(r, TW = 30, Ymax = 2){
+cross_section <- function(r, TW = 30, Ymax = 2, n = 30){
   
   TW <- as.integer(TW)
-  half <- TW/2
+  half <- ceiling(n/2)
   x_list <- numeric()
   z_list <- numeric()
 
