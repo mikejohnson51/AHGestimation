@@ -12,3 +12,4 @@ codecov.yml
 ^data-raw$
 ^\.github$
 ^_pkgdown\.yaml$
+explore

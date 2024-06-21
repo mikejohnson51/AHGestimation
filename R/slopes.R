@@ -44,11 +44,14 @@ compute_channel_slope = function(path,
     xyz    = as.data.frame(st_coordinates(path))
   }
   
-  slope_matrices(split(x = xyz, 
+  data.frame(
+    hf_id = path[[1]],
+    slope = slope_matrices(split(x = xyz, 
                       f = xyz[, "L1"]), 
                       lonlat = lonlat, 
                       fun = fun, 
                       directed = directed)
+  )
 }
 
 
