@@ -1,7 +1,7 @@
 Package: AHGestimation
 Title: An R package for Computing Robust, Mass Preserving Hydraulic Geometries and Rating Curves
 Description: Compute mass preserving 'At a station Hydraulic Geometry' (AHG) fits from river measurements.
-Version: 0.2
+Version: 0.3
 Authors@R: 
     c(person(given = "Mike", 
              family = "Johnson", 
@@ -22,8 +22,12 @@ Depends:
 Imports: 
     DescTools,
     dplyr,
+    geodist,
     mco,
-    stats
+    pbapply,
+    stats,
+    sf,
+    utils
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
