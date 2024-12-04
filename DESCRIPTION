@@ -6,7 +6,7 @@ Authors@R:
     c(person(given = "Mike", 
              family = "Johnson", 
              role = c("aut", "cre"), 
-             email = "jjohnson@lynker.com", 
+             email = "mike.johnson@noaa.gov", 
              comment = c(ORCID = "0000-0002-5288-8350")),
       person(given = "Arash", 
              family = "Modaresi Rad", 
@@ -14,7 +14,7 @@ Authors@R:
              comment = c(ORCID = "0000-0002-6030-7923")),
       person(given = "NOAA OWP",  role = "fnd"),
       person(given = "NSF",  role = "fnd"))
-Maintainer: Mike Johnson <jjohnson@lynker.com>
+Maintainer: Mike Johnson <mike.johnson@noaa.gov>
 BugReports: https://github.com/mikejohnson51/AHGestimation/issues
 URL: https://github.com/mikejohnson51/AHGestimation
 Depends: 
