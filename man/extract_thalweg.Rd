@@ -19,3 +19,12 @@ XYZ LINESTRING object
 Extract Thalweg
 From a data.frame of cross sections, a classified thalweg can be extracted as the connected LINESTRING
 }
+\seealso{
+Other hydraulics: 
+\code{\link{compute_channel_slope}()},
+\code{\link{compute_hydraulic_params}()},
+\code{\link{compute_n}()},
+\code{\link{cross_section}()},
+\code{\link{slope_matrix}()}
+}
+\concept{hydraulics}

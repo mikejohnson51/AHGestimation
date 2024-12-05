@@ -14,6 +14,8 @@ Active](https://www.repostatus.org/badges/latest/active.svg)](https://www.repost
 [![Website](https://github.com/mikejohnson51/AHGestimation/actions/workflows/pkgdown.yaml/badge.svg)](https://github.com/mikejohnson51/AHGestimation/actions/workflows/pkgdown.yaml)
 <!-- badges: end -->
 
+# AHGestimation <a href="https://github.com/mikejohnson51/AHGestimation"><img src="man/figures/logo.png" align="right" width="20%"/></a>
+
 ## Installation
 
 ``` r
@@ -325,12 +327,12 @@ cs = cross_section(r = hydraulic_params$r,
                    Ymax = max(filtered_data$Y))
 
 glimpse(cs)
-#> Rows: 150
+#> Rows: 90
 #> Columns: 4
 #> $ ind <int> 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,…
-#> $ x   <dbl> 0.0000000, 0.3422819, 0.6845638, 1.0268456, 1.3691275, 1.7114094, …
-#> $ Y   <dbl> 3.565485, 3.550130, 3.550130, 3.186628, 3.144801, 3.144801, 2.8344…
-#> $ A   <dbl> 132.46010, 131.56309, 131.56309, 113.75671, 111.63183, 111.63183, …
+#> $ x   <dbl> 0.0000000, 0.5730337, 1.1460674, 1.7191011, 2.2921348, 2.8651685, …
+#> $ Y   <dbl> 0.87421950, 0.77874613, 0.77874613, 0.72304562, 0.63446965, 0.6344…
+#> $ A   <dbl> 32.842929, 28.051288, 28.051288, 25.351314, 21.214316, 21.214316, …
 ```
 
 <img src="man/figures/README-unnamed-chunk-15-1.jpeg" width="100%" />
@@ -378,7 +380,8 @@ Other notes:
 
 # References
 
-<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="refs" class="references csl-bib-body hanging-indent"
+entry-spacing="0">
 
 <div id="ref-afshari2017statistical" class="csl-entry">
 

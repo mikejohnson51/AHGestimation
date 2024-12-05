@@ -29,3 +29,12 @@ The default calculates the  slope using `slope_weighted()`.
 You can also use `slope_mean()` or any other
 function that takes the same inputs as these functions.
 }
+\seealso{
+Other hydraulics: 
+\code{\link{compute_hydraulic_params}()},
+\code{\link{compute_n}()},
+\code{\link{cross_section}()},
+\code{\link{extract_thalweg}()},
+\code{\link{slope_matrix}()}
+}
+\concept{hydraulics}

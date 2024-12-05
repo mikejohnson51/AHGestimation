@@ -25,7 +25,10 @@ those points based on channel shape
 }
 \seealso{
 Other hydraulics: 
+\code{\link{compute_channel_slope}()},
 \code{\link{compute_hydraulic_params}()},
-\code{\link{compute_n}()}
+\code{\link{compute_n}()},
+\code{\link{extract_thalweg}()},
+\code{\link{slope_matrix}()}
 }
 \concept{hydraulics}

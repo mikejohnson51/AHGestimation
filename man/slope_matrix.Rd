@@ -30,3 +30,12 @@ A vector of slopes associated with each LINE element
 \description{
 Calculate the gradient of line segments from a 3D matrix of coordinates
 }
+\seealso{
+Other hydraulics: 
+\code{\link{compute_channel_slope}()},
+\code{\link{compute_hydraulic_params}()},
+\code{\link{compute_n}()},
+\code{\link{cross_section}()},
+\code{\link{extract_thalweg}()}
+}
+\concept{hydraulics}

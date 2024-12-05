@@ -31,6 +31,7 @@ library(patchwork)
 [![Website](https://github.com/mikejohnson51/AHGestimation/actions/workflows/pkgdown.yaml/badge.svg)](https://github.com/mikejohnson51/AHGestimation/actions/workflows/pkgdown.yaml)
 <!-- badges: end -->
 
+# AHGestimation <a href="https://github.com/mikejohnson51/AHGestimation"><img src="man/figures/logo.png" align="right" width="20%"/></a>
 ## Installation
 
 ```{r, eval = FALSE}

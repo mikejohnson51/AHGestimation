@@ -3,6 +3,7 @@
 #' @param xs a data.frame containing cross sectional data. Required columns are hf_id, cs_id, X, Y, Z
 #' @param crs the CRS of the XY coordinates
 #' @return XYZ LINESTRING object
+#' @family hydraulics
 #' @export
 
 extract_thalweg = function(xs, crs = 5070){
@@ -33,6 +34,7 @@ extract_thalweg = function(xs, crs = 5070){
 #' @return A vector of slopes associated with each linear element
 #'   The value is a proportion representing the change in elevation
 #'   for a given change in horizontal distance.
+#' @family hydraulics
 #' @export
 
 compute_channel_slope = function(path, 
@@ -66,6 +68,7 @@ compute_channel_slope = function(path,
 #' @return A vector of slopes associated with each LINE element
 #'   The output value is a proportion representing the change in elevation
 #'   for a given change in horizontal distance.
+#' @family hydraulics
 #' @export
 
 slope_matrix = function(mat, 

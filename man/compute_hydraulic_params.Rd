@@ -17,7 +17,10 @@ Approximate the hydraulic values from AHG fit
 }
 \seealso{
 Other hydraulics: 
+\code{\link{compute_channel_slope}()},
 \code{\link{compute_n}()},
-\code{\link{cross_section}()}
+\code{\link{cross_section}()},
+\code{\link{extract_thalweg}()},
+\code{\link{slope_matrix}()}
 }
 \concept{hydraulics}
