@@ -65,8 +65,10 @@ AHG relations are historically fit using OLS on the logarithmic transformation o
 ## Example: 
 
 ```{r}
-data <- select(AHGestimation::nwis, date, Q = Q_cms, Y = Y_m, TW = TW_m, V = V_ms)
-
+data <- setNames(
+  AHGestimation::nwis[c("date", "Q_cms", "Y_m", "TW_m", "V_ms")],
+  c("date", "Q", "Y", "TW", "V")
+)
 fit <- lm(log(data$Y) ~ log(data$Q))
   
 (coef <- exp(fit$coefficients[1]))
