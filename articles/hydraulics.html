@@ -99,11 +99,11 @@ for more)</p>
 <span><span class="fu">glimpse</span><span class="op">(</span><span class="va">data</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Rows: 85</span></span>
 <span><span class="co">#&gt; Columns: 5</span></span>
-<span><span class="co">#&gt; $ date <span style="color: #949494; font-style: italic;">&lt;date&gt;</span> 1987-04-07, 2013-01-17, 2013-04-04, 2013-06-11, 2013-08-19, 2013…</span></span>
-<span><span class="co">#&gt; $ Q    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 317.1486864, 21.6907048, 40.2099227, 55.2178517, 8.8631731, 7.079…</span></span>
-<span><span class="co">#&gt; $ Y    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 3.7651748, 0.8401875, 1.1666478, 1.5349831, 0.5720217, 0.5648958,…</span></span>
-<span><span class="co">#&gt; $ TW   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 51.81600, 35.05200, 35.35680, 33.83280, 22.25040, 22.86000, 21.85…</span></span>
-<span><span class="co">#&gt; $ V    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 1.624584, 0.737616, 0.975360, 1.063752, 0.697992, 0.545592, 0.466…</span></span></code></pre></div>
+<span><span class="co">#&gt; $ date <span style="color: #949494; font-style: italic;">&lt;date&gt;</span> 1987-04-07<span style="color: #949494;">, </span>2013-01-17<span style="color: #949494;">, </span>2013-04-04<span style="color: #949494;">, </span>2013-06-11<span style="color: #949494;">, </span>2013-08-19<span style="color: #949494;">, </span>2013…</span></span>
+<span><span class="co">#&gt; $ Q    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 317.1486864<span style="color: #949494;">, </span>21.6907048<span style="color: #949494;">, </span>40.2099227<span style="color: #949494;">, </span>55.2178517<span style="color: #949494;">, </span>8.8631731<span style="color: #949494;">, </span>7.079…</span></span>
+<span><span class="co">#&gt; $ Y    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 3.7651748<span style="color: #949494;">, </span>0.8401875<span style="color: #949494;">, </span>1.1666478<span style="color: #949494;">, </span>1.5349831<span style="color: #949494;">, </span>0.5720217<span style="color: #949494;">, </span>0.5648958<span style="color: #949494;">,</span>…</span></span>
+<span><span class="co">#&gt; $ TW   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 51.81600<span style="color: #949494;">, </span>35.05200<span style="color: #949494;">, </span>35.35680<span style="color: #949494;">, </span>33.83280<span style="color: #949494;">, </span>22.25040<span style="color: #949494;">, </span>22.86000<span style="color: #949494;">, </span>21.85…</span></span>
+<span><span class="co">#&gt; $ V    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 1.624584<span style="color: #949494;">, </span>0.737616<span style="color: #949494;">, </span>0.975360<span style="color: #949494;">, </span>1.063752<span style="color: #949494;">, </span>0.697992<span style="color: #949494;">, </span>0.545592<span style="color: #949494;">, </span>0.466…</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="compute-roughness">Compute Roughness<a class="anchor" aria-label="anchor" href="#compute-roughness"></a>
@@ -234,13 +234,13 @@ V = BFW^{-(r*p)/d} * (BFD/ R)^{p / d} * κ^{(1+r)/d} * Q^{(-r*p)/d}
 <span>                    Ymax <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">Y</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cs</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   ind        x         Y         A</span></span>
-<span><span class="co">#&gt; 1   1 0.000000 0.7933300 29.521578</span></span>
-<span><span class="co">#&gt; 2   2 1.758621 0.6479128 22.394044</span></span>
-<span><span class="co">#&gt; 3   3 3.517241 0.5212662 16.634039</span></span>
-<span><span class="co">#&gt; 4   4 5.275862 0.4121338 12.056481</span></span>
-<span><span class="co">#&gt; 5   5 7.034483 0.3192528  8.489295</span></span>
-<span><span class="co">#&gt; 6   6 8.793103 0.2413536  5.773491</span></span></code></pre></div>
+<span><span class="co">#&gt;   ind        x         Y          A</span></span>
+<span><span class="co">#&gt; 1   1 0.000000 3.7651748 170.632970</span></span>
+<span><span class="co">#&gt; 2   2 1.758621 0.6479128  22.394044</span></span>
+<span><span class="co">#&gt; 3   3 3.517241 0.5212662  16.634039</span></span>
+<span><span class="co">#&gt; 4   4 5.275862 0.4121338  12.056481</span></span>
+<span><span class="co">#&gt; 5   5 7.034483 0.3192528   8.489295</span></span>
+<span><span class="co">#&gt; 6   6 8.793103 0.2413536   5.773491</span></span></code></pre></div>
 <p><img src="hydraulics_files/figure-html/unnamed-chunk-9-1.png" width="100%"></p>
 </div>
 </div>
